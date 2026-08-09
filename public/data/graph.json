@@ -1,0 +1,10 @@
+{
+  "/tables/bronze-orders-api.md": [
+    "/views/gold-customer-ltv.md",
+    "/tables/gold-order-daily.md",
+    "/tables/bronze-orders-raw.md"
+  ],
+  "/tables/bronze-orders-raw.md": [
+    "/tables/bronze-orders-api.md"
+  ]
+}

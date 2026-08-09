@@ -1,0 +1,46 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Unit tests
+        run: python3 tests/test_dekc.py
+
+      - name: Compile scripts
+        run: |
+          python3 -m py_compile \
+            scripts/dekc_common.py \
+            scripts/dekc_capture.py \
+            scripts/dekc_walk.py \
+            scripts/dekc_lineage.py \
+            scripts/dekc_business.py \
+            scripts/dekc_index.py \
+            scripts/dekc_validate.py \
+            scripts/dekc_pack.py \
+            scripts/dekc_search.py \
+            scripts/dekc_doctor.py \
+            scripts/dekc_link.py
+
+      - name: Validate + doctor sample-knowledge
+        run: |
+          python3 scripts/dekc_validate.py --bundle sample-knowledge
+          python3 scripts/dekc_doctor.py --bundle sample-knowledge
+
+      - name: Index + search
+        run: |
+          python3 scripts/dekc_index.py --repo . --bundle sample-knowledge build
+          python3 scripts/dekc_search.py revenue --repo . --bundle sample-knowledge --json | \
+            python3 -c "import json,sys; d=json.load(sys.stdin); assert d['count']>=1, d"

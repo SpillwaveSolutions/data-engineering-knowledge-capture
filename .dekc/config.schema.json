@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spillwave.solutions/schemas/dekc-config.json",
+  "title": "DEKC config",
+  "type": "object",
+  "properties": {
+    "dekc": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "knowledge_root": { "type": "string" },
+        "okf_bundle": { "type": "boolean" },
+        "depends_on": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "pack": { "type": "object" },
+        "walk": { "type": "object" },
+        "promote": { "type": "object" },
+        "index": { "type": "object" },
+        "scrub": { "type": "object" },
+        "medallion": { "type": "object" }
+      },
+      "additionalProperties": true
+    }
+  },
+  "required": ["dekc"]
+}

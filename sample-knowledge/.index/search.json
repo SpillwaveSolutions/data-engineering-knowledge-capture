@@ -1,0 +1,1392 @@
+{
+  "14": [
+    "agents/walk-retail-lake-walk.md"
+  ],
+  "acme": [
+    "sources/retail-lake.md"
+  ],
+  "after": [
+    "business-objects/customer-order.md",
+    "glossary/customer-order.md"
+  ],
+  "agent": [
+    "agents/walk-retail-lake-walk.md"
+  ],
+  "agentnode": [
+    "agents/walk-retail-lake-walk.md"
+  ],
+  "aggregate": [
+    "queries/daily-medallion.md",
+    "sql/daily-medallion.md",
+    "transformations/aggregate-order-daily.md",
+    "workflows/daily-medallion-orders.md"
+  ],
+  "aggregation": [
+    "transformations/aggregate-order-daily.md"
+  ],
+  "airflow": [
+    "workflows/daily-medallion-orders.md"
+  ],
+  "amounts": [
+    "business-objects/customer-lifetime-value.md",
+    "glossary/customer-lifetime-value.md",
+    "metrics/gross-merchandise-value.md"
+  ],
+  "analytics": [
+    "business-objects/customer-lifetime-value.md",
+    "business-objects/daily-order-summary.md",
+    "sources/retail-lake.md"
+  ],
+  "api": [
+    "packs/pack-gold-order-daily.md",
+    "queries/daily-medallion.md",
+    "sql/daily-medallion.md",
+    "workflows/daily-medallion-orders.md"
+  ],
+  "as": [
+    "packs/pack-gold-order-daily.md",
+    "queries/customer-ltv.md",
+    "queries/order-daily.md",
+    "queries/orders-raw.md",
+    "queries/orders.md",
+    "sql/customer-ltv.md",
+    "sql/order-daily.md",
+    "sql/orders-raw.md",
+    "sql/orders.md",
+    "tables/bronze-orders-raw.md",
+    "tables/gold-order-daily.md",
+    "tables/silver-orders.md"
+  ],
+  "at": [
+    "sources/retail-lake-walk.md"
+  ],
+  "automated": [
+    "reports/weekly-commerce-digest.md"
+  ],
+  "based": [
+    "business-objects/customer-lifetime-value.md",
+    "glossary/customer-lifetime-value.md"
+  ],
+  "before": [
+    "glossary/gmv.md",
+    "metrics/gross-merchandise-value.md"
+  ],
+  "bi": [
+    "dax/total-revenue-dax.md",
+    "queries/total-revenue-dax.md",
+    "semantic/retail-commerce-model.md",
+    "workflows/daily-medallion-orders.md"
+  ],
+  "bigint": [
+    "columns/gold-order-daily-order-count.md"
+  ],
+  "binding": [
+    "semantic/retail-commerce-model.md"
+  ],
+  "bronze": [
+    "columns/bronze-orders-raw-currency.md",
+    "columns/bronze-orders-raw-customer-id.md",
+    "columns/bronze-orders-raw-gross-amount.md",
+    "columns/bronze-orders-raw-order-id.md",
+    "columns/bronze-orders-raw-order-ts.md",
+    "columns/bronze-orders-raw-status.md",
+    "layers/bronze.md",
+    "lineage/orders-to-revenue.md",
+    "packs/pack-gold-order-daily.md",
+    "queries/daily-medallion.md",
+    "queries/orders-raw.md",
+    "queries/orders.md",
+    "schemas/bronze.md",
+    "sql/daily-medallion.md",
+    "sql/orders-raw.md",
+    "sql/orders.md",
+    "tables/bronze-orders-api.md",
+    "tables/bronze-orders-raw.md",
+    "tables/silver-orders.md",
+    "transformations/cleanse-orders.md",
+    "workflows/daily-medallion-orders.md"
+  ],
+  "business": [
+    "business-objects/customer-lifetime-value.md",
+    "business-objects/customer-order.md",
+    "business-objects/daily-order-summary.md",
+    "glossary/daily-order-summary.md",
+    "semantic/retail-commerce-model.md"
+  ],
+  "businessobject": [
+    "business-objects/customer-lifetime-value.md",
+    "business-objects/customer-order.md",
+    "business-objects/daily-order-summary.md"
+  ],
+  "by": [
+    "business-objects/daily-order-summary.md",
+    "glossary/daily-order-summary.md",
+    "packs/pack-gold-order-daily.md",
+    "queries/customer-ltv.md",
+    "queries/order-daily.md",
+    "sql/customer-ltv.md",
+    "sql/order-daily.md",
+    "tables/bronze-orders-api.md",
+    "tables/gold-order-daily.md",
+    "views/gold-customer-ltv.md"
+  ],
+  "cancellations": [
+    "glossary/gmv.md"
+  ],
+  "canonical": [
+    "business-objects/customer-order.md",
+    "glossary/customer-order.md"
+  ],
+  "cast": [
+    "packs/pack-gold-order-daily.md",
+    "queries/order-daily.md",
+    "sql/order-daily.md",
+    "tables/gold-order-daily.md"
+  ],
+  "clean": [
+    "queries/daily-medallion.md",
+    "sql/daily-medallion.md"
+  ],
+  "cleanse": [
+    "transformations/cleanse-orders.md",
+    "workflows/daily-medallion-orders.md"
+  ],
+  "code": [
+    "columns/bronze-orders-raw-currency.md"
+  ],
+  "coercion": [
+    "transformations/cleanse-orders.md"
+  ],
+  "column": [
+    "columns/bronze-orders-raw-currency.md",
+    "columns/bronze-orders-raw-customer-id.md",
+    "columns/bronze-orders-raw-gross-amount.md",
+    "columns/bronze-orders-raw-order-id.md",
+    "columns/bronze-orders-raw-order-ts.md",
+    "columns/bronze-orders-raw-status.md",
+    "columns/gold-order-daily-currency.md",
+    "columns/gold-order-daily-gross-revenue.md",
+    "columns/gold-order-daily-order-count.md",
+    "columns/gold-order-daily-order-date.md",
+    "columns/silver-orders-currency.md",
+    "columns/silver-orders-customer-id.md",
+    "columns/silver-orders-gross-amount.md",
+    "columns/silver-orders-order-id.md",
+    "columns/silver-orders-order-ts.md",
+    "columns/silver-orders-status.md"
+  ],
+  "commerce": [
+    "business-objects/customer-order.md",
+    "lineage/orders-to-revenue.md",
+    "reports/weekly-commerce-digest.md",
+    "semantic/retail-commerce-model.md",
+    "transformations/cleanse-orders.md",
+    "workflows/daily-medallion-orders.md"
+  ],
+  "completed": [
+    "metrics/order-count.md"
+  ],
+  "context": [
+    "packs/pack-gold-order-daily.md"
+  ],
+  "contextpack": [
+    "packs/pack-gold-order-daily.md"
+  ],
+  "core": [
+    "lineage/orders-to-revenue.md"
+  ],
+  "count": [
+    "metrics/order-count.md",
+    "packs/pack-gold-order-daily.md",
+    "queries/customer-ltv.md",
+    "queries/order-daily.md",
+    "sql/customer-ltv.md",
+    "sql/order-daily.md",
+    "tables/gold-order-daily.md",
+    "views/gold-customer-ltv.md"
+  ],
+  "create": [
+    "packs/pack-gold-order-daily.md",
+    "queries/customer-ltv.md",
+    "queries/order-daily.md",
+    "queries/orders-raw.md",
+    "queries/orders.md",
+    "sql/customer-ltv.md",
+    "sql/order-daily.md",
+    "sql/orders-raw.md",
+    "sql/orders.md",
+    "tables/bronze-orders-raw.md",
+    "tables/gold-order-daily.md",
+    "tables/silver-orders.md"
+  ],
+  "created": [
+    "agents/walk-retail-lake-walk.md"
+  ],
+  "curated": [
+    "layers/bronze.md",
+    "layers/gold.md",
+    "layers/silver.md"
+  ],
+  "currency": [
+    "business-objects/daily-order-summary.md",
+    "columns/bronze-orders-raw-currency.md",
+    "columns/gold-order-daily-currency.md",
+    "columns/silver-orders-currency.md",
+    "glossary/daily-order-summary.md",
+    "metrics/gross-merchandise-value.md",
+    "packs/pack-gold-order-daily.md",
+    "queries/order-daily.md",
+    "queries/orders.md",
+    "sql/order-daily.md",
+    "sql/orders.md",
+    "tables/gold-order-daily.md",
+    "tables/silver-orders.md"
+  ],
+  "customer": [
+    "business-objects/customer-lifetime-value.md",
+    "business-objects/customer-order.md",
+    "columns/bronze-orders-raw-customer-id.md",
+    "glossary/customer-lifetime-value.md",
+    "glossary/customer-order.md",
+    "packs/pack-gold-order-daily.md",
+    "views/gold-customer-ltv.md"
+  ],
+  "customer_id": [
+    "columns/bronze-orders-raw-customer-id.md",
+    "columns/silver-orders-customer-id.md",
+    "packs/pack-gold-order-daily.md",
+    "queries/customer-ltv.md",
+    "queries/orders.md",
+    "sql/customer-ltv.md",
+    "sql/orders.md",
+    "tables/silver-orders.md",
+    "views/gold-customer-ltv.md"
+  ],
+  "customer_ltv": [
+    "glossary/customer-lifetime-value.md",
+    "packs/pack-gold-order-daily.md",
+    "queries/customer-ltv.md",
+    "sql/customer-ltv.md",
+    "views/gold-customer-ltv.md"
+  ],
+  "daily": [
+    "business-objects/daily-order-summary.md",
+    "dashboards/executive-revenue.md",
+    "glossary/daily-order-summary.md",
+    "lineage/orders-to-revenue.md",
+    "packs/pack-gold-order-daily.md",
+    "schemas/gold.md",
+    "transformations/aggregate-order-daily.md",
+    "workflows/daily-medallion-orders.md"
+  ],
+  "daily_medallion": [
+    "queries/daily-medallion.md",
+    "sql/daily-medallion.md"
+  ],
+  "dashboard": [
+    "dashboards/executive-revenue.md"
+  ],
+  "data": [
+    "business-objects/customer-order.md",
+    "glossary/customer-order.md",
+    "layers/bronze.md",
+    "layers/gold.md",
+    "layers/silver.md",
+    "sources/retail-lake-walk.md",
+    "sources/retail-lake.md"
+  ],
+  "date": [
+    "columns/gold-order-daily-order-date.md",
+    "packs/pack-gold-order-daily.md",
+    "queries/order-daily.md",
+    "sql/order-daily.md",
+    "tables/gold-order-daily.md"
+  ],
+  "dax": [
+    "dax/total-revenue-dax.md",
+    "dax/total-revenue.md",
+    "queries/total-revenue-dax.md",
+    "queries/total-revenue.md"
+  ],
+  "daxartifact": [
+    "dax/total-revenue-dax.md",
+    "dax/total-revenue.md"
+  ],
+  "decimal": [
+    "columns/bronze-orders-raw-gross-amount.md",
+    "columns/gold-order-daily-gross-revenue.md",
+    "columns/silver-orders-gross-amount.md"
+  ],
+  "definition": [
+    "business-objects/customer-lifetime-value.md",
+    "business-objects/customer-order.md",
+    "business-objects/daily-order-summary.md",
+    "glossary/customer-lifetime-value.md",
+    "glossary/customer-order.md",
+    "glossary/daily-order-summary.md",
+    "glossary/gmv.md",
+    "metrics/gross-merchandise-value.md",
+    "metrics/order-count.md"
+  ],
+  "dekc": [
+    "agents/walk-retail-lake-walk.md",
+    "business-objects/customer-lifetime-value.md",
+    "business-objects/customer-order.md",
+    "business-objects/daily-order-summary.md",
+    "columns/bronze-orders-raw-currency.md",
+    "columns/bronze-orders-raw-customer-id.md",
+    "columns/bronze-orders-raw-gross-amount.md",
+    "columns/bronze-orders-raw-order-id.md",
+    "columns/bronze-orders-raw-order-ts.md",
+    "columns/bronze-orders-raw-status.md",
+    "columns/gold-order-daily-currency.md",
+    "columns/gold-order-daily-gross-revenue.md",
+    "columns/gold-order-daily-order-count.md",
+    "columns/gold-order-daily-order-date.md",
+    "columns/silver-orders-currency.md",
+    "columns/silver-orders-customer-id.md",
+    "columns/silver-orders-gross-amount.md",
+    "columns/silver-orders-order-id.md",
+    "columns/silver-orders-order-ts.md",
+    "columns/silver-orders-status.md",
+    "dashboards/executive-revenue.md",
+    "dax/total-revenue-dax.md",
+    "dax/total-revenue.md",
+    "glossary/customer-lifetime-value.md",
+    "glossary/customer-order.md",
+    "glossary/daily-order-summary.md",
+    "glossary/gmv.md",
+    "lineage/orders-to-revenue.md",
+    "metrics/gross-merchandise-value.md",
+    "metrics/order-count.md",
+    "packs/pack-gold-order-daily.md",
+    "queries/customer-ltv.md",
+    "queries/daily-medallion.md",
+    "queries/order-daily.md",
+    "queries/orders-raw.md",
+    "queries/orders.md",
+    "queries/total-revenue-dax.md",
+    "queries/total-revenue.md",
+    "reports/weekly-commerce-digest.md",
+    "schemas/bronze.md",
+    "schemas/gold.md",
+    "schemas/silver.md",
+    "semantic/retail-commerce-model.md",
+    "sources/retail-lake-walk.md",
+    "sources/retail-lake.md",
+    "sql/customer-ltv.md",
+    "sql/daily-medallion.md",
+    "sql/order-daily.md",
+    "sql/orders-raw.md",
+    "sql/orders.md",
+    "tables/bronze-orders-api.md",
+    "tables/bronze-orders-raw.md",
+    "tables/gold-order-daily.md",
+    "tables/silver-orders.md",
+    "transformations/aggregate-order-daily.md",
+    "transformations/cleanse-orders.md",
+    "views/gold-customer-ltv.md",
+    "workflows/daily-medallion-orders.md"
+  ],
+  "delta": [
+    "sources/retail-lake.md"
+  ],
+  "diagram": [
+    "packs/pack-gold-order-daily.md"
+  ],
+  "digest": [
+    "reports/weekly-commerce-digest.md"
+  ],
+  "disclosure": [
+    "packs/pack-gold-order-daily.md"
+  ],
+  "discounts": [
+    "glossary/gmv.md",
+    "metrics/gross-merchandise-value.md"
+  ],
+  "discovered": [
+    "dax/total-revenue.md",
+    "queries/customer-ltv.md",
+    "queries/daily-medallion.md",
+    "queries/order-daily.md",
+    "queries/orders-raw.md",
+    "queries/orders.md",
+    "queries/total-revenue.md",
+    "sql/customer-ltv.md",
+    "sql/daily-medallion.md",
+    "sql/order-daily.md",
+    "sql/orders-raw.md",
+    "sql/orders.md"
+  ],
+  "distinct": [
+    "metrics/order-count.md"
+  ],
+  "documented": [
+    "queries/daily-medallion.md",
+    "sql/daily-medallion.md"
+  ],
+  "dollar": [
+    "glossary/gmv.md"
+  ],
+  "drop": [
+    "transformations/cleanse-orders.md"
+  ],
+  "engineering": [
+    "business-objects/daily-order-summary.md"
+  ],
+  "errors": [
+    "agents/walk-retail-lake-walk.md"
+  ],
+  "executive": [
+    "dashboards/executive-revenue.md"
+  ],
+  "expression": [
+    "metrics/gross-merchandise-value.md",
+    "metrics/order-count.md"
+  ],
+  "facing": [
+    "business-objects/daily-order-summary.md",
+    "glossary/daily-order-summary.md"
+  ],
+  "facts": [
+    "business-objects/customer-order.md",
+    "glossary/customer-order.md"
+  ],
+  "finance": [
+    "business-objects/daily-order-summary.md",
+    "glossary/daily-order-summary.md"
+  ],
+  "fixtures": [
+    "agents/walk-retail-lake-walk.md",
+    "sources/retail-lake-walk.md"
+  ],
+  "flowchart": [
+    "lineage/orders-to-revenue.md",
+    "packs/pack-gold-order-daily.md"
+  ],
+  "forecasting": [
+    "business-objects/daily-order-summary.md",
+    "glossary/daily-order-summary.md"
+  ],
+  "glossary": [
+    "glossary/customer-lifetime-value.md",
+    "glossary/customer-order.md",
+    "glossary/daily-order-summary.md",
+    "glossary/gmv.md"
+  ],
+  "glossaryterm": [
+    "glossary/customer-lifetime-value.md",
+    "glossary/customer-order.md",
+    "glossary/daily-order-summary.md",
+    "glossary/gmv.md"
+  ],
+  "gmv": [
+    "glossary/gmv.md"
+  ],
+  "gold": [
+    "business-objects/customer-lifetime-value.md",
+    "business-objects/daily-order-summary.md",
+    "columns/gold-order-daily-currency.md",
+    "columns/gold-order-daily-gross-revenue.md",
+    "columns/gold-order-daily-order-count.md",
+    "columns/gold-order-daily-order-date.md",
+    "layers/gold.md",
+    "lineage/orders-to-revenue.md",
+    "packs/pack-gold-order-daily.md",
+    "queries/customer-ltv.md",
+    "queries/daily-medallion.md",
+    "queries/order-daily.md",
+    "schemas/gold.md",
+    "semantic/retail-commerce-model.md",
+    "sql/customer-ltv.md",
+    "sql/daily-medallion.md",
+    "sql/order-daily.md",
+    "tables/gold-order-daily.md",
+    "transformations/aggregate-order-daily.md",
+    "views/gold-customer-ltv.md",
+    "workflows/daily-medallion-orders.md"
+  ],
+  "grain": [
+    "transformations/aggregate-order-daily.md"
+  ],
+  "gross": [
+    "business-objects/customer-lifetime-value.md",
+    "business-objects/daily-order-summary.md",
+    "columns/bronze-orders-raw-gross-amount.md",
+    "glossary/customer-lifetime-value.md",
+    "glossary/daily-order-summary.md",
+    "glossary/gmv.md",
+    "metrics/gross-merchandise-value.md"
+  ],
+  "gross_amount": [
+    "columns/bronze-orders-raw-gross-amount.md",
+    "columns/silver-orders-gross-amount.md",
+    "packs/pack-gold-order-daily.md",
+    "queries/customer-ltv.md",
+    "queries/order-daily.md",
+    "queries/orders.md",
+    "sql/customer-ltv.md",
+    "sql/order-daily.md",
+    "sql/orders.md",
+    "tables/gold-order-daily.md",
+    "tables/silver-orders.md",
+    "views/gold-customer-ltv.md"
+  ],
+  "gross_revenue": [
+    "columns/gold-order-daily-gross-revenue.md",
+    "dax/total-revenue-dax.md",
+    "dax/total-revenue.md",
+    "metrics/gross-merchandise-value.md",
+    "packs/pack-gold-order-daily.md",
+    "queries/order-daily.md",
+    "queries/total-revenue-dax.md",
+    "queries/total-revenue.md",
+    "sql/order-daily.md",
+    "tables/gold-order-daily.md"
+  ],
+  "group": [
+    "packs/pack-gold-order-daily.md",
+    "queries/customer-ltv.md",
+    "queries/order-daily.md",
+    "sql/customer-ltv.md",
+    "sql/order-daily.md",
+    "tables/gold-order-daily.md",
+    "views/gold-customer-ltv.md"
+  ],
+  "growth": [
+    "business-objects/customer-lifetime-value.md",
+    "business-objects/daily-order-summary.md",
+    "glossary/daily-order-summary.md"
+  ],
+  "historical": [
+    "business-objects/customer-lifetime-value.md",
+    "glossary/customer-lifetime-value.md"
+  ],
+  "hops": [
+    "packs/pack-gold-order-daily.md"
+  ],
+  "identifier": [
+    "columns/bronze-orders-raw-order-id.md"
+  ],
+  "in": [
+    "metrics/gross-merchandise-value.md",
+    "schemas/bronze.md",
+    "schemas/gold.md",
+    "schemas/silver.md"
+  ],
+  "inferred": [
+    "packs/pack-gold-order-daily.md",
+    "tables/bronze-orders-raw.md",
+    "tables/gold-order-daily.md",
+    "tables/silver-orders.md"
+  ],
+  "is": [
+    "queries/orders.md",
+    "sql/orders.md",
+    "tables/silver-orders.md",
+    "transformations/cleanse-orders.md"
+  ],
+  "iso": [
+    "columns/bronze-orders-raw-currency.md"
+  ],
+  "json": [
+    "agents/walk-retail-lake-walk.md"
+  ],
+  "key": [
+    "columns/bronze-orders-raw-customer-id.md"
+  ],
+  "kind": [
+    "sources/retail-lake-walk.md",
+    "sources/retail-lake.md"
+  ],
+  "lake": [
+    "agents/walk-retail-lake-walk.md",
+    "sources/retail-lake-walk.md",
+    "sources/retail-lake.md"
+  ],
+  "land": [
+    "queries/daily-medallion.md",
+    "sql/daily-medallion.md",
+    "workflows/daily-medallion-orders.md"
+  ],
+  "landing": [
+    "lineage/orders-to-revenue.md",
+    "packs/pack-gold-order-daily.md",
+    "queries/orders-raw.md",
+    "sql/orders-raw.md",
+    "tables/bronze-orders-raw.md"
+  ],
+  "layer": [
+    "layers/bronze.md",
+    "layers/gold.md",
+    "layers/silver.md",
+    "packs/pack-gold-order-daily.md",
+    "semantic/retail-commerce-model.md",
+    "tables/bronze-orders-api.md",
+    "tables/bronze-orders-raw.md",
+    "tables/gold-order-daily.md",
+    "tables/silver-orders.md"
+  ],
+  "level": [
+    "dashboards/executive-revenue.md"
+  ],
+  "lifetime": [
+    "business-objects/customer-lifetime-value.md",
+    "glossary/customer-lifetime-value.md",
+    "packs/pack-gold-order-daily.md",
+    "views/gold-customer-ltv.md"
+  ],
+  "lifetime_value": [
+    "packs/pack-gold-order-daily.md",
+    "queries/customer-ltv.md",
+    "sql/customer-ltv.md",
+    "views/gold-customer-ltv.md"
+  ],
+  "lineage": [
+    "lineage/orders-to-revenue.md",
+    "packs/pack-gold-order-daily.md"
+  ],
+  "lineagepath": [
+    "lineage/orders-to-revenue.md"
+  ],
+  "lr": [
+    "lineage/orders-to-revenue.md",
+    "packs/pack-gold-order-daily.md"
+  ],
+  "ltv": [
+    "business-objects/customer-lifetime-value.md",
+    "packs/pack-gold-order-daily.md",
+    "reports/weekly-commerce-digest.md"
+  ],
+  "mart": [
+    "lineage/orders-to-revenue.md"
+  ],
+  "marts": [
+    "packs/pack-gold-order-daily.md",
+    "queries/customer-ltv.md",
+    "queries/order-daily.md",
+    "semantic/retail-commerce-model.md",
+    "sql/customer-ltv.md",
+    "sql/order-daily.md",
+    "tables/gold-order-daily.md"
+  ],
+  "md": [
+    "business-objects/customer-lifetime-value.md",
+    "business-objects/customer-order.md",
+    "business-objects/daily-order-summary.md",
+    "lineage/orders-to-revenue.md",
+    "packs/pack-gold-order-daily.md",
+    "schemas/bronze.md",
+    "schemas/gold.md",
+    "schemas/silver.md",
+    "views/gold-customer-ltv.md"
+  ],
+  "measure": [
+    "dax/total-revenue-dax.md",
+    "queries/total-revenue-dax.md"
+  ],
+  "medallion": [
+    "layers/bronze.md",
+    "layers/gold.md",
+    "layers/silver.md",
+    "workflows/daily-medallion-orders.md"
+  ],
+  "merchandise": [
+    "business-objects/daily-order-summary.md",
+    "columns/bronze-orders-raw-gross-amount.md",
+    "glossary/daily-order-summary.md",
+    "glossary/gmv.md",
+    "metrics/gross-merchandise-value.md"
+  ],
+  "mermaid": [
+    "lineage/orders-to-revenue.md",
+    "packs/pack-gold-order-daily.md"
+  ],
+  "metric": [
+    "metrics/gross-merchandise-value.md",
+    "metrics/order-count.md"
+  ],
+  "metrics": [
+    "semantic/retail-commerce-model.md"
+  ],
+  "model": [
+    "semantic/retail-commerce-model.md",
+    "workflows/daily-medallion-orders.md"
+  ],
+  "models": [
+    "sources/retail-lake.md"
+  ],
+  "n0": [
+    "lineage/orders-to-revenue.md",
+    "packs/pack-gold-order-daily.md"
+  ],
+  "n1": [
+    "lineage/orders-to-revenue.md",
+    "packs/pack-gold-order-daily.md"
+  ],
+  "n2": [
+    "lineage/orders-to-revenue.md",
+    "packs/pack-gold-order-daily.md"
+  ],
+  "nightly": [
+    "workflows/daily-medallion-orders.md"
+  ],
+  "nodes": [
+    "packs/pack-gold-order-daily.md"
+  ],
+  "notes": [
+    "sources/retail-lake-walk.md",
+    "sources/retail-lake.md"
+  ],
+  "nullable": [
+    "columns/bronze-orders-raw-currency.md",
+    "columns/bronze-orders-raw-customer-id.md",
+    "columns/bronze-orders-raw-gross-amount.md",
+    "columns/bronze-orders-raw-order-id.md",
+    "columns/bronze-orders-raw-order-ts.md",
+    "columns/bronze-orders-raw-status.md",
+    "columns/gold-order-daily-currency.md",
+    "columns/gold-order-daily-gross-revenue.md",
+    "columns/gold-order-daily-order-count.md",
+    "columns/gold-order-daily-order-date.md",
+    "columns/silver-orders-currency.md",
+    "columns/silver-orders-customer-id.md",
+    "columns/silver-orders-gross-amount.md",
+    "columns/silver-orders-order-id.md",
+    "columns/silver-orders-order-ts.md",
+    "columns/silver-orders-status.md"
+  ],
+  "object": [
+    "business-objects/customer-lifetime-value.md",
+    "business-objects/customer-order.md",
+    "business-objects/daily-order-summary.md"
+  ],
+  "of": [
+    "agents/walk-retail-lake-walk.md",
+    "business-objects/customer-lifetime-value.md",
+    "business-objects/daily-order-summary.md",
+    "glossary/customer-lifetime-value.md",
+    "glossary/daily-order-summary.md",
+    "metrics/gross-merchandise-value.md",
+    "metrics/order-count.md",
+    "reports/weekly-commerce-digest.md"
+  ],
+  "on": [
+    "business-objects/customer-lifetime-value.md",
+    "columns/gold-order-daily-currency.md",
+    "columns/gold-order-daily-gross-revenue.md",
+    "columns/gold-order-daily-order-count.md",
+    "columns/gold-order-daily-order-date.md",
+    "columns/silver-orders-currency.md",
+    "columns/silver-orders-customer-id.md",
+    "columns/silver-orders-gross-amount.md",
+    "columns/silver-orders-order-id.md",
+    "columns/silver-orders-order-ts.md",
+    "columns/silver-orders-status.md",
+    "glossary/customer-lifetime-value.md"
+  ],
+  "or": [
+    "packs/pack-gold-order-daily.md",
+    "queries/customer-ltv.md",
+    "queries/order-daily.md",
+    "queries/orders-raw.md",
+    "queries/orders.md",
+    "sql/customer-ltv.md",
+    "sql/order-daily.md",
+    "sql/orders-raw.md",
+    "sql/orders.md",
+    "tables/bronze-orders-raw.md",
+    "tables/gold-order-daily.md",
+    "tables/silver-orders.md"
+  ],
+  "orchestrated": [
+    "queries/daily-medallion.md",
+    "sql/daily-medallion.md"
+  ],
+  "orchestrator": [
+    "workflows/daily-medallion-orders.md"
+  ],
+  "order": [
+    "business-objects/customer-lifetime-value.md",
+    "business-objects/customer-order.md",
+    "business-objects/daily-order-summary.md",
+    "columns/bronze-orders-raw-order-id.md",
+    "columns/bronze-orders-raw-order-ts.md",
+    "columns/bronze-orders-raw-status.md",
+    "dashboards/executive-revenue.md",
+    "glossary/customer-lifetime-value.md",
+    "glossary/customer-order.md",
+    "glossary/daily-order-summary.md",
+    "lineage/orders-to-revenue.md",
+    "metrics/gross-merchandise-value.md",
+    "metrics/order-count.md",
+    "packs/pack-gold-order-daily.md",
+    "reports/weekly-commerce-digest.md",
+    "schemas/gold.md",
+    "semantic/retail-commerce-model.md",
+    "transformations/aggregate-order-daily.md",
+    "transformations/cleanse-orders.md"
+  ],
+  "order_count": [
+    "columns/gold-order-daily-order-count.md",
+    "packs/pack-gold-order-daily.md",
+    "queries/customer-ltv.md",
+    "queries/order-daily.md",
+    "sql/customer-ltv.md",
+    "sql/order-daily.md",
+    "tables/gold-order-daily.md",
+    "views/gold-customer-ltv.md"
+  ],
+  "order_daily": [
+    "columns/gold-order-daily-currency.md",
+    "columns/gold-order-daily-gross-revenue.md",
+    "columns/gold-order-daily-order-count.md",
+    "columns/gold-order-daily-order-date.md",
+    "dax/total-revenue-dax.md",
+    "dax/total-revenue.md",
+    "glossary/daily-order-summary.md",
+    "packs/pack-gold-order-daily.md",
+    "queries/daily-medallion.md",
+    "queries/order-daily.md",
+    "queries/total-revenue-dax.md",
+    "queries/total-revenue.md",
+    "schemas/gold.md",
+    "sql/daily-medallion.md",
+    "sql/order-daily.md",
+    "tables/gold-order-daily.md",
+    "workflows/daily-medallion-orders.md"
+  ],
+  "order_date": [
+    "columns/gold-order-daily-order-date.md",
+    "packs/pack-gold-order-daily.md",
+    "queries/order-daily.md",
+    "sql/order-daily.md",
+    "tables/gold-order-daily.md"
+  ],
+  "order_id": [
+    "columns/bronze-orders-raw-order-id.md",
+    "columns/silver-orders-order-id.md",
+    "queries/orders.md",
+    "sql/orders.md",
+    "tables/silver-orders.md"
+  ],
+  "order_ts": [
+    "columns/bronze-orders-raw-order-ts.md",
+    "columns/silver-orders-order-ts.md",
+    "packs/pack-gold-order-daily.md",
+    "queries/order-daily.md",
+    "queries/orders.md",
+    "sql/order-daily.md",
+    "sql/orders.md",
+    "tables/gold-order-daily.md",
+    "tables/silver-orders.md"
+  ],
+  "orders": [
+    "business-objects/customer-order.md",
+    "columns/silver-orders-currency.md",
+    "columns/silver-orders-customer-id.md",
+    "columns/silver-orders-gross-amount.md",
+    "columns/silver-orders-order-id.md",
+    "columns/silver-orders-order-ts.md",
+    "columns/silver-orders-status.md",
+    "glossary/customer-order.md",
+    "lineage/orders-to-revenue.md",
+    "metrics/order-count.md",
+    "packs/pack-gold-order-daily.md",
+    "queries/customer-ltv.md",
+    "queries/daily-medallion.md",
+    "queries/order-daily.md",
+    "queries/orders.md",
+    "schemas/bronze.md",
+    "schemas/silver.md",
+    "sql/customer-ltv.md",
+    "sql/daily-medallion.md",
+    "sql/order-daily.md",
+    "sql/orders.md",
+    "tables/gold-order-daily.md",
+    "tables/silver-orders.md",
+    "transformations/cleanse-orders.md",
+    "views/gold-customer-ltv.md",
+    "workflows/daily-medallion-orders.md"
+  ],
+  "orders_api": [
+    "packs/pack-gold-order-daily.md",
+    "queries/orders-raw.md",
+    "sql/orders-raw.md",
+    "tables/bronze-orders-api.md",
+    "tables/bronze-orders-raw.md"
+  ],
+  "orders_raw": [
+    "columns/bronze-orders-raw-currency.md",
+    "columns/bronze-orders-raw-customer-id.md",
+    "columns/bronze-orders-raw-gross-amount.md",
+    "columns/bronze-orders-raw-order-id.md",
+    "columns/bronze-orders-raw-order-ts.md",
+    "columns/bronze-orders-raw-status.md",
+    "packs/pack-gold-order-daily.md",
+    "queries/daily-medallion.md",
+    "queries/orders-raw.md",
+    "queries/orders.md",
+    "schemas/bronze.md",
+    "sql/daily-medallion.md",
+    "sql/orders-raw.md",
+    "sql/orders.md",
+    "tables/bronze-orders-api.md",
+    "tables/bronze-orders-raw.md",
+    "tables/silver-orders.md",
+    "transformations/cleanse-orders.md",
+    "workflows/daily-medallion-orders.md"
+  ],
+  "over": [
+    "semantic/retail-commerce-model.md"
+  ],
+  "owner": [
+    "business-objects/customer-lifetime-value.md",
+    "business-objects/customer-order.md",
+    "business-objects/daily-order-summary.md"
+  ],
+  "pacing": [
+    "business-objects/daily-order-summary.md",
+    "glossary/daily-order-summary.md"
+  ],
+  "pack": [
+    "packs/pack-gold-order-daily.md"
+  ],
+  "path": [
+    "lineage/orders-to-revenue.md",
+    "packs/pack-gold-order-daily.md"
+  ],
+  "pdf": [
+    "reports/weekly-commerce-digest.md"
+  ],
+  "per": [
+    "packs/pack-gold-order-daily.md",
+    "views/gold-customer-ltv.md"
+  ],
+  "pipeline": [
+    "workflows/daily-medallion-orders.md"
+  ],
+  "power": [
+    "dax/total-revenue-dax.md",
+    "queries/total-revenue-dax.md",
+    "workflows/daily-medallion-orders.md"
+  ],
+  "powerbi": [
+    "dashboards/executive-revenue.md"
+  ],
+  "predicted": [
+    "business-objects/customer-lifetime-value.md",
+    "glossary/customer-lifetime-value.md"
+  ],
+  "primary": [
+    "sources/retail-lake.md"
+  ],
+  "products": [
+    "layers/bronze.md",
+    "layers/gold.md",
+    "layers/silver.md"
+  ],
+  "progressive": [
+    "packs/pack-gold-order-daily.md"
+  ],
+  "purchase": [
+    "business-objects/customer-order.md",
+    "glossary/customer-order.md"
+  ],
+  "quality": [
+    "business-objects/customer-order.md",
+    "glossary/customer-order.md"
+  ],
+  "query": [
+    "queries/customer-ltv.md",
+    "queries/daily-medallion.md",
+    "queries/order-daily.md",
+    "queries/orders-raw.md",
+    "queries/orders.md",
+    "queries/total-revenue-dax.md",
+    "queries/total-revenue.md"
+  ],
+  "raw": [
+    "lineage/orders-to-revenue.md",
+    "packs/pack-gold-order-daily.md",
+    "schemas/bronze.md"
+  ],
+  "reads": [
+    "views/gold-customer-ltv.md"
+  ],
+  "realized": [
+    "business-objects/customer-lifetime-value.md",
+    "glossary/customer-lifetime-value.md"
+  ],
+  "referenced": [
+    "packs/pack-gold-order-daily.md",
+    "tables/bronze-orders-api.md"
+  ],
+  "refresh": [
+    "workflows/daily-medallion-orders.md"
+  ],
+  "replace": [
+    "packs/pack-gold-order-daily.md",
+    "queries/customer-ltv.md",
+    "queries/order-daily.md",
+    "queries/orders-raw.md",
+    "queries/orders.md",
+    "sql/customer-ltv.md",
+    "sql/order-daily.md",
+    "sql/orders-raw.md",
+    "sql/orders.md",
+    "tables/bronze-orders-raw.md",
+    "tables/gold-order-daily.md",
+    "tables/silver-orders.md"
+  ],
+  "report": [
+    "reports/weekly-commerce-digest.md"
+  ],
+  "reporting": [
+    "transformations/aggregate-order-daily.md"
+  ],
+  "retail": [
+    "agents/walk-retail-lake-walk.md",
+    "semantic/retail-commerce-model.md",
+    "sources/retail-lake-walk.md",
+    "sources/retail-lake.md"
+  ],
+  "returns": [
+    "glossary/gmv.md",
+    "metrics/gross-merchandise-value.md"
+  ],
+  "revenue": [
+    "dashboards/executive-revenue.md",
+    "dax/total-revenue-dax.md",
+    "dax/total-revenue.md",
+    "glossary/gmv.md",
+    "lineage/orders-to-revenue.md",
+    "queries/total-revenue-dax.md",
+    "queries/total-revenue.md",
+    "transformations/aggregate-order-daily.md"
+  ],
+  "root": [
+    "agents/walk-retail-lake-walk.md"
+  ],
+  "rules": [
+    "business-objects/customer-order.md",
+    "glossary/customer-order.md"
+  ],
+  "s3": [
+    "sources/retail-lake.md"
+  ],
+  "sales": [
+    "glossary/gmv.md",
+    "packs/pack-gold-order-daily.md",
+    "queries/orders-raw.md",
+    "queries/orders.md",
+    "sql/orders-raw.md",
+    "sql/orders.md",
+    "tables/bronze-orders-raw.md",
+    "tables/silver-orders.md"
+  ],
+  "sample": [
+    "agents/walk-retail-lake-walk.md",
+    "sources/retail-lake-walk.md"
+  ],
+  "schema": [
+    "schemas/bronze.md",
+    "schemas/gold.md",
+    "schemas/silver.md"
+  ],
+  "select": [
+    "packs/pack-gold-order-daily.md",
+    "queries/customer-ltv.md",
+    "queries/daily-medallion.md",
+    "queries/order-daily.md",
+    "queries/orders-raw.md",
+    "queries/orders.md",
+    "sql/customer-ltv.md",
+    "sql/daily-medallion.md",
+    "sql/order-daily.md",
+    "sql/orders-raw.md",
+    "sql/orders.md",
+    "tables/bronze-orders-raw.md",
+    "tables/gold-order-daily.md",
+    "tables/silver-orders.md",
+    "transformations/cleanse-orders.md",
+    "views/gold-customer-ltv.md"
+  ],
+  "semantic": [
+    "semantic/retail-commerce-model.md",
+    "workflows/daily-medallion-orders.md"
+  ],
+  "semanticmodel": [
+    "semantic/retail-commerce-model.md"
+  ],
+  "silver": [
+    "business-objects/customer-order.md",
+    "columns/silver-orders-currency.md",
+    "columns/silver-orders-customer-id.md",
+    "columns/silver-orders-gross-amount.md",
+    "columns/silver-orders-order-id.md",
+    "columns/silver-orders-order-ts.md",
+    "columns/silver-orders-status.md",
+    "layers/silver.md",
+    "lineage/orders-to-revenue.md",
+    "packs/pack-gold-order-daily.md",
+    "queries/customer-ltv.md",
+    "queries/daily-medallion.md",
+    "queries/order-daily.md",
+    "queries/orders.md",
+    "schemas/silver.md",
+    "sql/customer-ltv.md",
+    "sql/daily-medallion.md",
+    "sql/order-daily.md",
+    "sql/orders.md",
+    "tables/gold-order-daily.md",
+    "tables/silver-orders.md",
+    "transformations/aggregate-order-daily.md",
+    "transformations/cleanse-orders.md",
+    "views/gold-customer-ltv.md",
+    "workflows/daily-medallion-orders.md"
+  ],
+  "single": [
+    "business-objects/customer-order.md",
+    "glossary/customer-order.md"
+  ],
+  "skipped": [
+    "agents/walk-retail-lake-walk.md"
+  ],
+  "source": [
+    "business-objects/customer-order.md",
+    "glossary/customer-order.md",
+    "sources/retail-lake-walk.md",
+    "sources/retail-lake.md"
+  ],
+  "sources": [
+    "business-objects/customer-lifetime-value.md",
+    "business-objects/customer-order.md",
+    "business-objects/daily-order-summary.md"
+  ],
+  "sourcesystem": [
+    "sources/retail-lake-walk.md",
+    "sources/retail-lake.md"
+  ],
+  "sql": [
+    "metrics/gross-merchandise-value.md",
+    "metrics/order-count.md",
+    "packs/pack-gold-order-daily.md",
+    "queries/customer-ltv.md",
+    "queries/daily-medallion.md",
+    "queries/order-daily.md",
+    "queries/orders-raw.md",
+    "queries/orders.md",
+    "sources/retail-lake.md",
+    "sql/customer-ltv.md",
+    "sql/daily-medallion.md",
+    "sql/order-daily.md",
+    "sql/orders-raw.md",
+    "sql/orders.md",
+    "tables/bronze-orders-raw.md",
+    "tables/gold-order-daily.md",
+    "tables/silver-orders.md",
+    "transformations/cleanse-orders.md",
+    "views/gold-customer-ltv.md"
+  ],
+  "sqlartifact": [
+    "sql/customer-ltv.md",
+    "sql/daily-medallion.md",
+    "sql/order-daily.md",
+    "sql/orders-raw.md",
+    "sql/orders.md"
+  ],
+  "stats": [
+    "agents/walk-retail-lake-walk.md"
+  ],
+  "steps": [
+    "queries/daily-medallion.md",
+    "sql/daily-medallion.md",
+    "workflows/daily-medallion-orders.md"
+  ],
+  "string": [
+    "columns/bronze-orders-raw-currency.md",
+    "columns/bronze-orders-raw-customer-id.md",
+    "columns/bronze-orders-raw-order-id.md",
+    "columns/bronze-orders-raw-status.md",
+    "columns/gold-order-daily-currency.md",
+    "columns/silver-orders-currency.md",
+    "columns/silver-orders-customer-id.md",
+    "columns/silver-orders-order-id.md",
+    "columns/silver-orders-status.md"
+  ],
+  "sum": [
+    "metrics/gross-merchandise-value.md",
+    "packs/pack-gold-order-daily.md",
+    "queries/customer-ltv.md",
+    "queries/order-daily.md",
+    "sql/customer-ltv.md",
+    "sql/order-daily.md",
+    "tables/gold-order-daily.md",
+    "views/gold-customer-ltv.md"
+  ],
+  "summary": [
+    "business-objects/daily-order-summary.md",
+    "glossary/daily-order-summary.md"
+  ],
+  "sumx": [
+    "dax/total-revenue-dax.md",
+    "dax/total-revenue.md",
+    "queries/total-revenue-dax.md",
+    "queries/total-revenue.md"
+  ],
+  "synonyms": [
+    "glossary/customer-lifetime-value.md",
+    "glossary/customer-order.md",
+    "glossary/daily-order-summary.md",
+    "glossary/gmv.md"
+  ],
+  "table": [
+    "packs/pack-gold-order-daily.md",
+    "queries/order-daily.md",
+    "queries/orders-raw.md",
+    "queries/orders.md",
+    "sql/order-daily.md",
+    "sql/orders-raw.md",
+    "sql/orders.md",
+    "tables/bronze-orders-api.md",
+    "tables/bronze-orders-raw.md",
+    "tables/gold-order-daily.md",
+    "tables/silver-orders.md"
+  ],
+  "tables": [
+    "business-objects/customer-order.md",
+    "business-objects/daily-order-summary.md",
+    "lineage/orders-to-revenue.md",
+    "packs/pack-gold-order-daily.md",
+    "schemas/bronze.md",
+    "schemas/gold.md",
+    "schemas/silver.md",
+    "semantic/retail-commerce-model.md",
+    "views/gold-customer-ltv.md"
+  ],
+  "technical": [
+    "business-objects/customer-lifetime-value.md",
+    "business-objects/customer-order.md",
+    "business-objects/daily-order-summary.md",
+    "semantic/retail-commerce-model.md"
+  ],
+  "tests": [
+    "agents/walk-retail-lake-walk.md",
+    "sources/retail-lake-walk.md"
+  ],
+  "timestamp": [
+    "columns/bronze-orders-raw-order-ts.md",
+    "columns/silver-orders-order-ts.md"
+  ],
+  "to": [
+    "lineage/orders-to-revenue.md",
+    "semantic/retail-commerce-model.md",
+    "workflows/daily-medallion-orders.md"
+  ],
+  "tool": [
+    "dashboards/executive-revenue.md"
+  ],
+  "tools": [
+    "semantic/retail-commerce-model.md"
+  ],
+  "total": [
+    "dax/total-revenue-dax.md",
+    "dax/total-revenue.md",
+    "glossary/gmv.md",
+    "queries/total-revenue-dax.md",
+    "queries/total-revenue.md"
+  ],
+  "total_revenue": [
+    "dax/total-revenue.md",
+    "queries/total-revenue.md"
+  ],
+  "transaction": [
+    "business-objects/customer-order.md",
+    "glossary/customer-order.md",
+    "metrics/gross-merchandise-value.md"
+  ],
+  "transformation": [
+    "transformations/aggregate-order-daily.md",
+    "transformations/cleanse-orders.md"
+  ],
+  "trends": [
+    "dashboards/executive-revenue.md",
+    "reports/weekly-commerce-digest.md"
+  ],
+  "updated": [
+    "agents/walk-retail-lake-walk.md"
+  ],
+  "uri": [
+    "sources/retail-lake-walk.md",
+    "sources/retail-lake.md"
+  ],
+  "used": [
+    "business-objects/daily-order-summary.md",
+    "glossary/daily-order-summary.md"
+  ],
+  "utc": [
+    "columns/bronze-orders-raw-order-ts.md"
+  ],
+  "value": [
+    "business-objects/customer-lifetime-value.md",
+    "business-objects/daily-order-summary.md",
+    "columns/bronze-orders-raw-gross-amount.md",
+    "glossary/customer-lifetime-value.md",
+    "glossary/daily-order-summary.md",
+    "glossary/gmv.md",
+    "metrics/gross-merchandise-value.md",
+    "packs/pack-gold-order-daily.md",
+    "views/gold-customer-ltv.md"
+  ],
+  "view": [
+    "packs/pack-gold-order-daily.md",
+    "queries/customer-ltv.md",
+    "sql/customer-ltv.md",
+    "views/gold-customer-ltv.md"
+  ],
+  "views": [
+    "business-objects/customer-lifetime-value.md",
+    "packs/pack-gold-order-daily.md",
+    "schemas/bronze.md",
+    "schemas/gold.md",
+    "schemas/silver.md"
+  ],
+  "volume": [
+    "business-objects/daily-order-summary.md",
+    "glossary/daily-order-summary.md",
+    "glossary/gmv.md"
+  ],
+  "walk": [
+    "agents/walk-retail-lake-walk.md",
+    "sources/retail-lake-walk.md"
+  ],
+  "walked": [
+    "sources/retail-lake-walk.md"
+  ],
+  "weekly": [
+    "reports/weekly-commerce-digest.md"
+  ],
+  "where": [
+    "queries/orders.md",
+    "sql/orders.md",
+    "tables/silver-orders.md",
+    "transformations/cleanse-orders.md"
+  ],
+  "workflow": [
+    "workflows/daily-medallion-orders.md"
+  ],
+  "workflows": [
+    "queries/daily-medallion.md",
+    "sql/daily-medallion.md"
+  ],
+  "workspace": [
+    "agents/walk-retail-lake-walk.md",
+    "sources/retail-lake-walk.md"
+  ],
+  "zone": [
+    "layers/bronze.md",
+    "layers/gold.md",
+    "layers/silver.md"
+  ]
+}

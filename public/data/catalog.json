@@ -1,0 +1,976 @@
+{
+  "title": "Retail Lake Sample Knowledge",
+  "version": "0.1.0",
+  "depends_on": [
+    "project-knowledge-capture",
+    "okf-graph-eng"
+  ],
+  "concepts": [
+    {
+      "path": "agents/walk-retail-lake-walk.md",
+      "type": "AgentNode",
+      "title": "Lake walk: retail-lake-walk",
+      "description": "DEKC walk of /workspace/tests/fixtures/sample-lake",
+      "layer": null,
+      "tags": [
+        "agent",
+        "walk",
+        "dekc"
+      ],
+      "links": [],
+      "status": "completed",
+      "verified": true,
+      "excerpt": "# Lake walk: retail-lake-walk\n\nRoot: `/workspace/tests/fixtures/sample-lake`\n\n## Stats\n\n```json\n{\n  \"created\": 14,\n  \"updated\": 4,\n  \"skipped\": 0,\n  \"errors\": 0\n}\n```"
+    },
+    {
+      "path": "business-objects/customer-lifetime-value.md",
+      "type": "BusinessObject",
+      "title": "Customer Lifetime Value",
+      "description": "Predicted and realized value of a customer based on historical order gross amounts.",
+      "layer": null,
+      "tags": [
+        "business-object",
+        "dekc"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": true,
+      "excerpt": "# Customer Lifetime Value\n\n## Business definition\n\nPredicted and realized value of a customer based on historical order gross amounts.\n\n**Owner:** Growth Analytics\n\n## Technical sources\n\n- [views/gold-customer-ltv.md](/views/gold-customer-ltv.md)"
+    },
+    {
+      "path": "business-objects/customer-order.md",
+      "type": "BusinessObject",
+      "title": "Customer Order",
+      "description": "A single customer purchase transaction after data quality rules. Canonical source for order facts.",
+      "layer": null,
+      "tags": [
+        "business-object",
+        "dekc"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": true,
+      "excerpt": "# Customer Order\n\n## Business definition\n\nA single customer purchase transaction after data quality rules. Canonical source for order facts.\n\n**Owner:** Commerce Data\n\n## Technical sources\n\n- [tables/silver-orders.md](/tables/silver-orders.md)"
+    },
+    {
+      "path": "business-objects/daily-order-summary.md",
+      "type": "BusinessObject",
+      "title": "Daily Order Summary",
+      "description": "Business-facing daily summary of order volume and gross merchandise value by currency. Used by finance and growth for pacing and forecasting.",
+      "layer": null,
+      "tags": [
+        "business-object",
+        "dekc"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": true,
+      "excerpt": "# Daily Order Summary\n\n## Business definition\n\nBusiness-facing daily summary of order volume and gross merchandise value by currency. Used by finance and growth for pacing and forecasting.\n\n**Owner:** Analytics Engineering\n\n## Technical sources\n\n- [tables/gold-order-daily.md](/tables/gold-order-daily.md)"
+    },
+    {
+      "path": "columns/bronze-orders-raw-currency.md",
+      "type": "Column",
+      "title": "orders_raw.currency",
+      "description": "ISO currency code",
+      "layer": null,
+      "tags": [
+        "column",
+        "dekc",
+        "bronze"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": false,
+      "excerpt": "# orders_raw.currency\n\n- Type: `string`\n- Nullable: True\n\nISO currency code"
+    },
+    {
+      "path": "columns/bronze-orders-raw-customer-id.md",
+      "type": "Column",
+      "title": "orders_raw.customer_id",
+      "description": "Customer key",
+      "layer": null,
+      "tags": [
+        "column",
+        "dekc",
+        "bronze"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": false,
+      "excerpt": "# orders_raw.customer_id\n\n- Type: `string`\n- Nullable: True\n\nCustomer key"
+    },
+    {
+      "path": "columns/bronze-orders-raw-gross-amount.md",
+      "type": "Column",
+      "title": "orders_raw.gross_amount",
+      "description": "Gross merchandise value",
+      "layer": null,
+      "tags": [
+        "column",
+        "dekc",
+        "bronze"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": false,
+      "excerpt": "# orders_raw.gross_amount\n\n- Type: `decimal`\n- Nullable: True\n\nGross merchandise value"
+    },
+    {
+      "path": "columns/bronze-orders-raw-order-id.md",
+      "type": "Column",
+      "title": "orders_raw.order_id",
+      "description": "Order identifier",
+      "layer": null,
+      "tags": [
+        "column",
+        "dekc",
+        "bronze"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": false,
+      "excerpt": "# orders_raw.order_id\n\n- Type: `string`\n- Nullable: True\n\nOrder identifier"
+    },
+    {
+      "path": "columns/bronze-orders-raw-order-ts.md",
+      "type": "Column",
+      "title": "orders_raw.order_ts",
+      "description": "Order timestamp UTC",
+      "layer": null,
+      "tags": [
+        "column",
+        "dekc",
+        "bronze"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": false,
+      "excerpt": "# orders_raw.order_ts\n\n- Type: `timestamp`\n- Nullable: True\n\nOrder timestamp UTC"
+    },
+    {
+      "path": "columns/bronze-orders-raw-status.md",
+      "type": "Column",
+      "title": "orders_raw.status",
+      "description": "Order status",
+      "layer": null,
+      "tags": [
+        "column",
+        "dekc",
+        "bronze"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": false,
+      "excerpt": "# orders_raw.status\n\n- Type: `string`\n- Nullable: True\n\nOrder status"
+    },
+    {
+      "path": "columns/gold-order-daily-currency.md",
+      "type": "Column",
+      "title": "order_daily.currency",
+      "description": "Column currency on order_daily",
+      "layer": null,
+      "tags": [
+        "column",
+        "dekc",
+        "gold"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": false,
+      "excerpt": "# order_daily.currency\n\n- Type: `string`\n- Nullable: True"
+    },
+    {
+      "path": "columns/gold-order-daily-gross-revenue.md",
+      "type": "Column",
+      "title": "order_daily.gross_revenue",
+      "description": "Column gross_revenue on order_daily",
+      "layer": null,
+      "tags": [
+        "column",
+        "dekc",
+        "gold"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": false,
+      "excerpt": "# order_daily.gross_revenue\n\n- Type: `decimal`\n- Nullable: True"
+    },
+    {
+      "path": "columns/gold-order-daily-order-count.md",
+      "type": "Column",
+      "title": "order_daily.order_count",
+      "description": "Column order_count on order_daily",
+      "layer": null,
+      "tags": [
+        "column",
+        "dekc",
+        "gold"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": false,
+      "excerpt": "# order_daily.order_count\n\n- Type: `bigint`\n- Nullable: True"
+    },
+    {
+      "path": "columns/gold-order-daily-order-date.md",
+      "type": "Column",
+      "title": "order_daily.order_date",
+      "description": "Column order_date on order_daily",
+      "layer": null,
+      "tags": [
+        "column",
+        "dekc",
+        "gold"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": false,
+      "excerpt": "# order_daily.order_date\n\n- Type: `date`\n- Nullable: True"
+    },
+    {
+      "path": "columns/silver-orders-currency.md",
+      "type": "Column",
+      "title": "orders.currency",
+      "description": "Column currency on orders",
+      "layer": null,
+      "tags": [
+        "column",
+        "dekc",
+        "silver"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": false,
+      "excerpt": "# orders.currency\n\n- Type: `string`\n- Nullable: True"
+    },
+    {
+      "path": "columns/silver-orders-customer-id.md",
+      "type": "Column",
+      "title": "orders.customer_id",
+      "description": "Column customer_id on orders",
+      "layer": null,
+      "tags": [
+        "column",
+        "dekc",
+        "silver"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": false,
+      "excerpt": "# orders.customer_id\n\n- Type: `string`\n- Nullable: True"
+    },
+    {
+      "path": "columns/silver-orders-gross-amount.md",
+      "type": "Column",
+      "title": "orders.gross_amount",
+      "description": "Column gross_amount on orders",
+      "layer": null,
+      "tags": [
+        "column",
+        "dekc",
+        "silver"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": false,
+      "excerpt": "# orders.gross_amount\n\n- Type: `decimal`\n- Nullable: True"
+    },
+    {
+      "path": "columns/silver-orders-order-id.md",
+      "type": "Column",
+      "title": "orders.order_id",
+      "description": "Column order_id on orders",
+      "layer": null,
+      "tags": [
+        "column",
+        "dekc",
+        "silver"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": false,
+      "excerpt": "# orders.order_id\n\n- Type: `string`\n- Nullable: True"
+    },
+    {
+      "path": "columns/silver-orders-order-ts.md",
+      "type": "Column",
+      "title": "orders.order_ts",
+      "description": "Column order_ts on orders",
+      "layer": null,
+      "tags": [
+        "column",
+        "dekc",
+        "silver"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": false,
+      "excerpt": "# orders.order_ts\n\n- Type: `timestamp`\n- Nullable: True"
+    },
+    {
+      "path": "columns/silver-orders-status.md",
+      "type": "Column",
+      "title": "orders.status",
+      "description": "Column status on orders",
+      "layer": null,
+      "tags": [
+        "column",
+        "dekc",
+        "silver"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": false,
+      "excerpt": "# orders.status\n\n- Type: `string`\n- Nullable: True"
+    },
+    {
+      "path": "dashboards/executive-revenue.md",
+      "type": "Dashboard",
+      "title": "Executive Revenue",
+      "description": "C-level daily revenue and order trends",
+      "layer": null,
+      "tags": [
+        "dashboard",
+        "powerbi",
+        "dekc"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": true,
+      "excerpt": "# Executive Revenue\n\nTool: **powerbi**\n\nC-level daily revenue and order trends"
+    },
+    {
+      "path": "dax/total-revenue-dax.md",
+      "type": "DaxArtifact",
+      "title": "total-revenue-dax (DAX)",
+      "description": "Power BI total revenue measure",
+      "layer": null,
+      "tags": [
+        "dax",
+        "dekc"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": false,
+      "excerpt": "# total-revenue-dax (DAX)\n\n```dax\nTotal Revenue = SUMX('order_daily','order_daily'[gross_revenue])\n```"
+    },
+    {
+      "path": "dax/total-revenue.md",
+      "type": "DaxArtifact",
+      "title": "total_revenue (DAX)",
+      "description": "Discovered DAX from dax/total_revenue.dax",
+      "layer": null,
+      "tags": [
+        "dax",
+        "dekc"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": false,
+      "excerpt": "# total_revenue (DAX)\n\n```dax\nTotal Revenue =\nSUMX(\n  'order_daily',\n  'order_daily'[gross_revenue]\n)\n```"
+    },
+    {
+      "path": "glossary/customer-lifetime-value.md",
+      "type": "GlossaryTerm",
+      "title": "Customer Lifetime Value",
+      "description": "Predicted and realized value of a customer based on historical order gross amounts.",
+      "layer": null,
+      "tags": [
+        "glossary",
+        "dekc"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": true,
+      "excerpt": "# Customer Lifetime Value\n\n## Definition\n\nPredicted and realized value of a customer based on historical order gross amounts.\n\n## Synonyms\n\n`customer_ltv`"
+    },
+    {
+      "path": "glossary/customer-order.md",
+      "type": "GlossaryTerm",
+      "title": "Customer Order",
+      "description": "A single customer purchase transaction after data quality rules. Canonical source for order facts.",
+      "layer": null,
+      "tags": [
+        "glossary",
+        "dekc"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": true,
+      "excerpt": "# Customer Order\n\n## Definition\n\nA single customer purchase transaction after data quality rules. Canonical source for order facts.\n\n## Synonyms\n\n`orders`"
+    },
+    {
+      "path": "glossary/daily-order-summary.md",
+      "type": "GlossaryTerm",
+      "title": "Daily Order Summary",
+      "description": "Business-facing daily summary of order volume and gross merchandise value by currency. Used by finance and growth for pacing and forecasting.",
+      "layer": null,
+      "tags": [
+        "glossary",
+        "dekc"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": true,
+      "excerpt": "# Daily Order Summary\n\n## Definition\n\nBusiness-facing daily summary of order volume and gross merchandise value by currency. Used by finance and growth for pacing and forecasting.\n\n## Synonyms\n\n`order_daily`"
+    },
+    {
+      "path": "glossary/gmv.md",
+      "type": "GlossaryTerm",
+      "title": "GMV",
+      "description": "Gross Merchandise Value \u2014 total sales dollar volume before returns, cancellations, and discounts.",
+      "layer": null,
+      "tags": [
+        "glossary",
+        "dekc"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": true,
+      "excerpt": "# GMV\n\n## Definition\n\nGross Merchandise Value \u2014 total sales dollar volume before returns, cancellations, and discounts.\n\n## Synonyms\n\n`gross merchandise value`, `gross revenue`"
+    },
+    {
+      "path": "layers/bronze.md",
+      "type": "Layer",
+      "title": "Bronze layer",
+      "description": "Medallion bronze zone",
+      "layer": "bronze",
+      "tags": [
+        "layer",
+        "medallion",
+        "bronze"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": true,
+      "excerpt": "# Bronze layer\n\nMedallion **bronze** zone for curated data products."
+    },
+    {
+      "path": "layers/gold.md",
+      "type": "Layer",
+      "title": "Gold layer",
+      "description": "Medallion gold zone",
+      "layer": "gold",
+      "tags": [
+        "layer",
+        "medallion",
+        "gold"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": true,
+      "excerpt": "# Gold layer\n\nMedallion **gold** zone for curated data products."
+    },
+    {
+      "path": "layers/silver.md",
+      "type": "Layer",
+      "title": "Silver layer",
+      "description": "Medallion silver zone",
+      "layer": "silver",
+      "tags": [
+        "layer",
+        "medallion",
+        "silver"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": true,
+      "excerpt": "# Silver layer\n\nMedallion **silver** zone for curated data products."
+    },
+    {
+      "path": "lineage/orders-to-revenue.md",
+      "type": "LineagePath",
+      "title": "orders-to-revenue",
+      "description": "Core commerce revenue lineage from landing to gold mart",
+      "layer": null,
+      "tags": [
+        "lineage",
+        "dekc"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": true,
+      "excerpt": "# orders-to-revenue\n\nCore commerce revenue lineage from landing to gold mart\n\n## Path\n\n[bronze-orders-raw](/tables/bronze-orders-raw.md) \u2192 [silver-orders](/tables/silver-orders.md) \u2192 [gold-order-daily](/tables/gold-order-daily.md)\n\n```mermaid\nflowchart LR\n  n0[\"bronze-orders-raw\"]\n  n1[\"silver-orders\"]\n  n2[\"gold-order-daily\"]\n  n0 --> n1\n  n1 --> n2\n```"
+    },
+    {
+      "path": "metrics/gross-merchandise-value.md",
+      "type": "Metric",
+      "title": "Gross Merchandise Value",
+      "description": "Sum of gross order amounts before returns and discounts, in transaction currency.",
+      "layer": null,
+      "tags": [
+        "metric",
+        "dekc"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": true,
+      "excerpt": "# Gross Merchandise Value\n\n## Definition\n\nSum of gross order amounts before returns and discounts, in transaction currency.\n\n## Expression (sql)\n\n```sql\nSUM(gross_revenue)\n```"
+    },
+    {
+      "path": "metrics/order-count.md",
+      "type": "Metric",
+      "title": "Order Count",
+      "description": "Count of distinct completed orders.",
+      "layer": null,
+      "tags": [
+        "metric",
+        "dekc"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": true,
+      "excerpt": "# Order Count\n\n## Definition\n\nCount of distinct completed orders.\n\n## Expression (sql)\n\n```sql\nCOUNT(*)\n```"
+    },
+    {
+      "path": "packs/pack-gold-order-daily.md",
+      "type": "ContextPack",
+      "title": "Pack: gold-order-daily",
+      "description": "Progressive disclosure pack for /tables/gold-order-daily.md",
+      "layer": null,
+      "tags": [
+        "pack",
+        "dekc"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": true,
+      "excerpt": "# Context pack: gold-order-daily\n\nHops: 2 \u00b7 Nodes: 4\n\n## order_daily (`Table`, gold)\n\n- Path: `/tables/gold-order-daily.md`\n- Inferred table from gold/marts/order_daily.sql\n\n**Layer:** gold  \nInferred table from gold/marts/order_daily.sql\n```sql\nCREATE OR REPLACE TABLE gold.order_daily AS\nSELECT\n  CAST(order_ts AS DATE) AS order_date,\n  currency,\n  COUNT(*) AS order_count,\n  SUM(gross_amount) AS gross_revenue\nFROM silver.orders\nGROUP BY 1, 2;\n```\n\n## orders_api (`Table`, bronze)\n\n- Path: `/tables/bronze-orders-api.md`\n- Referenced by orders_raw\n\n**Layer:** bronze  \nReferenced by orders_raw\n\n## customer_ltv (`View`, gold)\n\n- Path: `/views/gold-customer-ltv.md`\n- Per-customer lifetime value view\n\nPer-customer lifetime value view\n```sql\nSELECT customer_id, SUM(gross_amount) lifetime_value, COUNT(*) order_count FROM silver.orders GROUP BY customer_id\n```\n- [silver-orders](/tables/silver-orders.md)"
+    },
+    {
+      "path": "queries/customer-ltv.md",
+      "type": "Query",
+      "title": "customer_ltv",
+      "description": "Discovered SQL from gold/marts/customer_ltv.sql",
+      "layer": null,
+      "tags": [
+        "query",
+        "sql",
+        "dekc"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": true,
+      "excerpt": "# customer_ltv\n\nDiscovered SQL from gold/marts/customer_ltv.sql\n\n## SQL\n\n```sql\nCREATE OR REPLACE VIEW gold.customer_ltv AS\nSELECT\n  customer_id,\n  SUM(gross_amount) AS lifetime_value,\n  COUNT(*) AS order_count\nFROM silver.orders\nGROUP BY customer_id;\n```"
+    },
+    {
+      "path": "queries/daily-medallion.md",
+      "type": "Query",
+      "title": "daily_medallion",
+      "description": "Discovered SQL from workflows/daily_medallion.sql",
+      "layer": null,
+      "tags": [
+        "query",
+        "sql",
+        "dekc"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": true,
+      "excerpt": "# daily_medallion\n\nDiscovered SQL from workflows/daily_medallion.sql\n\n## SQL\n\n```sql\n-- orchestrated steps (documented)\n-- 1. land API \u2192 bronze.orders_raw\n-- 2. clean \u2192 silver.orders\n-- 3. aggregate \u2192 gold.order_daily\nSELECT 1;\n```"
+    },
+    {
+      "path": "queries/order-daily.md",
+      "type": "Query",
+      "title": "order_daily",
+      "description": "Discovered SQL from gold/marts/order_daily.sql",
+      "layer": null,
+      "tags": [
+        "query",
+        "sql",
+        "dekc"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": true,
+      "excerpt": "# order_daily\n\nDiscovered SQL from gold/marts/order_daily.sql\n\n## SQL\n\n```sql\nCREATE OR REPLACE TABLE gold.order_daily AS\nSELECT\n  CAST(order_ts AS DATE) AS order_date,\n  currency,\n  COUNT(*) AS order_count,\n  SUM(gross_amount) AS gross_revenue\nFROM silver.orders\nGROUP BY 1, 2;\n```"
+    },
+    {
+      "path": "queries/orders-raw.md",
+      "type": "Query",
+      "title": "orders_raw",
+      "description": "Discovered SQL from bronze/sales/orders_raw.sql",
+      "layer": null,
+      "tags": [
+        "query",
+        "sql",
+        "dekc"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": true,
+      "excerpt": "# orders_raw\n\nDiscovered SQL from bronze/sales/orders_raw.sql\n\n## SQL\n\n```sql\nCREATE OR REPLACE TABLE bronze.orders_raw AS\nSELECT * FROM landing.orders_api;\n```"
+    },
+    {
+      "path": "queries/orders.md",
+      "type": "Query",
+      "title": "orders",
+      "description": "Discovered SQL from silver/sales/orders.sql",
+      "layer": null,
+      "tags": [
+        "query",
+        "sql",
+        "dekc"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": true,
+      "excerpt": "# orders\n\nDiscovered SQL from silver/sales/orders.sql\n\n## SQL\n\n```sql\nCREATE OR REPLACE TABLE silver.orders AS\nSELECT\n  order_id,\n  customer_id,\n  order_ts,\n  status,\n  gross_amount,\n  currency\nFROM bronze.orders_raw\nWHERE status IS NOT NULL;\n```"
+    },
+    {
+      "path": "queries/total-revenue-dax.md",
+      "type": "Query",
+      "title": "total-revenue-dax",
+      "description": "Power BI total revenue measure",
+      "layer": null,
+      "tags": [
+        "query",
+        "dax",
+        "dekc"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": true,
+      "excerpt": "# total-revenue-dax\n\nPower BI total revenue measure\n\n## DAX\n\n```dax\nTotal Revenue = SUMX('order_daily','order_daily'[gross_revenue])\n```"
+    },
+    {
+      "path": "queries/total-revenue.md",
+      "type": "Query",
+      "title": "total_revenue",
+      "description": "Discovered DAX from dax/total_revenue.dax",
+      "layer": null,
+      "tags": [
+        "query",
+        "dax",
+        "dekc"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": true,
+      "excerpt": "# total_revenue\n\nDiscovered DAX from dax/total_revenue.dax\n\n## DAX\n\n```dax\nTotal Revenue =\nSUMX(\n  'order_daily',\n  'order_daily'[gross_revenue]\n)\n```"
+    },
+    {
+      "path": "reports/weekly-commerce-digest.md",
+      "type": "Report",
+      "title": "Weekly Commerce Digest",
+      "description": "Automated weekly PDF of order and LTV trends",
+      "layer": null,
+      "tags": [
+        "report",
+        "dekc"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": true,
+      "excerpt": "# Weekly Commerce Digest\n\nAutomated weekly PDF of order and LTV trends"
+    },
+    {
+      "path": "schemas/bronze.md",
+      "type": "Schema",
+      "title": "bronze",
+      "description": "Schema bronze",
+      "layer": null,
+      "tags": [
+        "schema",
+        "dekc"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": true,
+      "excerpt": "# bronze\n\nTables and views in this schema.\n\n- [orders_raw](/tables/bronze-orders-raw.md)"
+    },
+    {
+      "path": "schemas/gold.md",
+      "type": "Schema",
+      "title": "gold",
+      "description": "Schema gold",
+      "layer": null,
+      "tags": [
+        "schema",
+        "dekc"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": true,
+      "excerpt": "# gold\n\nTables and views in this schema.\n\n- [order_daily](/tables/gold-order-daily.md)"
+    },
+    {
+      "path": "schemas/silver.md",
+      "type": "Schema",
+      "title": "silver",
+      "description": "Schema silver",
+      "layer": null,
+      "tags": [
+        "schema",
+        "dekc"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": true,
+      "excerpt": "# silver\n\nTables and views in this schema.\n\n- [orders](/tables/silver-orders.md)"
+    },
+    {
+      "path": "semantic/retail-commerce-model.md",
+      "type": "SemanticModel",
+      "title": "Retail Commerce Model",
+      "description": "Semantic layer over gold order marts for BI tools",
+      "layer": null,
+      "tags": [
+        "semantic",
+        "dekc"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": true,
+      "excerpt": "# Retail Commerce Model\n\nSemantic layer over gold order marts for BI tools\n\nSemantic layer binding technical tables to business metrics."
+    },
+    {
+      "path": "sources/retail-lake-walk.md",
+      "type": "SourceSystem",
+      "title": "retail-lake-walk",
+      "description": "Walked data lake at /workspace/tests/fixtures/sample-lake",
+      "layer": null,
+      "tags": [
+        "source",
+        "lake",
+        "dekc"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": true,
+      "excerpt": "# retail-lake-walk\n\n## Kind\n\nlake\n\n## URI\n\n`/workspace/tests/fixtures/sample-lake`\n\n## Notes\n\nWalked data lake at /workspace/tests/fixtures/sample-lake"
+    },
+    {
+      "path": "sources/retail-lake.md",
+      "type": "SourceSystem",
+      "title": "retail-lake",
+      "description": "Primary retail analytics data lake (Delta + SQL models)",
+      "layer": null,
+      "tags": [
+        "source",
+        "lake",
+        "dekc"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": true,
+      "excerpt": "# retail-lake\n\n## Kind\n\nlake\n\n## URI\n\n`s3://acme-retail/lake`\n\n## Notes\n\nPrimary retail analytics data lake (Delta + SQL models)"
+    },
+    {
+      "path": "sql/customer-ltv.md",
+      "type": "SqlArtifact",
+      "title": "customer_ltv (SQL)",
+      "description": "Discovered SQL from gold/marts/customer_ltv.sql",
+      "layer": null,
+      "tags": [
+        "sql",
+        "dekc"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": false,
+      "excerpt": "# customer_ltv (SQL)\n\n```sql\nCREATE OR REPLACE VIEW gold.customer_ltv AS\nSELECT\n  customer_id,\n  SUM(gross_amount) AS lifetime_value,\n  COUNT(*) AS order_count\nFROM silver.orders\nGROUP BY customer_id;\n```"
+    },
+    {
+      "path": "sql/daily-medallion.md",
+      "type": "SqlArtifact",
+      "title": "daily_medallion (SQL)",
+      "description": "Discovered SQL from workflows/daily_medallion.sql",
+      "layer": null,
+      "tags": [
+        "sql",
+        "dekc"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": false,
+      "excerpt": "# daily_medallion (SQL)\n\n```sql\n-- orchestrated steps (documented)\n-- 1. land API \u2192 bronze.orders_raw\n-- 2. clean \u2192 silver.orders\n-- 3. aggregate \u2192 gold.order_daily\nSELECT 1;\n```"
+    },
+    {
+      "path": "sql/order-daily.md",
+      "type": "SqlArtifact",
+      "title": "order_daily (SQL)",
+      "description": "Discovered SQL from gold/marts/order_daily.sql",
+      "layer": null,
+      "tags": [
+        "sql",
+        "dekc"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": false,
+      "excerpt": "# order_daily (SQL)\n\n```sql\nCREATE OR REPLACE TABLE gold.order_daily AS\nSELECT\n  CAST(order_ts AS DATE) AS order_date,\n  currency,\n  COUNT(*) AS order_count,\n  SUM(gross_amount) AS gross_revenue\nFROM silver.orders\nGROUP BY 1, 2;\n```"
+    },
+    {
+      "path": "sql/orders-raw.md",
+      "type": "SqlArtifact",
+      "title": "orders_raw (SQL)",
+      "description": "Discovered SQL from bronze/sales/orders_raw.sql",
+      "layer": null,
+      "tags": [
+        "sql",
+        "dekc"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": false,
+      "excerpt": "# orders_raw (SQL)\n\n```sql\nCREATE OR REPLACE TABLE bronze.orders_raw AS\nSELECT * FROM landing.orders_api;\n```"
+    },
+    {
+      "path": "sql/orders.md",
+      "type": "SqlArtifact",
+      "title": "orders (SQL)",
+      "description": "Discovered SQL from silver/sales/orders.sql",
+      "layer": null,
+      "tags": [
+        "sql",
+        "dekc"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": false,
+      "excerpt": "# orders (SQL)\n\n```sql\nCREATE OR REPLACE TABLE silver.orders AS\nSELECT\n  order_id,\n  customer_id,\n  order_ts,\n  status,\n  gross_amount,\n  currency\nFROM bronze.orders_raw\nWHERE status IS NOT NULL;\n```"
+    },
+    {
+      "path": "tables/bronze-orders-api.md",
+      "type": "Table",
+      "title": "orders_api",
+      "description": "Referenced by orders_raw",
+      "layer": "bronze",
+      "tags": [
+        "table",
+        "dekc",
+        "bronze"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": true,
+      "excerpt": "# orders_api\n\n**Layer:** bronze  \n\nReferenced by orders_raw"
+    },
+    {
+      "path": "tables/bronze-orders-raw.md",
+      "type": "Table",
+      "title": "orders_raw",
+      "description": "Inferred table from bronze/sales/orders_raw.sql",
+      "layer": "bronze",
+      "tags": [
+        "table",
+        "dekc",
+        "bronze"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": true,
+      "excerpt": "# orders_raw\n\n**Layer:** bronze  \n\nInferred table from bronze/sales/orders_raw.sql\n\n## SQL\n\n```sql\nCREATE OR REPLACE TABLE bronze.orders_raw AS\nSELECT * FROM landing.orders_api;\n```"
+    },
+    {
+      "path": "tables/gold-order-daily.md",
+      "type": "Table",
+      "title": "order_daily",
+      "description": "Inferred table from gold/marts/order_daily.sql",
+      "layer": "gold",
+      "tags": [
+        "table",
+        "dekc",
+        "gold"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": true,
+      "excerpt": "# order_daily\n\n**Layer:** gold  \n\nInferred table from gold/marts/order_daily.sql\n\n## SQL\n\n```sql\nCREATE OR REPLACE TABLE gold.order_daily AS\nSELECT\n  CAST(order_ts AS DATE) AS order_date,\n  currency,\n  COUNT(*) AS order_count,\n  SUM(gross_amount) AS gross_revenue\nFROM silver.orders\nGROUP BY 1, 2;\n```"
+    },
+    {
+      "path": "tables/silver-orders.md",
+      "type": "Table",
+      "title": "orders",
+      "description": "Inferred table from silver/sales/orders.sql",
+      "layer": "silver",
+      "tags": [
+        "table",
+        "dekc",
+        "silver"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": true,
+      "excerpt": "# orders\n\n**Layer:** silver  \n\nInferred table from silver/sales/orders.sql\n\n## SQL\n\n```sql\nCREATE OR REPLACE TABLE silver.orders AS\nSELECT\n  order_id,\n  customer_id,\n  order_ts,\n  status,\n  gross_amount,\n  currency\nFROM bronze.orders_raw\nWHERE status IS NOT NULL;\n```"
+    },
+    {
+      "path": "transformations/aggregate-order-daily.md",
+      "type": "Transformation",
+      "title": "aggregate-order-daily",
+      "description": "Daily grain aggregation for revenue reporting",
+      "layer": null,
+      "tags": [
+        "transformation",
+        "dekc",
+        "silver",
+        "gold"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": true,
+      "excerpt": "# aggregate-order-daily\n\n**silver \u2192 gold**\n\nDaily grain aggregation for revenue reporting"
+    },
+    {
+      "path": "transformations/cleanse-orders.md",
+      "type": "Transformation",
+      "title": "cleanse-orders",
+      "description": "Type coercion, null status drop, commerce order cleanse",
+      "layer": null,
+      "tags": [
+        "transformation",
+        "dekc",
+        "bronze",
+        "silver"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": true,
+      "excerpt": "# cleanse-orders\n\n**bronze \u2192 silver**\n\nType coercion, null status drop, commerce order cleanse\n\n## SQL\n\n```sql\nSELECT * FROM bronze.orders_raw WHERE status IS NOT NULL\n```"
+    },
+    {
+      "path": "views/gold-customer-ltv.md",
+      "type": "View",
+      "title": "customer_ltv",
+      "description": "Per-customer lifetime value view",
+      "layer": "gold",
+      "tags": [
+        "view",
+        "dekc",
+        "gold"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": true,
+      "excerpt": "# customer_ltv\n\nPer-customer lifetime value view\n\n## SQL\n\n```sql\nSELECT customer_id, SUM(gross_amount) lifetime_value, COUNT(*) order_count FROM silver.orders GROUP BY customer_id\n```\n\n## Reads from\n\n- [silver-orders](/tables/silver-orders.md)"
+    },
+    {
+      "path": "workflows/daily-medallion-orders.md",
+      "type": "Workflow",
+      "title": "daily-medallion-orders",
+      "description": "Nightly bronze\u2192silver\u2192gold orders pipeline",
+      "layer": null,
+      "tags": [
+        "workflow",
+        "airflow",
+        "dekc"
+      ],
+      "links": [],
+      "status": "active",
+      "verified": true,
+      "excerpt": "# daily-medallion-orders\n\nOrchestrator: **airflow**\n\nNightly bronze\u2192silver\u2192gold orders pipeline\n\n## Steps\n\n1. Land commerce API to bronze.orders_raw\n2. Cleanse to silver.orders\n3. Aggregate gold.order_daily\n4. Refresh Power BI semantic model"
+    }
+  ],
+  "graph": {
+    "/tables/bronze-orders-api.md": [
+      "/tables/gold-order-daily.md",
+      "/views/gold-customer-ltv.md",
+      "/tables/bronze-orders-raw.md"
+    ],
+    "/tables/bronze-orders-raw.md": [
+      "/tables/bronze-orders-api.md"
+    ]
+  },
+  "mermaid": "flowchart LR\n  n0[\"bronze-orders-api\"]\n  n1[\"bronze-orders-raw\"]\n  n2[\"gold-order-daily\"]\n  n3[\"gold-customer-ltv\"]\n  n0 --> n2\n  n0 --> n3\n  n0 --> n1\n  n1 --> n0"
+}

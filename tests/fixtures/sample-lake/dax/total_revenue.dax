@@ -1,0 +1,5 @@
+Total Revenue =
+SUMX(
+  'order_daily',
+  'order_daily'[gross_revenue]
+)

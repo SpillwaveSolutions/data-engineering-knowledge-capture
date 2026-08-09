@@ -1,0 +1,27 @@
+# Copy to .dekc/config.yml
+dekc:
+  enabled: true
+  knowledge_root: knowledge
+  okf_bundle: true
+  depends_on:
+    - project-knowledge-capture
+    - okf-graph-eng
+  pack:
+    default_hops: 2
+    default_max_nodes: 20
+    tiny_hops: 1
+    tiny_max_nodes: 8
+  walk:
+    max_files: 500
+    layer_hints: [raw, bronze, silver, gold, staging, curated, marts]
+  promote:
+    default_layer: gold
+    auto_glossary: true
+  index:
+    engine: dekc-local-bow-v1
+    rebuild_after_walk: true
+  scrub:
+    secrets: true
+    pii: true
+  medallion:
+    layers: [bronze, silver, gold]

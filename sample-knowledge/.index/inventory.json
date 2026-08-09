@@ -1,0 +1,1018 @@
+[
+  {
+    "path": "agents/walk-retail-lake-walk.md",
+    "type": "AgentNode",
+    "title": "Lake walk: retail-lake-walk",
+    "description": "DEKC walk of /workspace/tests/fixtures/sample-lake",
+    "layer": null,
+    "tags": [
+      "agent",
+      "walk",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "completed",
+    "wiki_key": "walk-retail-lake-walk",
+    "token_count": 35,
+    "hash": "35343d82f99ef3ee"
+  },
+  {
+    "path": "business-objects/customer-lifetime-value.md",
+    "type": "BusinessObject",
+    "title": "Customer Lifetime Value",
+    "description": "Predicted and realized value of a customer based on historical order gross amounts.",
+    "layer": null,
+    "tags": [
+      "business-object",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "bo-customer-lifetime-value",
+    "token_count": 49,
+    "hash": "ce75a058db2643d0"
+  },
+  {
+    "path": "business-objects/customer-order.md",
+    "type": "BusinessObject",
+    "title": "Customer Order",
+    "description": "A single customer purchase transaction after data quality rules. Canonical source for order facts.",
+    "layer": null,
+    "tags": [
+      "business-object",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "bo-customer-order",
+    "token_count": 47,
+    "hash": "45f0a512e5d73c36"
+  },
+  {
+    "path": "business-objects/daily-order-summary.md",
+    "type": "BusinessObject",
+    "title": "Daily Order Summary",
+    "description": "Business-facing daily summary of order volume and gross merchandise value by currency. Used by finance and growth for pacing and forecasting.",
+    "layer": null,
+    "tags": [
+      "business-object",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "bo-daily-order-summary",
+    "token_count": 63,
+    "hash": "27ea4fff16f1b66e"
+  },
+  {
+    "path": "columns/bronze-orders-raw-currency.md",
+    "type": "Column",
+    "title": "orders_raw.currency",
+    "description": "ISO currency code",
+    "layer": null,
+    "tags": [
+      "column",
+      "dekc",
+      "bronze"
+    ],
+    "verified": false,
+    "status": "active",
+    "wiki_key": "col-bronze-orders-raw-currency",
+    "token_count": 16,
+    "hash": "64714aeca81971ad"
+  },
+  {
+    "path": "columns/bronze-orders-raw-customer-id.md",
+    "type": "Column",
+    "title": "orders_raw.customer_id",
+    "description": "Customer key",
+    "layer": null,
+    "tags": [
+      "column",
+      "dekc",
+      "bronze"
+    ],
+    "verified": false,
+    "status": "active",
+    "wiki_key": "col-bronze-orders-raw-customer-id",
+    "token_count": 14,
+    "hash": "f8fc85b24eaa91f9"
+  },
+  {
+    "path": "columns/bronze-orders-raw-gross-amount.md",
+    "type": "Column",
+    "title": "orders_raw.gross_amount",
+    "description": "Gross merchandise value",
+    "layer": null,
+    "tags": [
+      "column",
+      "dekc",
+      "bronze"
+    ],
+    "verified": false,
+    "status": "active",
+    "wiki_key": "col-bronze-orders-raw-gross-amount",
+    "token_count": 16,
+    "hash": "8a1c57b663bf258f"
+  },
+  {
+    "path": "columns/bronze-orders-raw-order-id.md",
+    "type": "Column",
+    "title": "orders_raw.order_id",
+    "description": "Order identifier",
+    "layer": null,
+    "tags": [
+      "column",
+      "dekc",
+      "bronze"
+    ],
+    "verified": false,
+    "status": "active",
+    "wiki_key": "col-bronze-orders-raw-order-id",
+    "token_count": 14,
+    "hash": "f7e2d70ba7be0c60"
+  },
+  {
+    "path": "columns/bronze-orders-raw-order-ts.md",
+    "type": "Column",
+    "title": "orders_raw.order_ts",
+    "description": "Order timestamp UTC",
+    "layer": null,
+    "tags": [
+      "column",
+      "dekc",
+      "bronze"
+    ],
+    "verified": false,
+    "status": "active",
+    "wiki_key": "col-bronze-orders-raw-order-ts",
+    "token_count": 16,
+    "hash": "976cf5ffe46a1af4"
+  },
+  {
+    "path": "columns/bronze-orders-raw-status.md",
+    "type": "Column",
+    "title": "orders_raw.status",
+    "description": "Order status",
+    "layer": null,
+    "tags": [
+      "column",
+      "dekc",
+      "bronze"
+    ],
+    "verified": false,
+    "status": "active",
+    "wiki_key": "col-bronze-orders-raw-status",
+    "token_count": 10,
+    "hash": "a84578575782fcb5"
+  },
+  {
+    "path": "columns/gold-order-daily-currency.md",
+    "type": "Column",
+    "title": "order_daily.currency",
+    "description": "Column currency on order_daily",
+    "layer": null,
+    "tags": [
+      "column",
+      "dekc",
+      "gold"
+    ],
+    "verified": false,
+    "status": "active",
+    "wiki_key": "col-gold-order-daily-currency",
+    "token_count": 14,
+    "hash": "e92c51b0ba83fad3"
+  },
+  {
+    "path": "columns/gold-order-daily-gross-revenue.md",
+    "type": "Column",
+    "title": "order_daily.gross_revenue",
+    "description": "Column gross_revenue on order_daily",
+    "layer": null,
+    "tags": [
+      "column",
+      "dekc",
+      "gold"
+    ],
+    "verified": false,
+    "status": "active",
+    "wiki_key": "col-gold-order-daily-gross-revenue",
+    "token_count": 14,
+    "hash": "cf6684d4994041a7"
+  },
+  {
+    "path": "columns/gold-order-daily-order-count.md",
+    "type": "Column",
+    "title": "order_daily.order_count",
+    "description": "Column order_count on order_daily",
+    "layer": null,
+    "tags": [
+      "column",
+      "dekc",
+      "gold"
+    ],
+    "verified": false,
+    "status": "active",
+    "wiki_key": "col-gold-order-daily-order-count",
+    "token_count": 14,
+    "hash": "39fcfd48898a382a"
+  },
+  {
+    "path": "columns/gold-order-daily-order-date.md",
+    "type": "Column",
+    "title": "order_daily.order_date",
+    "description": "Column order_date on order_daily",
+    "layer": null,
+    "tags": [
+      "column",
+      "dekc",
+      "gold"
+    ],
+    "verified": false,
+    "status": "active",
+    "wiki_key": "col-gold-order-daily-order-date",
+    "token_count": 14,
+    "hash": "d290ffd17d005eb8"
+  },
+  {
+    "path": "columns/silver-orders-currency.md",
+    "type": "Column",
+    "title": "orders.currency",
+    "description": "Column currency on orders",
+    "layer": null,
+    "tags": [
+      "column",
+      "dekc",
+      "silver"
+    ],
+    "verified": false,
+    "status": "active",
+    "wiki_key": "col-silver-orders-currency",
+    "token_count": 14,
+    "hash": "c710bea98ff18665"
+  },
+  {
+    "path": "columns/silver-orders-customer-id.md",
+    "type": "Column",
+    "title": "orders.customer_id",
+    "description": "Column customer_id on orders",
+    "layer": null,
+    "tags": [
+      "column",
+      "dekc",
+      "silver"
+    ],
+    "verified": false,
+    "status": "active",
+    "wiki_key": "col-silver-orders-customer-id",
+    "token_count": 14,
+    "hash": "b32f431712f78e13"
+  },
+  {
+    "path": "columns/silver-orders-gross-amount.md",
+    "type": "Column",
+    "title": "orders.gross_amount",
+    "description": "Column gross_amount on orders",
+    "layer": null,
+    "tags": [
+      "column",
+      "dekc",
+      "silver"
+    ],
+    "verified": false,
+    "status": "active",
+    "wiki_key": "col-silver-orders-gross-amount",
+    "token_count": 14,
+    "hash": "f19fea44f03fed29"
+  },
+  {
+    "path": "columns/silver-orders-order-id.md",
+    "type": "Column",
+    "title": "orders.order_id",
+    "description": "Column order_id on orders",
+    "layer": null,
+    "tags": [
+      "column",
+      "dekc",
+      "silver"
+    ],
+    "verified": false,
+    "status": "active",
+    "wiki_key": "col-silver-orders-order-id",
+    "token_count": 14,
+    "hash": "4af9e278ef515174"
+  },
+  {
+    "path": "columns/silver-orders-order-ts.md",
+    "type": "Column",
+    "title": "orders.order_ts",
+    "description": "Column order_ts on orders",
+    "layer": null,
+    "tags": [
+      "column",
+      "dekc",
+      "silver"
+    ],
+    "verified": false,
+    "status": "active",
+    "wiki_key": "col-silver-orders-order-ts",
+    "token_count": 14,
+    "hash": "f99d78f71cf8ac32"
+  },
+  {
+    "path": "columns/silver-orders-status.md",
+    "type": "Column",
+    "title": "orders.status",
+    "description": "Column status on orders",
+    "layer": null,
+    "tags": [
+      "column",
+      "dekc",
+      "silver"
+    ],
+    "verified": false,
+    "status": "active",
+    "wiki_key": "col-silver-orders-status",
+    "token_count": 11,
+    "hash": "6764f2d2cb1439e4"
+  },
+  {
+    "path": "dashboards/executive-revenue.md",
+    "type": "Dashboard",
+    "title": "Executive Revenue",
+    "description": "C-level daily revenue and order trends",
+    "layer": null,
+    "tags": [
+      "dashboard",
+      "powerbi",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "dashboard-executive-revenue",
+    "token_count": 20,
+    "hash": "73b0773a7906541f"
+  },
+  {
+    "path": "dax/total-revenue-dax.md",
+    "type": "DaxArtifact",
+    "title": "total-revenue-dax (DAX)",
+    "description": "Power BI total revenue measure",
+    "layer": null,
+    "tags": [
+      "dax",
+      "dekc"
+    ],
+    "verified": false,
+    "status": "active",
+    "wiki_key": "dax-total-revenue-dax",
+    "token_count": 23,
+    "hash": "ce6b586476ef61c5"
+  },
+  {
+    "path": "dax/total-revenue.md",
+    "type": "DaxArtifact",
+    "title": "total_revenue (DAX)",
+    "description": "Discovered DAX from dax/total_revenue.dax",
+    "layer": null,
+    "tags": [
+      "dax",
+      "dekc"
+    ],
+    "verified": false,
+    "status": "active",
+    "wiki_key": "dax-total-revenue",
+    "token_count": 19,
+    "hash": "ad75df6a5d25bedf"
+  },
+  {
+    "path": "glossary/customer-lifetime-value.md",
+    "type": "GlossaryTerm",
+    "title": "Customer Lifetime Value",
+    "description": "Predicted and realized value of a customer based on historical order gross amounts.",
+    "layer": null,
+    "tags": [
+      "glossary",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "term-customer-lifetime-value",
+    "token_count": 34,
+    "hash": "9ec79c6d5dc5f578"
+  },
+  {
+    "path": "glossary/customer-order.md",
+    "type": "GlossaryTerm",
+    "title": "Customer Order",
+    "description": "A single customer purchase transaction after data quality rules. Canonical source for order facts.",
+    "layer": null,
+    "tags": [
+      "glossary",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "term-customer-order",
+    "token_count": 34,
+    "hash": "323cf55039393e3a"
+  },
+  {
+    "path": "glossary/daily-order-summary.md",
+    "type": "GlossaryTerm",
+    "title": "Daily Order Summary",
+    "description": "Business-facing daily summary of order volume and gross merchandise value by currency. Used by finance and growth for pacing and forecasting.",
+    "layer": null,
+    "tags": [
+      "glossary",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "term-daily-order-summary",
+    "token_count": 48,
+    "hash": "28bb48392ac43a0a"
+  },
+  {
+    "path": "glossary/gmv.md",
+    "type": "GlossaryTerm",
+    "title": "GMV",
+    "description": "Gross Merchandise Value \u2014 total sales dollar volume before returns, cancellations, and discounts.",
+    "layer": null,
+    "tags": [
+      "glossary",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "term-gmv",
+    "token_count": 34,
+    "hash": "74645969b7523b8a"
+  },
+  {
+    "path": "layers/bronze.md",
+    "type": "Layer",
+    "title": "Bronze layer",
+    "description": "Medallion bronze zone",
+    "layer": "bronze",
+    "tags": [
+      "layer",
+      "medallion",
+      "bronze"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "layer-bronze",
+    "token_count": 17,
+    "hash": "01d9cc8a30049fec"
+  },
+  {
+    "path": "layers/gold.md",
+    "type": "Layer",
+    "title": "Gold layer",
+    "description": "Medallion gold zone",
+    "layer": "gold",
+    "tags": [
+      "layer",
+      "medallion",
+      "gold"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "layer-gold",
+    "token_count": 17,
+    "hash": "643fcdcc5ab757e6"
+  },
+  {
+    "path": "layers/silver.md",
+    "type": "Layer",
+    "title": "Silver layer",
+    "description": "Medallion silver zone",
+    "layer": "silver",
+    "tags": [
+      "layer",
+      "medallion",
+      "silver"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "layer-silver",
+    "token_count": 17,
+    "hash": "71e90fa74df4dd89"
+  },
+  {
+    "path": "lineage/orders-to-revenue.md",
+    "type": "LineagePath",
+    "title": "orders-to-revenue",
+    "description": "Core commerce revenue lineage from landing to gold mart",
+    "layer": null,
+    "tags": [
+      "lineage",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "lineage-orders-to-revenue",
+    "token_count": 66,
+    "hash": "b9086afc65f1f833"
+  },
+  {
+    "path": "metrics/gross-merchandise-value.md",
+    "type": "Metric",
+    "title": "Gross Merchandise Value",
+    "description": "Sum of gross order amounts before returns and discounts, in transaction currency.",
+    "layer": null,
+    "tags": [
+      "metric",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "metric-gross-merchandise-value",
+    "token_count": 37,
+    "hash": "f62cb56165d14936"
+  },
+  {
+    "path": "metrics/order-count.md",
+    "type": "Metric",
+    "title": "Order Count",
+    "description": "Count of distinct completed orders.",
+    "layer": null,
+    "tags": [
+      "metric",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "metric-order-count",
+    "token_count": 22,
+    "hash": "e4ce6b8955104470"
+  },
+  {
+    "path": "packs/pack-gold-order-daily.md",
+    "type": "ContextPack",
+    "title": "Pack: gold-order-daily",
+    "description": "Progressive disclosure pack for /tables/gold-order-daily.md",
+    "layer": null,
+    "tags": [
+      "pack",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "pack-gold-order-daily",
+    "token_count": 184,
+    "hash": "ca022c342a713da5"
+  },
+  {
+    "path": "queries/customer-ltv.md",
+    "type": "Query",
+    "title": "customer_ltv",
+    "description": "Discovered SQL from gold/marts/customer_ltv.sql",
+    "layer": null,
+    "tags": [
+      "query",
+      "sql",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "query-customer-ltv",
+    "token_count": 41,
+    "hash": "2265c7676ab68feb"
+  },
+  {
+    "path": "queries/daily-medallion.md",
+    "type": "Query",
+    "title": "daily_medallion",
+    "description": "Discovered SQL from workflows/daily_medallion.sql",
+    "layer": null,
+    "tags": [
+      "query",
+      "sql",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "query-daily-medallion",
+    "token_count": 32,
+    "hash": "a0906c56918444fc"
+  },
+  {
+    "path": "queries/order-daily.md",
+    "type": "Query",
+    "title": "order_daily",
+    "description": "Discovered SQL from gold/marts/order_daily.sql",
+    "layer": null,
+    "tags": [
+      "query",
+      "sql",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "query-order-daily",
+    "token_count": 46,
+    "hash": "35e6274680727d2c"
+  },
+  {
+    "path": "queries/orders-raw.md",
+    "type": "Query",
+    "title": "orders_raw",
+    "description": "Discovered SQL from bronze/sales/orders_raw.sql",
+    "layer": null,
+    "tags": [
+      "query",
+      "sql",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "query-orders-raw",
+    "token_count": 30,
+    "hash": "517f606afb09e632"
+  },
+  {
+    "path": "queries/orders.md",
+    "type": "Query",
+    "title": "orders",
+    "description": "Discovered SQL from silver/sales/orders.sql",
+    "layer": null,
+    "tags": [
+      "query",
+      "sql",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "query-orders",
+    "token_count": 37,
+    "hash": "2d8611ea9747d211"
+  },
+  {
+    "path": "queries/total-revenue-dax.md",
+    "type": "Query",
+    "title": "total-revenue-dax",
+    "description": "Power BI total revenue measure",
+    "layer": null,
+    "tags": [
+      "query",
+      "dax",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "query-total-revenue-dax",
+    "token_count": 28,
+    "hash": "44e6133ea33b7d1c"
+  },
+  {
+    "path": "queries/total-revenue.md",
+    "type": "Query",
+    "title": "total_revenue",
+    "description": "Discovered DAX from dax/total_revenue.dax",
+    "layer": null,
+    "tags": [
+      "query",
+      "dax",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "query-total-revenue",
+    "token_count": 24,
+    "hash": "ddbb3b5d637cbda9"
+  },
+  {
+    "path": "reports/weekly-commerce-digest.md",
+    "type": "Report",
+    "title": "Weekly Commerce Digest",
+    "description": "Automated weekly PDF of order and LTV trends",
+    "layer": null,
+    "tags": [
+      "report",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "report-weekly-commerce-digest",
+    "token_count": 23,
+    "hash": "77788c967fd321f0"
+  },
+  {
+    "path": "schemas/bronze.md",
+    "type": "Schema",
+    "title": "bronze",
+    "description": "Schema bronze",
+    "layer": null,
+    "tags": [
+      "schema",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "schema-bronze",
+    "token_count": 17,
+    "hash": "40403a02c0f6f9d1"
+  },
+  {
+    "path": "schemas/gold.md",
+    "type": "Schema",
+    "title": "gold",
+    "description": "Schema gold",
+    "layer": null,
+    "tags": [
+      "schema",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "schema-gold",
+    "token_count": 17,
+    "hash": "9e192f47166a3834"
+  },
+  {
+    "path": "schemas/silver.md",
+    "type": "Schema",
+    "title": "silver",
+    "description": "Schema silver",
+    "layer": null,
+    "tags": [
+      "schema",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "schema-silver",
+    "token_count": 16,
+    "hash": "d44bb9a2fe85542c"
+  },
+  {
+    "path": "semantic/retail-commerce-model.md",
+    "type": "SemanticModel",
+    "title": "Retail Commerce Model",
+    "description": "Semantic layer over gold order marts for BI tools",
+    "layer": null,
+    "tags": [
+      "semantic",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "semantic-retail-commerce-model",
+    "token_count": 33,
+    "hash": "550d87663c9245f3"
+  },
+  {
+    "path": "sources/retail-lake-walk.md",
+    "type": "SourceSystem",
+    "title": "retail-lake-walk",
+    "description": "Walked data lake at /workspace/tests/fixtures/sample-lake",
+    "layer": null,
+    "tags": [
+      "source",
+      "lake",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "source-retail-lake-walk",
+    "token_count": 37,
+    "hash": "1d073150427b2982"
+  },
+  {
+    "path": "sources/retail-lake.md",
+    "type": "SourceSystem",
+    "title": "retail-lake",
+    "description": "Primary retail analytics data lake (Delta + SQL models)",
+    "layer": null,
+    "tags": [
+      "source",
+      "lake",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "source-retail-lake",
+    "token_count": 32,
+    "hash": "6bd09e5e2b4db764"
+  },
+  {
+    "path": "sql/customer-ltv.md",
+    "type": "SqlArtifact",
+    "title": "customer_ltv (SQL)",
+    "description": "Discovered SQL from gold/marts/customer_ltv.sql",
+    "layer": null,
+    "tags": [
+      "sql",
+      "dekc"
+    ],
+    "verified": false,
+    "status": "active",
+    "wiki_key": "sql-customer-ltv",
+    "token_count": 35,
+    "hash": "ab20e86f7cab5b4b"
+  },
+  {
+    "path": "sql/daily-medallion.md",
+    "type": "SqlArtifact",
+    "title": "daily_medallion (SQL)",
+    "description": "Discovered SQL from workflows/daily_medallion.sql",
+    "layer": null,
+    "tags": [
+      "sql",
+      "dekc"
+    ],
+    "verified": false,
+    "status": "active",
+    "wiki_key": "sql-daily-medallion",
+    "token_count": 27,
+    "hash": "99576be96c53571b"
+  },
+  {
+    "path": "sql/order-daily.md",
+    "type": "SqlArtifact",
+    "title": "order_daily (SQL)",
+    "description": "Discovered SQL from gold/marts/order_daily.sql",
+    "layer": null,
+    "tags": [
+      "sql",
+      "dekc"
+    ],
+    "verified": false,
+    "status": "active",
+    "wiki_key": "sql-order-daily",
+    "token_count": 40,
+    "hash": "e76aa14c0a32ff02"
+  },
+  {
+    "path": "sql/orders-raw.md",
+    "type": "SqlArtifact",
+    "title": "orders_raw (SQL)",
+    "description": "Discovered SQL from bronze/sales/orders_raw.sql",
+    "layer": null,
+    "tags": [
+      "sql",
+      "dekc"
+    ],
+    "verified": false,
+    "status": "active",
+    "wiki_key": "sql-orders-raw",
+    "token_count": 24,
+    "hash": "c30d112805133a7e"
+  },
+  {
+    "path": "sql/orders.md",
+    "type": "SqlArtifact",
+    "title": "orders (SQL)",
+    "description": "Discovered SQL from silver/sales/orders.sql",
+    "layer": null,
+    "tags": [
+      "sql",
+      "dekc"
+    ],
+    "verified": false,
+    "status": "active",
+    "wiki_key": "sql-orders",
+    "token_count": 31,
+    "hash": "7e9c59adbe60e09a"
+  },
+  {
+    "path": "tables/bronze-orders-api.md",
+    "type": "Table",
+    "title": "orders_api",
+    "description": "Referenced by orders_raw",
+    "layer": "bronze",
+    "tags": [
+      "table",
+      "dekc",
+      "bronze"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "table-bronze-orders-api",
+    "token_count": 14,
+    "hash": "fa3229885b25fa8e"
+  },
+  {
+    "path": "tables/bronze-orders-raw.md",
+    "type": "Table",
+    "title": "orders_raw",
+    "description": "Inferred table from bronze/sales/orders_raw.sql",
+    "layer": "bronze",
+    "tags": [
+      "table",
+      "dekc",
+      "bronze"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "table-bronze-orders-raw",
+    "token_count": 32,
+    "hash": "d62a7300ddd1c4d6"
+  },
+  {
+    "path": "tables/gold-order-daily.md",
+    "type": "Table",
+    "title": "order_daily",
+    "description": "Inferred table from gold/marts/order_daily.sql",
+    "layer": "gold",
+    "tags": [
+      "table",
+      "dekc",
+      "gold"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "table-gold-order-daily",
+    "token_count": 48,
+    "hash": "4edeea9928bae2e1"
+  },
+  {
+    "path": "tables/silver-orders.md",
+    "type": "Table",
+    "title": "orders",
+    "description": "Inferred table from silver/sales/orders.sql",
+    "layer": "silver",
+    "tags": [
+      "table",
+      "dekc",
+      "silver"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "table-silver-orders",
+    "token_count": 39,
+    "hash": "159032be5030ac47"
+  },
+  {
+    "path": "transformations/aggregate-order-daily.md",
+    "type": "Transformation",
+    "title": "aggregate-order-daily",
+    "description": "Daily grain aggregation for revenue reporting",
+    "layer": null,
+    "tags": [
+      "transformation",
+      "dekc",
+      "silver",
+      "gold"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "xform-aggregate-order-daily",
+    "token_count": 23,
+    "hash": "280a378f8b3a796f"
+  },
+  {
+    "path": "transformations/cleanse-orders.md",
+    "type": "Transformation",
+    "title": "cleanse-orders",
+    "description": "Type coercion, null status drop, commerce order cleanse",
+    "layer": null,
+    "tags": [
+      "transformation",
+      "dekc",
+      "bronze",
+      "silver"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "xform-cleanse-orders",
+    "token_count": 28,
+    "hash": "3b0f268cf8769e3a"
+  },
+  {
+    "path": "views/gold-customer-ltv.md",
+    "type": "View",
+    "title": "customer_ltv",
+    "description": "Per-customer lifetime value view",
+    "layer": "gold",
+    "tags": [
+      "view",
+      "dekc",
+      "gold"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "view-gold-customer-ltv",
+    "token_count": 37,
+    "hash": "e469046fc96462a2"
+  },
+  {
+    "path": "workflows/daily-medallion-orders.md",
+    "type": "Workflow",
+    "title": "daily-medallion-orders",
+    "description": "Nightly bronze\u2192silver\u2192gold orders pipeline",
+    "layer": null,
+    "tags": [
+      "workflow",
+      "airflow",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "workflow-daily-medallion-orders",
+    "token_count": 43,
+    "hash": "db063f6ba6a0bfba"
+  }
+]

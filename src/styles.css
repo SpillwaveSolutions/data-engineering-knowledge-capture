@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #0b0f12;
+  --color-surface: #12181d;
+  --color-surface-2: #182028;
+  --color-border: #24303a;
+  --color-fg: #e7eef4;
+  --color-muted: #8b9aab;
+  --color-primary: #0d9488;
+  --color-primary-fg: #042f2e;
+  --color-accent: #38bdf8;
+  --color-bronze: #b87333;
+  --color-silver: #94a3b8;
+  --color-gold: #d4a017;
+  --color-danger: #f87171;
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --radius-sm: 0.375rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 0.875rem;
+}
+
+@layer base {
+  html,
+  body {
+    background: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--color-primary) 40%, transparent);
+  }
+}
+
+@layer utilities {
+  .panel {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+  }
+}

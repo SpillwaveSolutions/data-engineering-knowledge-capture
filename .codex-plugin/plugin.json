@@ -1,0 +1,38 @@
+{
+  "name": "data-engineering-knowledge-capture",
+  "version": "0.1.0",
+  "description": "Data Engineering Knowledge Capture (DEKC) — schemas, lineage, medallion layers, semantic models, business glossary. Extends PKC; depends on OKF. Codex-native skills + hooks port.",
+  "author": {
+    "name": "Rick Hightower",
+    "url": "https://github.com/RichardHightower"
+  },
+  "homepage": "https://github.com/SpillwaveSolutions/data-engineering-knowledge-capture",
+  "repository": "https://github.com/SpillwaveSolutions/data-engineering-knowledge-capture",
+  "license": "MIT",
+  "keywords": [
+    "dekc",
+    "pkc",
+    "okf",
+    "data-engineering",
+    "lineage",
+    "medallion",
+    "codex"
+  ],
+  "skills": "./skills/",
+  "hooks": "./hooks/codex-hooks.json",
+  "interface": {
+    "displayName": "Data Engineering Knowledge Capture",
+    "shortDescription": "Data lake second brain on PKC + OKF",
+    "longDescription": "Walk data lakes, capture schemas/tables/SQL/DAX/lineage, promote technical assets to business objects with glossary definitions, and index everything as a Git-native OKF second brain for agents.",
+    "developerName": "Spillwave Solutions",
+    "category": "Productivity",
+    "capabilities": ["Read", "Write"],
+    "websiteURL": "https://github.com/SpillwaveSolutions/data-engineering-knowledge-capture",
+    "defaultPrompt": [
+      "Walk this data lake and capture DEKC knowledge.",
+      "Promote gold tables to business objects and glossary terms.",
+      "Show lineage for the orders mart."
+    ],
+    "brandColor": "#0D9488"
+  }
+}
