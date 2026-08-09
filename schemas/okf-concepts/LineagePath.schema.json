@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "dekc://schemas/okf-concepts/LineagePath.schema.json",
+  "title": "DEKC OKF concept: LineagePath",
+  "description": "Documented multi-hop lineage path.",
+  "type": "object",
+  "required": [
+    "type",
+    "title",
+    "description",
+    "timestamp"
+  ],
+  "properties": {
+    "type": {
+      "const": "LineagePath"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string"
+    },
+    "timestamp": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "active",
+        "deprecated",
+        "completed",
+        "failed"
+      ]
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "target"
+        ],
+        "properties": {
+          "target": {
+            "type": "string",
+            "description": "Absolute in-bundle path e.g. /tables/foo.md"
+          },
+          "rel": {
+            "type": "string",
+            "description": "Typed edge relation"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "verified": {
+      "type": "boolean"
+    },
+    "generated": {
+      "type": "boolean"
+    },
+    "wiki_key": {
+      "type": "string"
+    },
+    "truth_state": {
+      "type": "string",
+      "enum": [
+        "current",
+        "historical",
+        "proposed"
+      ]
+    },
+    "owner": {
+      "type": "string"
+    },
+    "cloud": {
+      "type": "string",
+      "enum": [
+        "azure",
+        "aws",
+        "gcp",
+        "multi",
+        "onprem",
+        "generic"
+      ]
+    },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": true
+}

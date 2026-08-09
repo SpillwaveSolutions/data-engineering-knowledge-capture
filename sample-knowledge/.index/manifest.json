@@ -1,8 +1,8 @@
 {
-  "built_at": "2026-08-09T10:54:16Z",
+  "built_at": "2026-08-09T11:09:38Z",
   "concept_count": 61,
   "token_count": 219,
-  "edge_count": 4,
+  "edge_count": 28,
   "bundle": "/workspace/sample-knowledge",
   "engine": "dekc-local-bow-v1",
   "files": [

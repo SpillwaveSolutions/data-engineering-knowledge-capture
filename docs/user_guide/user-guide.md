@@ -65,6 +65,36 @@ Skills are also invokable as `$dekc-init`, `$dekc-walk`, etc.
 
 Use skills under `skills/` plus `AGENTS.md`. Register permissions via `.opencode/opencode.json`.
 
+
+## Second brain for design work
+
+The knowledge bundle is an indexed, **schema-typed** second brain. Use it before designing reports or landing data so agents reuse existing gold tables, metrics, glossary terms, sources, and jobs.
+
+### Standard OKF schemas
+
+Concept frontmatter must match [`schemas/okf-concepts/`](../../schemas/okf-concepts/). List and validate:
+
+```bash
+python3 scripts/dekc_schemas.py list
+python3 scripts/dekc_schemas.py intents
+python3 scripts/dekc_schemas.py validate --repo . --bundle knowledge
+```
+
+### Intent queries
+
+```bash
+python3 scripts/dekc_brain.py "executive revenue" --intent design-report --repo . --bundle knowledge --write
+python3 scripts/dekc_brain.py "orders event hub" --intent land-data --repo . --bundle knowledge --write
+python3 scripts/dekc_brain.py "GMV" --intent design-metric --repo . --bundle knowledge
+python3 scripts/dekc_brain.py "silver.orders" --intent impact --repo . --bundle knowledge
+```
+
+Each intent returns: design checklist, ranked schema-typed concepts, progressive disclosure pack, lineage snippet.
+
+Skills: `dekc-second-brain`, `dekc-design-report`, `dekc-land-data`.
+
+Patterns: `patterns/design-report-from-gold.md`, `patterns/land-stream-to-bronze.md`.
+
 ## First 15 minutes
 
 ### 1. Scaffold a knowledge bundle

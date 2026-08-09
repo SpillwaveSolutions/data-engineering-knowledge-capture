@@ -11,7 +11,7 @@ generated: true
 wiki_key: query-orders-raw
 truth_state: current
 links:
-- target: /tables/orders-api.md
+- target: /tables/bronze-orders-api.md
   rel: queries
 - target: /sql/orders-raw.md
   rel: implements

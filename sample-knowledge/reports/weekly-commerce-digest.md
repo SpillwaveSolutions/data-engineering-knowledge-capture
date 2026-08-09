@@ -12,7 +12,7 @@ truth_state: current
 links:
 - target: /tables/gold-order-daily.md
   rel: visualizes
-- target: /tables/gold-customer-ltv.md
+- target: /views/gold-customer-ltv.md
   rel: visualizes
 ---
 

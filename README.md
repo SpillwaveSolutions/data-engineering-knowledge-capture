@@ -27,6 +27,26 @@ Data teams lose institutional memory in tribal knowledge: “what does this gold
 
 DEKC turns lakehouse / warehouse / stream reality into a **reviewable OKF knowledge graph** that agents can walk, pack, and search — while promoting technical assets into **business objects with glossary definitions**.
 
+
+## Second brain (core goal)
+
+DEKC is a **schema-typed OKF second brain** for data engineering work. Capture platform truth once; reuse it when you:
+
+| Intent | Command |
+|--------|---------|
+| **Design a report** | `python3 scripts/dekc_brain.py "executive revenue" --intent design-report` |
+| **Land new data** | `python3 scripts/dekc_brain.py "orders stream" --intent land-data` |
+| **Design a metric** | `python3 scripts/dekc_brain.py "GMV" --intent design-metric` |
+| **Impact analysis** | `python3 scripts/dekc_brain.py "gold order_daily" --intent impact` |
+
+Standard concept schemas: [`schemas/okf-concepts/`](./schemas/okf-concepts/) (Table, SourceSystem, Workflow, Metric, Dashboard, BusinessObject, …). Registry: [`schemas/README.md`](./schemas/README.md).
+
+```bash
+python3 scripts/dekc_schemas.py list
+python3 scripts/dekc_schemas.py validate --bundle sample-knowledge
+python3 scripts/dekc_index.py --bundle sample-knowledge build   # refresh search index
+```
+
 ## Ecosystem
 
 ```text

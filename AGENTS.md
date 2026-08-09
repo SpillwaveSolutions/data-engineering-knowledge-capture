@@ -23,6 +23,17 @@ One plugin tree, four hosts. Do not diverge packaging without updating [PORTS.md
 
 Agent loops follow [okf-agent-graph (AGER)](https://github.com/SpillwaveSolutions/okf-agent-graph): **orchestrators**, producer workers, **adversarial skeptics with rubrics**, and a lead **re-adversary-judge**. Parallel workers **append** ScratchPad lists.
 
+## Second brain
+
+Goal: maintain a **standard OKF schema set** for data engineering concepts and an indexed second brain used when **designing reports**, **landing data**, **defining metrics**, and **impact analysis**.
+
+```bash
+python3 scripts/dekc_brain.py "<topic>" --intent design-report|land-data|design-metric|impact
+python3 scripts/dekc_schemas.py validate --bundle knowledge
+```
+
+Schemas: `schemas/okf-concepts/`. Skills: `dekc-second-brain`, `dekc-design-report`, `dekc-land-data`.
+
 ## Mission
 
 Turn data-platform reality into a durable OKF knowledge graph: walk lakes, capture technical assets, reconstruct lineage across medallion layers, materialize **business objects + glossary**, and **grade reverse engineering** before claiming done.

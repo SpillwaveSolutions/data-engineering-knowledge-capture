@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "dekc://schemas/okf-concepts/SourceSystem.schema.json",
+  "title": "DEKC OKF concept: SourceSystem",
+  "description": "Landing origin: lake, warehouse, stream, API, SaaS, etc.",
+  "type": "object",
+  "required": [
+    "type",
+    "title",
+    "description",
+    "timestamp"
+  ],
+  "properties": {
+    "type": {
+      "const": "SourceSystem"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string"
+    },
+    "timestamp": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "active",
+        "deprecated",
+        "completed",
+        "failed"
+      ]
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "target"
+        ],
+        "properties": {
+          "target": {
+            "type": "string",
+            "description": "Absolute in-bundle path e.g. /tables/foo.md"
+          },
+          "rel": {
+            "type": "string",
+            "description": "Typed edge relation"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "verified": {
+      "type": "boolean"
+    },
+    "generated": {
+      "type": "boolean"
+    },
+    "wiki_key": {
+      "type": "string"
+    },
+    "truth_state": {
+      "type": "string",
+      "enum": [
+        "current",
+        "historical",
+        "proposed"
+      ]
+    },
+    "owner": {
+      "type": "string"
+    },
+    "cloud": {
+      "type": "string",
+      "enum": [
+        "azure",
+        "aws",
+        "gcp",
+        "multi",
+        "onprem",
+        "generic"
+      ]
+    },
+    "source_kind": {
+      "type": "string",
+      "enum": [
+        "lake",
+        "warehouse",
+        "stream",
+        "api",
+        "saas",
+        "file",
+        "database",
+        "other"
+      ]
+    },
+    "kind": {
+      "type": "string"
+    },
+    "uri": {
+      "type": "string"
+    },
+    "platform": {
+      "type": "string",
+      "description": "fabric|s3|gcs|bigquery|snowflake|..."
+    }
+  },
+  "additionalProperties": true
+}

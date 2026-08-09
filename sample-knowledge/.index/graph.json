@@ -1,10 +1,52 @@
 {
+  "/views/gold-customer-ltv.md": [
+    "/business-objects/customer-lifetime-value.md"
+  ],
+  "/tables/silver-orders.md": [
+    "/business-objects/customer-order.md",
+    "/queries/customer-ltv.md",
+    "/queries/order-daily.md",
+    "/transformations/aggregate-order-daily.md"
+  ],
+  "/tables/gold-order-daily.md": [
+    "/business-objects/daily-order-summary.md",
+    "/queries/total-revenue-dax.md"
+  ],
+  "/lineage/orders-to-revenue.md": [
+    "/tables/silver-orders.md",
+    "/tables/gold-order-daily.md"
+  ],
   "/tables/bronze-orders-api.md": [
     "/tables/gold-order-daily.md",
     "/views/gold-customer-ltv.md",
+    "/queries/orders-raw.md",
     "/tables/bronze-orders-raw.md"
   ],
   "/tables/bronze-orders-raw.md": [
-    "/tables/bronze-orders-api.md"
+    "/queries/orders.md",
+    "/tables/bronze-orders-api.md",
+    "/transformations/cleanse-orders.md"
+  ],
+  "/sources/retail-lake-walk.md": [
+    "/tables/bronze-orders-api.md",
+    "/tables/bronze-orders-raw.md",
+    "/tables/gold-order-daily.md",
+    "/tables/silver-orders.md"
+  ],
+  "/layers/silver.md": [
+    "/transformations/aggregate-order-daily.md"
+  ],
+  "/transformations/aggregate-order-daily.md": [
+    "/layers/gold.md",
+    "/layers/silver.md",
+    "/tables/gold-order-daily.md"
+  ],
+  "/layers/bronze.md": [
+    "/transformations/cleanse-orders.md"
+  ],
+  "/transformations/cleanse-orders.md": [
+    "/layers/silver.md",
+    "/layers/bronze.md",
+    "/tables/silver-orders.md"
   ]
 }

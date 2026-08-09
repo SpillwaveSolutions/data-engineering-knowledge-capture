@@ -25,6 +25,19 @@ AGER spec version referenced: **0.3.0** ([AGER_SPEC](https://github.com/Spillwav
 
 ---
 
+## 0. Product goal — second brain
+
+DEKC’s primary product is a **Git-native second brain** of data-platform knowledge, expressed as **standard OKF concept schemas** (`schemas/okf-concepts/`). Downstream design work queries that brain:
+
+| Intent | When |
+|--------|------|
+| `design-report` | New dashboards/reports from gold + metrics + glossary |
+| `land-data` | New streams/jobs landing into bronze |
+| `design-metric` | New measures with business definitions |
+| `impact` | Blast radius before changing a table/pipeline |
+
+Retrieval: `scripts/dekc_brain.py`. Schema list/validate: `scripts/dekc_schemas.py`.
+
 ## 1. Goals and non-goals
 
 ### Goals

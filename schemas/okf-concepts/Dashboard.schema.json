@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "dekc://schemas/okf-concepts/Dashboard.schema.json",
+  "title": "DEKC OKF concept: Dashboard",
+  "description": "Dashboard composition of visuals/metrics.",
+  "type": "object",
+  "required": [
+    "type",
+    "title",
+    "description",
+    "timestamp"
+  ],
+  "properties": {
+    "type": {
+      "const": "Dashboard"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string"
+    },
+    "timestamp": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "active",
+        "deprecated",
+        "completed",
+        "failed"
+      ]
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "target"
+        ],
+        "properties": {
+          "target": {
+            "type": "string",
+            "description": "Absolute in-bundle path e.g. /tables/foo.md"
+          },
+          "rel": {
+            "type": "string",
+            "description": "Typed edge relation"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "verified": {
+      "type": "boolean"
+    },
+    "generated": {
+      "type": "boolean"
+    },
+    "wiki_key": {
+      "type": "string"
+    },
+    "truth_state": {
+      "type": "string",
+      "enum": [
+        "current",
+        "historical",
+        "proposed"
+      ]
+    },
+    "owner": {
+      "type": "string"
+    },
+    "cloud": {
+      "type": "string",
+      "enum": [
+        "azure",
+        "aws",
+        "gcp",
+        "multi",
+        "onprem",
+        "generic"
+      ]
+    },
+    "tool": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": true
+}

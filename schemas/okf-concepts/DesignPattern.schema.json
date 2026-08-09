@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "dekc://schemas/okf-concepts/DesignPattern.schema.json",
+  "title": "DEKC OKF concept: DesignPattern",
+  "description": "Reusable second-brain pattern for data engineering design work.",
+  "type": "object",
+  "required": [
+    "type",
+    "title",
+    "description",
+    "timestamp"
+  ],
+  "properties": {
+    "type": {
+      "const": "DesignPattern"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string"
+    },
+    "timestamp": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "active",
+        "deprecated",
+        "completed",
+        "failed"
+      ]
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "target"
+        ],
+        "properties": {
+          "target": {
+            "type": "string",
+            "description": "Absolute in-bundle path e.g. /tables/foo.md"
+          },
+          "rel": {
+            "type": "string",
+            "description": "Typed edge relation"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "verified": {
+      "type": "boolean"
+    },
+    "generated": {
+      "type": "boolean"
+    },
+    "wiki_key": {
+      "type": "string"
+    },
+    "truth_state": {
+      "type": "string",
+      "enum": [
+        "current",
+        "historical",
+        "proposed"
+      ]
+    },
+    "owner": {
+      "type": "string"
+    },
+    "cloud": {
+      "type": "string",
+      "enum": [
+        "azure",
+        "aws",
+        "gcp",
+        "multi",
+        "onprem",
+        "generic"
+      ]
+    },
+    "intent": {
+      "type": "string",
+      "enum": [
+        "design-report",
+        "land-data",
+        "design-metric",
+        "promote-layer",
+        "general"
+      ]
+    },
+    "applies_to": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": true
+}

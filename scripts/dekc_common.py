@@ -166,74 +166,159 @@ def scrub_text(text: str, *, pii: bool = True, secrets: bool = True) -> tuple[st
 
 
 def _parse_simple_yaml(text: str) -> dict[str, Any]:
-    """Minimal YAML subset parser (maps, lists, scalars) — no PyYAML required."""
+    """Minimal YAML subset parser (maps, lists, scalars) — no PyYAML required.
+
+    Supports OKF frontmatter list shapes::
+
+        links:
+        - target: /tables/foo.md
+          rel: feeds
+    """
     root: dict[str, Any] = {}
+    # stack entries: (indent, container)
     stack: list[tuple[int, Any]] = [(-1, root)]
     pending_key: str | None = None
     pending_indent = -1
 
-    def set_in_parent(parent: Any, key: str | None, value: Any) -> None:
-        if isinstance(parent, list):
-            if key is None:
-                parent.append(value)
-            else:
-                parent.append({key: value})
-        elif isinstance(parent, dict) and key is not None:
-            parent[key] = value
+    def pop_to(indent: int) -> None:
+        while len(stack) > 1 and stack[-1][0] > indent:
+            stack.pop()
 
     for raw in text.splitlines():
         if not raw.strip() or raw.lstrip().startswith("#"):
             continue
         indent = len(raw) - len(raw.lstrip(" "))
         line = raw.strip()
-        while len(stack) > 1 and indent <= stack[-1][0]:
-            stack.pop()
-        parent = stack[-1][1]
 
         if line.startswith("- "):
             item = line[2:].strip()
-            if isinstance(parent, dict) and pending_key is not None and indent > pending_indent:
-                lst: list[Any] = []
-                parent[pending_key] = lst
-                stack.append((indent, lst))
-                parent = lst
-                pending_key = None
+            # Close nested maps until a list or the map that owns pending_key
+            while len(stack) > 1 and isinstance(stack[-1][1], dict) and stack[-1][0] >= indent:
+                # keep root
+                if stack[-1][0] < 0:
+                    break
+                stack.pop()
+            parent = stack[-1][1]
+
+            # Begin list under bare key: (pending)
+            if pending_key is not None and indent >= pending_indent:
+                owner = None
+                for _ind, node in reversed(stack):
+                    if isinstance(node, dict) and pending_key in node:
+                        owner = node
+                        break
+                if owner is None and isinstance(parent, dict):
+                    owner = parent
+                if owner is not None:
+                    existing = owner.get(pending_key)
+                    if isinstance(existing, list):
+                        lst = existing
+                    else:
+                        lst = []
+                        owner[pending_key] = lst
+                    # drop empty placeholder dict if still on stack
+                    while len(stack) > 1 and stack[-1][1] is existing:
+                        stack.pop()
+                    stack.append((indent, lst))
+                    parent = lst
+                    pending_key = None
+
+            # Empty dict placeholder sitting as current parent (value of bare key)
+            if isinstance(parent, dict) and len(parent) == 0 and len(stack) >= 2:
+                grand = stack[-2][1]
+                empty = parent
+                if isinstance(grand, dict):
+                    for gk, gv in list(grand.items()):
+                        if gv is empty:
+                            lst = []
+                            grand[gk] = lst
+                            stack.pop()
+                            stack.append((indent, lst))
+                            parent = lst
+                            pending_key = None
+                            break
+
             if not isinstance(parent, list):
                 continue
+
             if ":" in item and not item.startswith("{"):
                 k, _, v = item.partition(":")
                 k, v = k.strip(), v.strip()
-                if v == "" or v in ("|", ">"):
-                    obj: dict[str, Any] = {k: {}}
-                    parent.append(obj)
-                    stack.append((indent, obj[k] if v else obj))
-                    if v == "":
-                        pending_key = k
-                        pending_indent = indent
-                else:
-                    parent.append({k: _scalar(v)})
+                obj: dict[str, Any] = {k: _scalar(v) if v and v not in ("|", ">") else None}
+                if v in ("|", ">"):
+                    obj[k] = ""
+                parent.append(obj)
+                stack.append((indent, obj))
             else:
                 parent.append(_scalar(item))
             continue
 
-        if ":" in line:
-            k, _, v = line.partition(":")
-            k, v = k.strip(), v.strip()
-            if v == "" or v in ("|", ">"):
-                child: dict[str, Any] = {}
-                set_in_parent(parent, k, child)
-                stack.append((indent, child))
-                pending_key = k
-                pending_indent = indent
-            elif v.startswith("[") and v.endswith("]"):
-                inner = v[1:-1].strip()
-                items = [_scalar(x.strip()) for x in inner.split(",") if x.strip()] if inner else []
-                set_in_parent(parent, k, items)
-                pending_key = None
-            else:
-                set_in_parent(parent, k, _scalar(v))
-                pending_key = None
+        # key: value line
+        if ":" not in line:
+            continue
+        k, _, v = line.partition(":")
+        k, v = k.strip(), v.strip()
+
+        parent = stack[-1][1]
+
+        # Field of current list-item object (must be MORE indented than `-`)
+        if isinstance(parent, dict) and len(stack) >= 2 and isinstance(stack[-2][1], list):
+            item_indent = stack[-1][0]
+            if indent > item_indent:
+                if v == "" or v in ("|", ">"):
+                    child: dict[str, Any] = {}
+                    parent[k] = child
+                    stack.append((indent, child))
+                    pending_key = k
+                    pending_indent = indent
+                elif v.startswith("[") and v.endswith("]"):
+                    inner = v[1:-1].strip()
+                    items = [_scalar(x.strip()) for x in inner.split(",") if x.strip()] if inner else []
+                    parent[k] = items
+                    pending_key = None
+                else:
+                    parent[k] = _scalar(v)
+                    pending_key = None
+                continue
+
+        # Close list-item dicts and list containers when dedenting to sibling keys
+        while len(stack) > 1:
+            top_ind, top = stack[-1]
+            if isinstance(top, dict) and len(stack) >= 2 and isinstance(stack[-2][1], list):
+                if indent <= top_ind:
+                    stack.pop()
+                    continue
+            if isinstance(top, list) and indent <= top_ind:
+                stack.pop()
+                continue
+            if top_ind > indent:
+                stack.pop()
+                continue
+            break
+        parent = stack[-1][1]
+
+        if isinstance(parent, list):
+            continue
+
+        if not isinstance(parent, dict):
+            continue
+
+        if v == "" or v in ("|", ">"):
+            child = {}
+            parent[k] = child
+            stack.append((indent, child))
+            pending_key = k
+            pending_indent = indent
+        elif v.startswith("[") and v.endswith("]"):
+            inner = v[1:-1].strip()
+            items = [_scalar(x.strip()) for x in inner.split(",") if x.strip()] if inner else []
+            parent[k] = items
+            pending_key = None
+        else:
+            parent[k] = _scalar(v)
+            pending_key = None
     return root
+
 
 
 def _scalar(v: str) -> Any:

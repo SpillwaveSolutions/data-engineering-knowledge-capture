@@ -11,7 +11,7 @@ generated: true
 wiki_key: query-order-daily
 truth_state: current
 links:
-- target: /tables/orders.md
+- target: /tables/silver-orders.md
   rel: queries
 - target: /sql/order-daily.md
   rel: implements
