@@ -168,6 +168,7 @@ If `okf-graph-eng` is available, prefer its pack/impact for the same paths.
 | `dekc-context` | Context packs |
 | `dekc-search` | Second-brain search |
 | `dekc-index` | Rebuild index |
+| `dekc-grade` | Rubric grade + adversarial RE protocol |
 | `dekc-doctor` | Health: coverage, orphans, validation |
 
 ## Agents (how to invoke)
@@ -184,6 +185,34 @@ If `okf-graph-eng` is available, prefer its pack/impact for the same paths.
 In Claude/Grok, ask for the agent by name or describe the walk (“walk this lake and promote gold tables”). In AGER terms, the walker is an **OrchestratorAgent**; scouts are **WorkerAgents**; the auditor is a **JudgeAgent**.
 
 See the [design doc](../designs/current_design_doc.md) for the full loop graph, LoopPolicy, ScratchPad keys, and cloud playbooks.
+
+
+## Adversarial grading (reverse engineering quality)
+
+After producers walk a lake or cloud mirror, **do not claim complete** until graded.
+
+### Automated baseline
+
+```bash
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/dekc_grade.py" --repo . --bundle knowledge
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/dekc_grade.py" --repo . --bundle knowledge --json --write
+```
+
+Exit code 0 ≈ automated pass (score ≥ 0.75, no hard fails). Still run LLM skeptics for lineage evidence and definition quality.
+
+### Adversarial agents
+
+| Agent | Rubric |
+|-------|--------|
+| lineage-skeptic | lineage integrity (0.80) |
+| business-skeptic | business fidelity (0.72) |
+| stream-job-skeptic | stream/job landing (0.70) |
+| coverage-skeptic | structural coverage |
+| re-adversary-judge | aggregate reverse-engineering (0.75) |
+
+Orchestrators: **data-lake-walker**, **reverse-engineering-orchestrator**.
+
+On fail: fix evidence or **retract** edges — never invent data to pass. See [design doc § adversarial](../designs/current_design_doc.md).
 
 ## Capturing streams and jobs
 

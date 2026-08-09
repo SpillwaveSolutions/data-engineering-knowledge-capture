@@ -19,8 +19,9 @@
     "test:js": "node --test 'scripts/**/*.test.mjs'",
     "validate": "python3 scripts/dekc_validate.py --bundle sample-knowledge",
     "doctor": "python3 scripts/dekc_doctor.py --bundle sample-knowledge",
+    "grade": "python3 scripts/dekc_grade.py --bundle sample-knowledge",
     "index": "python3 scripts/dekc_index.py --repo . --bundle sample-knowledge build",
-    "py:compile": "python3 -m py_compile scripts/dekc_common.py scripts/dekc_capture.py scripts/dekc_walk.py scripts/dekc_lineage.py scripts/dekc_business.py scripts/dekc_index.py scripts/dekc_validate.py scripts/dekc_pack.py scripts/dekc_search.py scripts/dekc_doctor.py scripts/dekc_link.py"
+    "py:compile": "python3 -m py_compile scripts/dekc_common.py scripts/dekc_capture.py scripts/dekc_walk.py scripts/dekc_lineage.py scripts/dekc_business.py scripts/dekc_index.py scripts/dekc_validate.py scripts/dekc_pack.py scripts/dekc_search.py scripts/dekc_doctor.py scripts/dekc_link.py scripts/dekc_grade.py"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.4",

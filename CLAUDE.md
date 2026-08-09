@@ -33,6 +33,7 @@ Add new `scripts/dekc_*.py` to `package.json` typecheck/test lists and CI.
 - OKF frontmatter required: `type`, `title`, `description`, `timestamp`
 - Absolute in-bundle links; typed `links[].rel` for lineage/business edges
 - Never invent edges; prefer scripts over freehand Markdown when possible
+- Reverse engineering: orchestrators + adversarial skeptics/rubrics (`dekc_grade.py`, re-adversary-judge); no success without pass
 
 ## Docs
 

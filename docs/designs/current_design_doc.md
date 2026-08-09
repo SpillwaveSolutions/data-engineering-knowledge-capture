@@ -179,10 +179,54 @@ flowchart TB
 | **Worker** | report-cataloger | Dashboards, reports, DAX, semantic bindings | **append** to `scratch.bi_assets` |
 | **Worker** | stream-job-scout *(logical; may be walker skill path)* | Streams, pipelines, schedules, landing tables | **append** to `scratch.landing_flows` |
 | **Worker** | semantic-mapper | BusinessObject + GlossaryTerm + Metric links | **append** to `scratch.business_objects` |
-| **Judge** | layer-auditor | Score coverage, orphans, missing promotions, index freshness | judgment + gap list |
+| **Judge** | layer-auditor | Health baseline (doctor/validate) | judgment + gap list |
+| **Adversarial workers** | lineage/business/stream-job/coverage-skeptic | Attack unproven RE claims per rubric | append judgments |
+| **Lead Judge** | re-adversary-judge | Aggregate reverse-engineering rubric (0.75) | pass/fail + revisions |
 | **Synthesizer** | index + pack step | `dekc_index build`, context packs, walk AgentNode receipt | set final artifacts |
 
 Parallel workers **must append** (AGER invariant) so concurrent scouts do not clobber each other.
+
+### 3.3b Adversarial grading (required)
+
+Reverse engineering is **producer → adversary → judge**, not producer-only.
+
+```text
+FanOut producers (schema, lineage, stream-job, report, semantic)
+        │
+        ▼
+FanOut skeptics (adversarial workers / rubric scorers)
+  lineage-skeptic      → lineage-integrity rubric (threshold 0.80)
+  business-skeptic     → business-fidelity rubric (threshold 0.72)
+  stream-job-skeptic   → stream-job-landing rubric (threshold 0.70)
+  coverage-skeptic     → structural + evidence slices
+        │
+        ▼
+re-adversary-judge     → reverse-engineering rubric (threshold 0.75)
+        │
+   pass? ──no──► orchestrator re-plan (capture evidence OR retract claims)
+        │
+       yes
+        ▼
+   synthesizer (index + judgment receipt)
+```
+
+| Orchestrator | Use |
+|--------------|-----|
+| **data-lake-walker** | Default lake/warehouse walks with adversarial close |
+| **reverse-engineering-orchestrator** | Fabric / AWS / GCP profiles, strict LoopPolicy |
+
+| Rubric file | Owner |
+|-------------|--------|
+| `evaluation/reverse-engineering-rubric.md` | re-adversary-judge |
+| `evaluation/lineage-integrity-rubric.md` | lineage-skeptic |
+| `evaluation/business-fidelity-rubric.md` | business-skeptic |
+| `evaluation/stream-job-landing-rubric.md` | stream-job-skeptic |
+
+Automated baseline (not sufficient alone): `scripts/dekc_grade.py`.
+
+**Hard fails** (override weighted score): invented lineage still present; secrets in bodies; claimed gold promotion with zero BusinessObjects.
+
+Skeptics **append** judgments to ScratchPad `judgments`. On fail, `on_fail: retry_producer` — never invent edges to raise scores.
 
 ### 3.4 LoopPolicy (normative defaults for lake walks)
 

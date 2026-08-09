@@ -122,36 +122,35 @@ python3 scripts/dekc_search.py "revenue" --repo . --bundle knowledge
 
 Slash / skill entry points: `/dekc-init` · `/dekc-walk` · `/dekc-lineage` · `/dekc-business-object` · `/dekc-glossary` · `/dekc-semantic` · `/dekc-context` · `/dekc-search` · `/dekc-index` · `/dekc-doctor`
 
-## Agent loop (AGER-shaped)
+## Agent loop (AGER-shaped): producers + adversarial judges
 
-DEKC’s **data-lake-walker** is the orchestrator. Subagents are AGER-style workers; a layer-auditor acts as judge; packs/index act as synthesizer output.
+**Orchestrators:** `data-lake-walker` (default) · `reverse-engineering-orchestrator` (Fabric/AWS/GCP).
+
+Producer workers fan out, then **adversarial skeptics grade reverse engineering with rubrics** before index/pack. Lead judge: **re-adversary-judge** (threshold **0.75**). Fail → re-plan or **retract** unproven claims — never invent edges to pass.
 
 ```text
-Trigger (manual | cron | okf_change | ticket)
-        │
-        ▼
-┌───────────────────┐
-│ data-lake-walker  │  Orchestrator — plan hops, spawn, re-plan
-│  LoopPolicy:      │  goal=coverage · max_turns · no_progress
-└─────────┬─────────┘
-          │ fan-out
-    ┌─────┼──────────────┬────────────────┐
-    ▼     ▼              ▼                ▼
- schema  lineage     report-cataloger  (stream/job scouts)
- scout   tracer
-    │     │              │
-    └─────┴──────┬───────┘
-                 ▼
-         semantic-mapper  → business objects + glossary
-                 │
-                 ▼
-          layer-auditor   → score coverage / orphans (Judge)
-                 │
-                 ▼
-            index + pack  → second-brain artifacts (Synthesizer)
+Trigger → Orchestrator (LoopPolicy: goal · max_turns · no_progress)
+              │ FanOut producers
+              ├─ schema-scout · lineage-tracer · stream-job-scout
+              ├─ report-cataloger · semantic-mapper
+              │ FanOut adversaries (rubrics)
+              ├─ lineage-skeptic · business-skeptic
+              ├─ stream-job-skeptic · coverage-skeptic · layer-auditor
+              ▼
+         re-adversary-judge  → reverse-engineering-rubric.md
+              │ pass? ──no──► revise / retract
+              ▼ yes
+         index + pack (Synthesizer) + judgment receipt
 ```
 
-Full reverse-engineering playbooks for **Azure Fabric**, **AWS**, and **GCP** (including **streams and jobs**) live in the [design doc](./docs/designs/current_design_doc.md).
+| Rubric | Path | Threshold |
+|--------|------|-----------|
+| Reverse engineering (aggregate) | [evaluation/reverse-engineering-rubric.md](./evaluation/reverse-engineering-rubric.md) | 0.75 |
+| Lineage integrity | [evaluation/lineage-integrity-rubric.md](./evaluation/lineage-integrity-rubric.md) | 0.80 |
+| Business fidelity | [evaluation/business-fidelity-rubric.md](./evaluation/business-fidelity-rubric.md) | 0.72 |
+| Stream & job landing | [evaluation/stream-job-landing-rubric.md](./evaluation/stream-job-landing-rubric.md) | 0.70 |
+
+Automated baseline: `python3 scripts/dekc_grade.py --bundle knowledge` (skill `/dekc-grade`). Full cloud RE playbooks: [design doc](./docs/designs/current_design_doc.md).
 
 ## Sample knowledge
 

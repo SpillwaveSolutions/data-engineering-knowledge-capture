@@ -126,5 +126,33 @@ class TestWalkFixture(unittest.TestCase):
             self.assertGreaterEqual(data["counts"]["created"], 1)
 
 
+
+    unittest.main()
+
+
+class TestGrade(unittest.TestCase):
+    def test_grade_sample_knowledge(self):
+        proc = subprocess.run(
+            [
+                sys.executable,
+                str(SCRIPTS / "dekc_grade.py"),
+                "--repo",
+                str(ROOT),
+                "--bundle",
+                "sample-knowledge",
+                "--json",
+            ],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(proc.returncode, 0, proc.stderr + proc.stdout)
+        data = json.loads(proc.stdout)
+        self.assertIn("score", data)
+        self.assertIn("criteria", data)
+        self.assertEqual(data["rubric"], "reverse-engineering")
+        self.assertTrue(data["pass"])
+
+
 if __name__ == "__main__":
     unittest.main()
