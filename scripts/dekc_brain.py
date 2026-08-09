@@ -62,6 +62,7 @@ INTENTS = {
         ],
     },
     "land-data": {
+        # includes IngestionJob
         "title": "Land new data (stream or batch)",
         "types": [
             "SourceSystem",
@@ -73,7 +74,8 @@ INTENTS = {
             "LineagePath",
             "Schema",
             "Column",
-        ],
+        
+            "IngestionJob",],
         "prefer_layers": ["bronze", "raw", "silver"],
         "checklist": [
             "Register SourceSystem (stream vs batch/api/file)",
@@ -116,12 +118,14 @@ INTENTS = {
             "Table",
             "Stream",
             "StorageLocation",
+            "IngestionJob",
             "DataLake",
         ],
         "prefer_layers": ["bronze", "silver", "gold"],
         "checklist": [
             "Capture Workflow with orchestrator and mode",
             "Attach activity/state/class diagrams via dekc_diagram job-pack",
+            "Capture IngestionJob for landing (mode, connector, lands_as)",
             "Link reads/writes to tables; streams/storage when landing",
             "Add DQ rules on outputs",
             "Do not invent lineage edges without SQL/job evidence",

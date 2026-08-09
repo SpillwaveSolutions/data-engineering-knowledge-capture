@@ -376,6 +376,138 @@ def capture_dq_rule(
     return [(rel, action)]
 
 
+
+def capture_ingestion_job(
+    bundle: Path,
+    *,
+    name: str,
+    description: str = "",
+    mode: str = "batch",
+    pattern: str = "",
+    orchestrator: str = "",
+    schedule: str = "",
+    connector: str = "",
+    source_format: str = "",
+    target_format: str = "",
+    target_layer: str = "bronze",
+    sources: list[str] | None = None,
+    streams: list[str] | None = None,
+    lands_as: list[str] | None = None,
+    storage: list[str] | None = None,
+    watermark_column: str = "",
+    checkpoint: str = "",
+    idempotent: bool = True,
+    sla_minutes: float | None = None,
+    steps: list[str] | None = None,
+) -> list[tuple[str, str]]:
+    """Capture a data ingestion job (landing into bronze/paths from sources/streams)."""
+    slug = slugify(name)
+    rel = path_for_type("IngestionJob", slug)
+    links: list[dict[str, str]] = []
+    if target_layer:
+        links.append({"target": f"/layers/{slugify(target_layer)}.md", "rel": "writes_to"})
+        links.append({"target": f"/layers/{slugify(target_layer)}.md", "rel": "layered_as"})
+    for s in sources or []:
+        ref = concept_ref(s, "sources")
+        links.append({"target": ref, "rel": "ingests_from"})
+        links.append({"target": ref, "rel": "reads_from"})
+        _patch(bundle, ref, f"/{rel}", "ingested_by")
+    for s in streams or []:
+        ref = concept_ref(s, "streams")
+        links.append({"target": ref, "rel": "ingests_from"})
+        links.append({"target": ref, "rel": "consumes_stream"})
+        _patch(bundle, ref, f"/{rel}", "ingested_by")
+    for tname in lands_as or []:
+        ref = concept_ref(tname, "tables")
+        links.append({"target": ref, "rel": "lands_as"})
+        links.append({"target": ref, "rel": "writes_to"})
+        links.append({"target": ref, "rel": "lands_into"})
+        _patch(bundle, ref, f"/{rel}", "sourced_from")
+        _patch(bundle, ref, f"/{rel}", "ingested_by")
+    for st in storage or []:
+        ref = concept_ref(st, "storage")
+        links.append({"target": ref, "rel": "writes_to"})
+        links.append({"target": ref, "rel": "stored_in"})
+
+    pattern = pattern or f"{mode}-to-{target_layer}"
+    fm: dict[str, Any] = {
+        "type": "IngestionJob",
+        "title": name,
+        "description": description or f"Ingestion job: {name}",
+        "ingestion_mode": mode,
+        "pattern": pattern,
+        "orchestrator": orchestrator,
+        "schedule": schedule,
+        "connector": connector,
+        "source_format": source_format,
+        "target_format": target_format,
+        "target_layer": target_layer,
+        "idempotent": idempotent,
+        "watermark_column": watermark_column,
+        "checkpoint": checkpoint,
+        "tags": ["ingestion", "job", mode, target_layer, "dekc"],
+        "timestamp": utc_now(),
+        "status": "active",
+        "verified": True,
+        "generated": True,
+        "stable_timestamp": True,
+        "wiki_key": f"ingest-{slug}",
+        "truth_state": "current",
+    }
+    if sla_minutes is not None:
+        fm["sla_minutes"] = sla_minutes
+    if links:
+        fm["links"] = links
+
+    body = f"# {name}\n\n{description or ''}\n\n"
+    body += f"**Mode:** `{mode}` · **Pattern:** `{pattern}` · **Target layer:** `{target_layer}`\n\n"
+    if orchestrator:
+        body += f"**Orchestrator:** {orchestrator}\n"
+    if schedule:
+        body += f"**Schedule:** `{schedule}`\n"
+    if connector:
+        body += f"**Connector:** {connector}\n"
+    if source_format or target_format:
+        body += f"**Formats:** {source_format or '?'} → {target_format or '?'}\n"
+    if watermark_column:
+        body += f"**Watermark:** `{watermark_column}`\n"
+    if checkpoint:
+        body += f"**Checkpoint:** `{checkpoint}`\n"
+    body += f"**Idempotent:** {idempotent}\n"
+    if sla_minutes is not None:
+        body += f"**SLA:** {sla_minutes} minutes\n"
+
+    if sources or streams:
+        body += "\n## Sources\n\n"
+        for s in sources or []:
+            body += f"- Source: {concept_ref(s, 'sources')}\n"
+        for s in streams or []:
+            body += f"- Stream: {concept_ref(s, 'streams')}\n"
+    if lands_as:
+        body += "\n## Lands as (tables)\n\n"
+        for tname in lands_as:
+            body += f"- {concept_ref(tname, 'tables')}\n"
+    if storage:
+        body += "\n## Storage\n\n"
+        for st in storage:
+            body += f"- {concept_ref(st, 'storage')}\n"
+    if steps:
+        body += "\n## Steps\n\n"
+        for i, step in enumerate(steps, 1):
+            body += f"{i}. {step}\n"
+
+    body += "\n## Ingestion flow\n\n```mermaid\nflowchart LR\n"
+    body += "  SRC[Source / Stream] --> JOB[Ingestion Job]\n"
+    body += f"  JOB --> LAND[{target_layer} landing]\n"
+    body += "  JOB --> DQ[Optional DQ]\n"
+    body += "```\n"
+
+    _, action = write_concept(bundle, rel, fm, body)
+    refresh_catalog_index(bundle, "ingestion")
+    append_log(bundle, f"Captured ingestion job: {name}")
+    return [(rel, action)]
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="DEKC platform concept capture")
     parser.add_argument("--repo", default=".")
@@ -431,6 +563,29 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--uri", default="")
     p.add_argument("--format", default="")
     p.add_argument("--layer", default="")
+
+    p = sub.add_parser("ingestion")
+    p.add_argument("--name", required=True)
+    p.add_argument("--description", default="")
+    p.add_argument("--mode", default="batch",
+                   choices=["batch", "microbatch", "streaming", "cdc", "full_load",
+                            "incremental", "file_drop", "api_pull", "unknown"])
+    p.add_argument("--pattern", default="")
+    p.add_argument("--orchestrator", default="")
+    p.add_argument("--schedule", default="")
+    p.add_argument("--connector", default="")
+    p.add_argument("--source-format", default="")
+    p.add_argument("--target-format", default="")
+    p.add_argument("--target-layer", default="bronze")
+    p.add_argument("--sources", nargs="*", default=[])
+    p.add_argument("--streams", nargs="*", default=[])
+    p.add_argument("--lands-as", nargs="*", default=[])
+    p.add_argument("--storage", nargs="*", default=[])
+    p.add_argument("--watermark", default="")
+    p.add_argument("--checkpoint", default="")
+    p.add_argument("--sla-minutes", type=float, default=None)
+    p.add_argument("--no-idempotent", action="store_true")
+    p.add_argument("--steps", nargs="*", default=[])
 
     p = sub.add_parser("dq-rule")
     p.add_argument("--name", required=True)
@@ -505,6 +660,29 @@ def main(argv: list[str] | None = None) -> int:
             uri=args.uri,
             format=args.format,
             layer=args.layer,
+        )
+    elif args.cmd == "ingestion":
+        results = capture_ingestion_job(
+            bundle,
+            name=args.name,
+            description=args.description,
+            mode=args.mode,
+            pattern=args.pattern,
+            orchestrator=args.orchestrator,
+            schedule=args.schedule,
+            connector=args.connector,
+            source_format=args.source_format,
+            target_format=args.target_format,
+            target_layer=args.target_layer,
+            sources=args.sources,
+            streams=args.streams,
+            lands_as=args.lands_as,
+            storage=args.storage,
+            watermark_column=args.watermark,
+            checkpoint=args.checkpoint,
+            idempotent=not args.no_idempotent,
+            sla_minutes=args.sla_minutes,
+            steps=args.steps,
         )
     elif args.cmd == "dq-rule":
         results = capture_dq_rule(

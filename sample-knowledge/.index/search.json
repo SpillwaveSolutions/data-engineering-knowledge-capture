@@ -5,6 +5,9 @@
   "142": [
     "wireframes/wireframe-executive-revenue-wireframe.md"
   ],
+  "15": [
+    "ingestion/orders-stream-landing.md"
+  ],
   "2m": [
     "wireframes/wireframe-executive-revenue-wireframe.md"
   ],
@@ -16,11 +19,15 @@
   ],
   "_edit": [
     "diagrams/activity-daily-medallion-orders-activity.md",
+    "diagrams/activity-orders-stream-landing-activity.md",
     "diagrams/architecture-commerce-lake-architecture.md",
     "diagrams/class-daily-medallion-orders-class.md",
     "diagrams/component-daily-medallion-orders-component.md",
+    "diagrams/component-orders-stream-landing-component.md",
     "diagrams/erd-orders-erd.md",
+    "diagrams/sequence-orders-stream-landing-sequence.md",
     "diagrams/state-daily-medallion-orders-state.md",
+    "diagrams/state-orders-stream-landing-state.md",
     "wireframes/wireframe-executive-revenue-wireframe.md"
   ],
   "abfss": [
@@ -29,18 +36,26 @@
   ],
   "above": [
     "diagrams/activity-daily-medallion-orders-activity.md",
+    "diagrams/activity-orders-stream-landing-activity.md",
     "diagrams/architecture-commerce-lake-architecture.md",
     "diagrams/class-daily-medallion-orders-class.md",
     "diagrams/component-daily-medallion-orders-component.md",
+    "diagrams/component-orders-stream-landing-component.md",
     "diagrams/erd-orders-erd.md",
+    "diagrams/sequence-orders-stream-landing-sequence.md",
     "diagrams/state-daily-medallion-orders-state.md",
+    "diagrams/state-orders-stream-landing-state.md",
     "wireframes/wireframe-executive-revenue-wireframe.md"
   ],
   "acme": [
     "sources/retail-lake.md"
   ],
   "activity": [
-    "diagrams/activity-daily-medallion-orders-activity.md"
+    "diagrams/activity-daily-medallion-orders-activity.md",
+    "diagrams/activity-orders-stream-landing-activity.md"
+  ],
+  "adf": [
+    "ingestion/product-catalog-sftp-load.md"
   ],
   "after": [
     "business-objects/customer-order.md",
@@ -68,7 +83,8 @@
     "workflows/daily-medallion-orders.md"
   ],
   "alert": [
-    "diagrams/activity-daily-medallion-orders-activity.md"
+    "diagrams/activity-daily-medallion-orders-activity.md",
+    "diagrams/activity-orders-stream-landing-activity.md"
   ],
   "amounts": [
     "business-objects/customer-lifetime-value.md",
@@ -102,11 +118,16 @@
   ],
   "as": [
     "diagrams/activity-daily-medallion-orders-activity.md",
+    "diagrams/activity-orders-stream-landing-activity.md",
     "diagrams/architecture-commerce-lake-architecture.md",
     "diagrams/class-daily-medallion-orders-class.md",
     "diagrams/component-daily-medallion-orders-component.md",
+    "diagrams/component-orders-stream-landing-component.md",
     "diagrams/erd-orders-erd.md",
+    "diagrams/sequence-orders-stream-landing-sequence.md",
     "diagrams/state-daily-medallion-orders-state.md",
+    "diagrams/state-orders-stream-landing-state.md",
+    "ingestion/orders-stream-landing.md",
     "packs/pack-gold-order-daily.md",
     "queries/customer-ltv.md",
     "queries/order-daily.md",
@@ -131,6 +152,9 @@
   "based": [
     "business-objects/customer-lifetime-value.md",
     "glossary/customer-lifetime-value.md"
+  ],
+  "batch": [
+    "diagrams/sequence-orders-stream-landing-sequence.md"
   ],
   "be": [
     "quality/gold-order-daily-freshness.md"
@@ -160,7 +184,11 @@
     "columns/bronze-orders-raw-order-ts.md",
     "columns/bronze-orders-raw-status.md",
     "diagrams/activity-daily-medallion-orders-activity.md",
+    "diagrams/activity-orders-stream-landing-activity.md",
     "diagrams/architecture-commerce-lake-architecture.md",
+    "diagrams/sequence-orders-stream-landing-sequence.md",
+    "ingestion/orders-stream-landing.md",
+    "ingestion/product-catalog-sftp-load.md",
     "lakes/retail-commerce-lake.md",
     "layers/bronze.md",
     "lineage/orders-to-revenue.md",
@@ -181,7 +209,8 @@
     "workflows/daily-medallion-orders.md"
   ],
   "brz": [
-    "diagrams/architecture-commerce-lake-architecture.md"
+    "diagrams/architecture-commerce-lake-architecture.md",
+    "diagrams/sequence-orders-stream-landing-sequence.md"
   ],
   "business": [
     "business-objects/customer-lifetime-value.md",
@@ -226,13 +255,21 @@
     "tables/gold-order-daily.md"
   ],
   "catalog": [
-    "catalogs/retail-unity-style-catalog.md"
+    "catalogs/retail-unity-style-catalog.md",
+    "ingestion/product-catalog-sftp-load.md",
+    "sources/product-catalog-sftp.md"
   ],
   "certified": [
     "products/daily-revenue-product.md"
   ],
   "chart": [
     "wireframes/wireframe-executive-revenue-wireframe.md"
+  ],
+  "checkpoint": [
+    "ingestion/orders-stream-landing.md"
+  ],
+  "checkpoints": [
+    "ingestion/orders-stream-landing.md"
   ],
   "class": [
     "diagrams/class-daily-medallion-orders-class.md"
@@ -275,6 +312,9 @@
     "columns/silver-orders-order-ts.md",
     "columns/silver-orders-status.md"
   ],
+  "com": [
+    "sources/product-catalog-sftp.md"
+  ],
   "commerce": [
     "business-objects/customer-order.md",
     "diagrams/architecture-commerce-lake-architecture.md",
@@ -288,16 +328,23 @@
     "workflows/daily-medallion-orders.md"
   ],
   "complete": [
-    "diagrams/state-daily-medallion-orders-state.md"
+    "diagrams/state-daily-medallion-orders-state.md",
+    "diagrams/state-orders-stream-landing-state.md"
   ],
   "completed": [
     "metrics/order-count.md"
   ],
   "component": [
-    "diagrams/component-daily-medallion-orders-component.md"
+    "diagrams/component-daily-medallion-orders-component.md",
+    "diagrams/component-orders-stream-landing-component.md"
   ],
   "compute": [
-    "diagrams/component-daily-medallion-orders-component.md"
+    "diagrams/component-daily-medallion-orders-component.md",
+    "diagrams/component-orders-stream-landing-component.md"
+  ],
+  "connector": [
+    "ingestion/orders-stream-landing.md",
+    "ingestion/product-catalog-sftp-load.md"
   ],
   "consumers": [
     "products/daily-revenue-product.md"
@@ -311,6 +358,9 @@
   ],
   "contextpack": [
     "packs/pack-gold-order-daily.md"
+  ],
+  "copy": [
+    "ingestion/product-catalog-sftp-load.md"
   ],
   "core": [
     "lineage/orders-to-revenue.md"
@@ -342,8 +392,12 @@
   "created": [
     "agents/walk-retail-lake-walk.md"
   ],
+  "csv": [
+    "ingestion/product-catalog-sftp-load.md"
+  ],
   "curated": [
     "diagrams/component-daily-medallion-orders-component.md",
+    "diagrams/component-orders-stream-landing-component.md",
     "layers/bronze.md",
     "layers/gold.md",
     "layers/silver.md",
@@ -431,6 +485,7 @@
     "business-objects/customer-order.md",
     "catalogs/retail-unity-style-catalog.md",
     "diagrams/activity-daily-medallion-orders-activity.md",
+    "diagrams/activity-orders-stream-landing-activity.md",
     "domains/commerce.md",
     "glossary/customer-order.md",
     "lakes/retail-commerce-lake.md",
@@ -486,10 +541,12 @@
     "wireframes/wireframe-executive-revenue-wireframe.md"
   ],
   "dead": [
-    "diagrams/activity-daily-medallion-orders-activity.md"
+    "diagrams/activity-daily-medallion-orders-activity.md",
+    "diagrams/activity-orders-stream-landing-activity.md"
   ],
   "deadletter": [
-    "diagrams/state-daily-medallion-orders-state.md"
+    "diagrams/state-daily-medallion-orders-state.md",
+    "diagrams/state-orders-stream-landing-state.md"
   ],
   "decimal": [
     "columns/bronze-orders-raw-gross-amount.md",
@@ -533,16 +590,22 @@
     "dax/total-revenue-dax.md",
     "dax/total-revenue.md",
     "diagrams/activity-daily-medallion-orders-activity.md",
+    "diagrams/activity-orders-stream-landing-activity.md",
     "diagrams/architecture-commerce-lake-architecture.md",
     "diagrams/class-daily-medallion-orders-class.md",
     "diagrams/component-daily-medallion-orders-component.md",
+    "diagrams/component-orders-stream-landing-component.md",
     "diagrams/erd-orders-erd.md",
+    "diagrams/sequence-orders-stream-landing-sequence.md",
     "diagrams/state-daily-medallion-orders-state.md",
+    "diagrams/state-orders-stream-landing-state.md",
     "domains/commerce.md",
     "glossary/customer-lifetime-value.md",
     "glossary/customer-order.md",
     "glossary/daily-order-summary.md",
     "glossary/gmv.md",
+    "ingestion/orders-stream-landing.md",
+    "ingestion/product-catalog-sftp-load.md",
     "lakes/retail-commerce-lake.md",
     "lineage/orders-to-revenue.md",
     "marts/revenue-mart.md",
@@ -563,6 +626,7 @@
     "schemas/gold.md",
     "schemas/silver.md",
     "semantic/retail-commerce-model.md",
+    "sources/product-catalog-sftp.md",
     "sources/retail-lake-walk.md",
     "sources/retail-lake.md",
     "sql/customer-ltv.md",
@@ -583,16 +647,22 @@
     "workflows/daily-medallion-orders.md"
   ],
   "delta": [
+    "ingestion/orders-stream-landing.md",
+    "ingestion/product-catalog-sftp-load.md",
     "sources/retail-lake.md",
     "storage/bronze-orders-prefix.md"
   ],
   "diagram": [
     "diagrams/activity-daily-medallion-orders-activity.md",
+    "diagrams/activity-orders-stream-landing-activity.md",
     "diagrams/architecture-commerce-lake-architecture.md",
     "diagrams/class-daily-medallion-orders-class.md",
     "diagrams/component-daily-medallion-orders-component.md",
+    "diagrams/component-orders-stream-landing-component.md",
     "diagrams/erd-orders-erd.md",
+    "diagrams/sequence-orders-stream-landing-sequence.md",
     "diagrams/state-daily-medallion-orders-state.md",
+    "diagrams/state-orders-stream-landing-state.md",
     "packs/pack-gold-order-daily.md",
     "wireframes/wireframe-executive-revenue-wireframe.md"
   ],
@@ -641,6 +711,10 @@
   ],
   "dq": [
     "diagrams/activity-daily-medallion-orders-activity.md",
+    "diagrams/activity-orders-stream-landing-activity.md",
+    "diagrams/sequence-orders-stream-landing-sequence.md",
+    "ingestion/orders-stream-landing.md",
+    "ingestion/product-catalog-sftp-load.md",
     "quality/gold-order-daily-freshness.md"
   ],
   "dqrule": [
@@ -651,7 +725,8 @@
     "transformations/cleanse-orders.md"
   ],
   "end": [
-    "diagrams/component-daily-medallion-orders-component.md"
+    "diagrams/component-daily-medallion-orders-component.md",
+    "diagrams/component-orders-stream-landing-component.md"
   ],
   "endpoints": [
     "streams/orders-events.md"
@@ -674,16 +749,26 @@
   ],
   "error": [
     "diagrams/state-daily-medallion-orders-state.md",
+    "diagrams/state-orders-stream-landing-state.md",
     "quality/gold-order-daily-freshness.md"
   ],
   "errors": [
     "agents/walk-retail-lake-walk.md"
   ],
+  "event": [
+    "diagrams/sequence-orders-stream-landing-sequence.md",
+    "ingestion/orders-stream-landing.md"
+  ],
   "eventhubs": [
+    "ingestion/orders-stream-landing.md",
     "streams/orders-events.md"
   ],
   "events": [
+    "ingestion/orders-stream-landing.md",
     "streams/orders-events.md"
+  ],
+  "example": [
+    "sources/product-catalog-sftp.md"
   ],
   "exec": [
     "marts/revenue-mart.md",
@@ -702,10 +787,13 @@
     "quality/gold-order-daily-freshness.md"
   ],
   "extract": [
-    "diagrams/component-daily-medallion-orders-component.md"
+    "diagrams/component-daily-medallion-orders-component.md",
+    "diagrams/component-orders-stream-landing-component.md",
+    "ingestion/product-catalog-sftp-load.md"
   ],
   "fabric": [
     "catalogs/retail-unity-style-catalog.md",
+    "ingestion/orders-stream-landing.md",
     "lakes/retail-commerce-lake.md"
   ],
   "facing": [
@@ -718,19 +806,36 @@
     "glossary/customer-order.md"
   ],
   "fail": [
-    "diagrams/activity-daily-medallion-orders-activity.md"
+    "diagrams/activity-daily-medallion-orders-activity.md",
+    "diagrams/activity-orders-stream-landing-activity.md",
+    "diagrams/sequence-orders-stream-landing-sequence.md"
   ],
   "failed": [
-    "diagrams/state-daily-medallion-orders-state.md"
+    "diagrams/state-daily-medallion-orders-state.md",
+    "diagrams/state-orders-stream-landing-state.md"
   ],
   "fenced": [
     "diagrams/activity-daily-medallion-orders-activity.md",
+    "diagrams/activity-orders-stream-landing-activity.md",
     "diagrams/architecture-commerce-lake-architecture.md",
     "diagrams/class-daily-medallion-orders-class.md",
     "diagrams/component-daily-medallion-orders-component.md",
+    "diagrams/component-orders-stream-landing-component.md",
     "diagrams/erd-orders-erd.md",
+    "diagrams/sequence-orders-stream-landing-sequence.md",
     "diagrams/state-daily-medallion-orders-state.md",
+    "diagrams/state-orders-stream-landing-state.md",
     "wireframes/wireframe-executive-revenue-wireframe.md"
+  ],
+  "file": [
+    "sources/product-catalog-sftp.md"
+  ],
+  "file_drop": [
+    "ingestion/product-catalog-sftp-load.md"
+  ],
+  "files": [
+    "ingestion/product-catalog-sftp-load.md",
+    "sources/product-catalog-sftp.md"
   ],
   "finance": [
     "business-objects/daily-order-summary.md",
@@ -743,10 +848,21 @@
   "fk": [
     "diagrams/erd-orders-erd.md"
   ],
+  "flat": [
+    "sources/product-catalog-sftp.md"
+  ],
+  "flow": [
+    "ingestion/orders-stream-landing.md",
+    "ingestion/product-catalog-sftp-load.md"
+  ],
   "flowchart": [
     "diagrams/activity-daily-medallion-orders-activity.md",
+    "diagrams/activity-orders-stream-landing-activity.md",
     "diagrams/architecture-commerce-lake-architecture.md",
     "diagrams/component-daily-medallion-orders-component.md",
+    "diagrams/component-orders-stream-landing-component.md",
+    "ingestion/orders-stream-landing.md",
+    "ingestion/product-catalog-sftp-load.md",
     "lakes/retail-commerce-lake.md",
     "lineage/orders-to-revenue.md",
     "packs/pack-gold-order-daily.md",
@@ -760,6 +876,10 @@
     "storage/bronze-orders-prefix.md",
     "streams/orders-events.md"
   ],
+  "formats": [
+    "ingestion/orders-stream-landing.md",
+    "ingestion/product-catalog-sftp-load.md"
+  ],
   "fqn": [
     "diagrams/class-daily-medallion-orders-class.md"
   ],
@@ -768,6 +888,9 @@
   ],
   "freshness": [
     "quality/gold-order-daily-freshness.md"
+  ],
+  "full": [
+    "ingestion/product-catalog-sftp-load.md"
   ],
   "gld": [
     "diagrams/architecture-commerce-lake-architecture.md"
@@ -799,6 +922,7 @@
     "columns/gold-order-daily-order-count.md",
     "columns/gold-order-daily-order-date.md",
     "diagrams/activity-daily-medallion-orders-activity.md",
+    "diagrams/activity-orders-stream-landing-activity.md",
     "diagrams/architecture-commerce-lake-architecture.md",
     "diagrams/erd-orders-erd.md",
     "lakes/retail-commerce-lake.md",
@@ -880,11 +1004,22 @@
   "hops": [
     "packs/pack-gold-order-daily.md"
   ],
+  "hub": [
+    "ingestion/orders-stream-landing.md"
+  ],
+  "hubs": [
+    "ingestion/orders-stream-landing.md"
+  ],
+  "idempotent": [
+    "ingestion/orders-stream-landing.md",
+    "ingestion/product-catalog-sftp-load.md"
+  ],
   "identifier": [
     "columns/bronze-orders-raw-order-id.md"
   ],
   "idle": [
-    "diagrams/state-daily-medallion-orders-state.md"
+    "diagrams/state-daily-medallion-orders-state.md",
+    "diagrams/state-orders-stream-landing-state.md"
   ],
   "in": [
     "metrics/gross-merchandise-value.md",
@@ -901,6 +1036,18 @@
     "tables/gold-order-daily.md",
     "tables/silver-orders.md"
   ],
+  "ingestion": [
+    "diagrams/activity-orders-stream-landing-activity.md",
+    "diagrams/component-orders-stream-landing-component.md",
+    "diagrams/sequence-orders-stream-landing-sequence.md",
+    "diagrams/state-orders-stream-landing-state.md",
+    "ingestion/orders-stream-landing.md",
+    "ingestion/product-catalog-sftp-load.md"
+  ],
+  "ingestionjob": [
+    "ingestion/orders-stream-landing.md",
+    "ingestion/product-catalog-sftp-load.md"
+  ],
   "is": [
     "queries/orders.md",
     "sql/orders.md",
@@ -911,22 +1058,33 @@
     "columns/bronze-orders-raw-currency.md"
   ],
   "job": [
-    "diagrams/architecture-commerce-lake-architecture.md"
+    "diagrams/activity-orders-stream-landing-activity.md",
+    "diagrams/architecture-commerce-lake-architecture.md",
+    "diagrams/component-orders-stream-landing-component.md",
+    "diagrams/sequence-orders-stream-landing-sequence.md",
+    "diagrams/state-orders-stream-landing-state.md",
+    "ingestion/orders-stream-landing.md",
+    "ingestion/product-catalog-sftp-load.md"
   ],
   "jobs": [
     "diagrams/architecture-commerce-lake-architecture.md"
   ],
   "json": [
     "agents/walk-retail-lake-walk.md",
+    "ingestion/orders-stream-landing.md",
     "streams/orders-events.md"
   ],
   "keep": [
     "diagrams/activity-daily-medallion-orders-activity.md",
+    "diagrams/activity-orders-stream-landing-activity.md",
     "diagrams/architecture-commerce-lake-architecture.md",
     "diagrams/class-daily-medallion-orders-class.md",
     "diagrams/component-daily-medallion-orders-component.md",
+    "diagrams/component-orders-stream-landing-component.md",
     "diagrams/erd-orders-erd.md",
+    "diagrams/sequence-orders-stream-landing-sequence.md",
     "diagrams/state-daily-medallion-orders-state.md",
+    "diagrams/state-orders-stream-landing-state.md",
     "wireframes/wireframe-executive-revenue-wireframe.md"
   ],
   "key": [
@@ -934,11 +1092,16 @@
   ],
   "kind": [
     "diagrams/activity-daily-medallion-orders-activity.md",
+    "diagrams/activity-orders-stream-landing-activity.md",
     "diagrams/architecture-commerce-lake-architecture.md",
     "diagrams/class-daily-medallion-orders-class.md",
     "diagrams/component-daily-medallion-orders-component.md",
+    "diagrams/component-orders-stream-landing-component.md",
     "diagrams/erd-orders-erd.md",
+    "diagrams/sequence-orders-stream-landing-sequence.md",
     "diagrams/state-daily-medallion-orders-state.md",
+    "diagrams/state-orders-stream-landing-state.md",
+    "sources/product-catalog-sftp.md",
     "sources/retail-lake-walk.md",
     "sources/retail-lake.md",
     "storage/bronze-orders-prefix.md",
@@ -960,13 +1123,22 @@
   ],
   "land": [
     "diagrams/activity-daily-medallion-orders-activity.md",
+    "diagrams/activity-orders-stream-landing-activity.md",
+    "ingestion/orders-stream-landing.md",
+    "ingestion/product-catalog-sftp-load.md",
     "queries/daily-medallion.md",
     "sql/daily-medallion.md",
     "workflows/daily-medallion-orders.md"
   ],
   "landing": [
+    "diagrams/activity-orders-stream-landing-activity.md",
     "diagrams/architecture-commerce-lake-architecture.md",
     "diagrams/component-daily-medallion-orders-component.md",
+    "diagrams/component-orders-stream-landing-component.md",
+    "diagrams/sequence-orders-stream-landing-sequence.md",
+    "diagrams/state-orders-stream-landing-state.md",
+    "ingestion/orders-stream-landing.md",
+    "ingestion/product-catalog-sftp-load.md",
     "lineage/orders-to-revenue.md",
     "packs/pack-gold-order-daily.md",
     "queries/orders-raw.md",
@@ -975,15 +1147,20 @@
     "tables/bronze-orders-raw.md"
   ],
   "lands": [
+    "ingestion/orders-stream-landing.md",
     "streams/orders-events.md"
   ],
   "language": [
     "diagrams/activity-daily-medallion-orders-activity.md",
+    "diagrams/activity-orders-stream-landing-activity.md",
     "diagrams/architecture-commerce-lake-architecture.md",
     "diagrams/class-daily-medallion-orders-class.md",
     "diagrams/component-daily-medallion-orders-component.md",
+    "diagrams/component-orders-stream-landing-component.md",
     "diagrams/erd-orders-erd.md",
+    "diagrams/sequence-orders-stream-landing-sequence.md",
     "diagrams/state-daily-medallion-orders-state.md",
+    "diagrams/state-orders-stream-landing-state.md",
     "wireframes/wireframe-executive-revenue-wireframe.md"
   ],
   "last": [
@@ -991,6 +1168,8 @@
   ],
   "layer": [
     "diagrams/class-daily-medallion-orders-class.md",
+    "ingestion/orders-stream-landing.md",
+    "ingestion/product-catalog-sftp-load.md",
     "layers/bronze.md",
     "layers/gold.md",
     "layers/silver.md",
@@ -1005,7 +1184,8 @@
     "lakes/retail-commerce-lake.md"
   ],
   "letter": [
-    "diagrams/activity-daily-medallion-orders-activity.md"
+    "diagrams/activity-daily-medallion-orders-activity.md",
+    "diagrams/activity-orders-stream-landing-activity.md"
   ],
   "level": [
     "dashboards/executive-revenue.md"
@@ -1029,23 +1209,34 @@
   "lineagepath": [
     "lineage/orders-to-revenue.md"
   ],
+  "list": [
+    "ingestion/product-catalog-sftp-load.md"
+  ],
   "listing": [
     "diagrams/activity-daily-medallion-orders-activity.md",
+    "diagrams/activity-orders-stream-landing-activity.md",
     "diagrams/architecture-commerce-lake-architecture.md",
     "diagrams/class-daily-medallion-orders-class.md",
     "diagrams/component-daily-medallion-orders-component.md",
+    "diagrams/component-orders-stream-landing-component.md",
     "diagrams/erd-orders-erd.md",
+    "diagrams/sequence-orders-stream-landing-sequence.md",
     "diagrams/state-daily-medallion-orders-state.md",
+    "diagrams/state-orders-stream-landing-state.md",
     "wireframes/wireframe-executive-revenue-wireframe.md"
   ],
   "load": [
-    "diagrams/component-daily-medallion-orders-component.md"
+    "diagrams/component-daily-medallion-orders-component.md",
+    "diagrams/component-orders-stream-landing-component.md",
+    "ingestion/product-catalog-sftp-load.md"
   ],
   "logical": [
     "diagrams/erd-orders-erd.md"
   ],
   "lr": [
     "diagrams/architecture-commerce-lake-architecture.md",
+    "ingestion/orders-stream-landing.md",
+    "ingestion/product-catalog-sftp-load.md",
     "lakes/retail-commerce-lake.md",
     "lineage/orders-to-revenue.md",
     "packs/pack-gold-order-daily.md",
@@ -1073,6 +1264,7 @@
   ],
   "max": [
     "diagrams/state-daily-medallion-orders-state.md",
+    "diagrams/state-orders-stream-landing-state.md",
     "quality/gold-order-daily-freshness.md"
   ],
   "md": [
@@ -1080,11 +1272,17 @@
     "business-objects/customer-order.md",
     "business-objects/daily-order-summary.md",
     "diagrams/activity-daily-medallion-orders-activity.md",
+    "diagrams/activity-orders-stream-landing-activity.md",
     "diagrams/architecture-commerce-lake-architecture.md",
     "diagrams/class-daily-medallion-orders-class.md",
     "diagrams/component-daily-medallion-orders-component.md",
+    "diagrams/component-orders-stream-landing-component.md",
     "diagrams/erd-orders-erd.md",
+    "diagrams/sequence-orders-stream-landing-sequence.md",
     "diagrams/state-daily-medallion-orders-state.md",
+    "diagrams/state-orders-stream-landing-state.md",
+    "ingestion/orders-stream-landing.md",
+    "ingestion/product-catalog-sftp-load.md",
     "lakes/retail-commerce-lake.md",
     "lineage/orders-to-revenue.md",
     "marts/revenue-mart.md",
@@ -1123,11 +1321,17 @@
   ],
   "mermaid": [
     "diagrams/activity-daily-medallion-orders-activity.md",
+    "diagrams/activity-orders-stream-landing-activity.md",
     "diagrams/architecture-commerce-lake-architecture.md",
     "diagrams/class-daily-medallion-orders-class.md",
     "diagrams/component-daily-medallion-orders-component.md",
+    "diagrams/component-orders-stream-landing-component.md",
     "diagrams/erd-orders-erd.md",
+    "diagrams/sequence-orders-stream-landing-sequence.md",
     "diagrams/state-daily-medallion-orders-state.md",
+    "diagrams/state-orders-stream-landing-state.md",
+    "ingestion/orders-stream-landing.md",
+    "ingestion/product-catalog-sftp-load.md",
     "lakes/retail-commerce-lake.md",
     "lineage/orders-to-revenue.md",
     "packs/pack-gold-order-daily.md",
@@ -1141,8 +1345,13 @@
   "metrics": [
     "semantic/retail-commerce-model.md"
   ],
+  "minutes": [
+    "ingestion/orders-stream-landing.md"
+  ],
   "mode": [
-    "diagrams/class-daily-medallion-orders-class.md"
+    "diagrams/class-daily-medallion-orders-class.md",
+    "ingestion/orders-stream-landing.md",
+    "ingestion/product-catalog-sftp-load.md"
   ],
   "model": [
     "diagrams/architecture-commerce-lake-architecture.md",
@@ -1172,27 +1381,36 @@
     "diagrams/erd-orders-erd.md"
   ],
   "nightly": [
+    "ingestion/product-catalog-sftp-load.md",
+    "sources/product-catalog-sftp.md",
     "workflows/daily-medallion-orders.md"
   ],
   "no": [
-    "diagrams/activity-daily-medallion-orders-activity.md"
+    "diagrams/activity-daily-medallion-orders-activity.md",
+    "diagrams/activity-orders-stream-landing-activity.md"
   ],
   "nodes": [
     "packs/pack-gold-order-daily.md"
   ],
   "notes": [
     "diagrams/activity-daily-medallion-orders-activity.md",
+    "diagrams/activity-orders-stream-landing-activity.md",
     "diagrams/architecture-commerce-lake-architecture.md",
     "diagrams/class-daily-medallion-orders-class.md",
     "diagrams/component-daily-medallion-orders-component.md",
+    "diagrams/component-orders-stream-landing-component.md",
     "diagrams/erd-orders-erd.md",
+    "diagrams/sequence-orders-stream-landing-sequence.md",
     "diagrams/state-daily-medallion-orders-state.md",
+    "diagrams/state-orders-stream-landing-state.md",
+    "sources/product-catalog-sftp.md",
     "sources/retail-lake-walk.md",
     "sources/retail-lake.md",
     "wireframes/wireframe-executive-revenue-wireframe.md"
   ],
   "notify": [
-    "diagrams/activity-daily-medallion-orders-activity.md"
+    "diagrams/activity-daily-medallion-orders-activity.md",
+    "diagrams/activity-orders-stream-landing-activity.md"
   ],
   "nullable": [
     "columns/bronze-orders-raw-currency.md",
@@ -1227,12 +1445,14 @@
     "catalogs/retail-unity-style-catalog.md",
     "glossary/customer-lifetime-value.md",
     "glossary/daily-order-summary.md",
+    "ingestion/product-catalog-sftp-load.md",
     "metrics/gross-merchandise-value.md",
     "metrics/order-count.md",
     "reports/weekly-commerce-digest.md"
   ],
   "ok": [
-    "diagrams/activity-daily-medallion-orders-activity.md"
+    "diagrams/activity-daily-medallion-orders-activity.md",
+    "diagrams/activity-orders-stream-landing-activity.md"
   ],
   "on": [
     "business-objects/customer-lifetime-value.md",
@@ -1246,19 +1466,28 @@
     "columns/silver-orders-order-id.md",
     "columns/silver-orders-order-ts.md",
     "columns/silver-orders-status.md",
+    "diagrams/sequence-orders-stream-landing-sequence.md",
     "glossary/customer-lifetime-value.md"
   ],
   "onelake": [
     "lakes/retail-commerce-lake.md",
     "storage/bronze-orders-prefix.md"
   ],
+  "optional": [
+    "ingestion/orders-stream-landing.md",
+    "ingestion/product-catalog-sftp-load.md"
+  ],
   "or": [
     "diagrams/activity-daily-medallion-orders-activity.md",
+    "diagrams/activity-orders-stream-landing-activity.md",
     "diagrams/architecture-commerce-lake-architecture.md",
     "diagrams/class-daily-medallion-orders-class.md",
     "diagrams/component-daily-medallion-orders-component.md",
+    "diagrams/component-orders-stream-landing-component.md",
     "diagrams/erd-orders-erd.md",
+    "diagrams/sequence-orders-stream-landing-sequence.md",
     "diagrams/state-daily-medallion-orders-state.md",
+    "diagrams/state-orders-stream-landing-state.md",
     "packs/pack-gold-order-daily.md",
     "queries/customer-ltv.md",
     "queries/order-daily.md",
@@ -1280,6 +1509,9 @@
   "orchestrator": [
     "diagrams/class-daily-medallion-orders-class.md",
     "diagrams/component-daily-medallion-orders-component.md",
+    "diagrams/component-orders-stream-landing-component.md",
+    "ingestion/orders-stream-landing.md",
+    "ingestion/product-catalog-sftp-load.md",
     "workflows/daily-medallion-orders.md"
   ],
   "order": [
@@ -1295,6 +1527,7 @@
     "glossary/customer-lifetime-value.md",
     "glossary/customer-order.md",
     "glossary/daily-order-summary.md",
+    "ingestion/orders-stream-landing.md",
     "lineage/orders-to-revenue.md",
     "marts/revenue-mart.md",
     "metrics/gross-merchandise-value.md",
@@ -1377,11 +1610,16 @@
     "columns/silver-orders-order-ts.md",
     "columns/silver-orders-status.md",
     "diagrams/activity-daily-medallion-orders-activity.md",
+    "diagrams/activity-orders-stream-landing-activity.md",
     "diagrams/class-daily-medallion-orders-class.md",
     "diagrams/component-daily-medallion-orders-component.md",
+    "diagrams/component-orders-stream-landing-component.md",
     "diagrams/erd-orders-erd.md",
+    "diagrams/sequence-orders-stream-landing-sequence.md",
     "diagrams/state-daily-medallion-orders-state.md",
+    "diagrams/state-orders-stream-landing-state.md",
     "glossary/customer-order.md",
+    "ingestion/orders-stream-landing.md",
     "lineage/orders-to-revenue.md",
     "metrics/order-count.md",
     "packs/pack-gold-order-daily.md",
@@ -1448,14 +1686,24 @@
   "pack": [
     "packs/pack-gold-order-daily.md"
   ],
+  "participant": [
+    "diagrams/sequence-orders-stream-landing-sequence.md"
+  ],
   "pass": [
-    "diagrams/activity-daily-medallion-orders-activity.md"
+    "diagrams/activity-daily-medallion-orders-activity.md",
+    "diagrams/activity-orders-stream-landing-activity.md",
+    "diagrams/sequence-orders-stream-landing-sequence.md"
   ],
   "path": [
     "diagrams/component-daily-medallion-orders-component.md",
+    "diagrams/component-orders-stream-landing-component.md",
     "lineage/orders-to-revenue.md",
     "packs/pack-gold-order-daily.md",
     "storage/bronze-orders-prefix.md"
+  ],
+  "pattern": [
+    "ingestion/orders-stream-landing.md",
+    "ingestion/product-catalog-sftp-load.md"
   ],
   "pdf": [
     "reports/weekly-commerce-digest.md"
@@ -1469,6 +1717,8 @@
   ],
   "pipeline": [
     "diagrams/component-daily-medallion-orders-component.md",
+    "diagrams/component-orders-stream-landing-component.md",
+    "ingestion/orders-stream-landing.md",
     "workflows/daily-medallion-orders.md"
   ],
   "pipelines": [
@@ -1485,11 +1735,15 @@
   ],
   "plantuml": [
     "diagrams/activity-daily-medallion-orders-activity.md",
+    "diagrams/activity-orders-stream-landing-activity.md",
     "diagrams/architecture-commerce-lake-architecture.md",
     "diagrams/class-daily-medallion-orders-class.md",
     "diagrams/component-daily-medallion-orders-component.md",
+    "diagrams/component-orders-stream-landing-component.md",
     "diagrams/erd-orders-erd.md",
+    "diagrams/sequence-orders-stream-landing-sequence.md",
     "diagrams/state-daily-medallion-orders-state.md",
+    "diagrams/state-orders-stream-landing-state.md",
     "wireframes/wireframe-executive-revenue-wireframe.md"
   ],
   "platform": [
@@ -1509,6 +1763,7 @@
     "glossary/customer-lifetime-value.md"
   ],
   "prefix": [
+    "ingestion/orders-stream-landing.md",
     "storage/bronze-orders-prefix.md"
   ],
   "primary": [
@@ -1520,22 +1775,30 @@
   ],
   "product": [
     "diagrams/erd-orders-erd.md",
-    "products/daily-revenue-product.md"
+    "ingestion/product-catalog-sftp-load.md",
+    "products/daily-revenue-product.md",
+    "sources/product-catalog-sftp.md"
   ],
   "product_id": [
     "diagrams/erd-orders-erd.md"
   ],
   "products": [
+    "ingestion/product-catalog-sftp-load.md",
     "layers/bronze.md",
     "layers/gold.md",
     "layers/silver.md",
+    "sources/product-catalog-sftp.md",
     "wireframes/wireframe-executive-revenue-wireframe.md"
   ],
   "progressive": [
     "packs/pack-gold-order-daily.md"
   ],
+  "promote": [
+    "diagrams/sequence-orders-stream-landing-sequence.md"
+  ],
   "publish": [
-    "diagrams/activity-daily-medallion-orders-activity.md"
+    "diagrams/activity-daily-medallion-orders-activity.md",
+    "diagrams/activity-orders-stream-landing-activity.md"
   ],
   "publishable": [
     "products/daily-revenue-product.md"
@@ -1556,7 +1819,8 @@
     "quality/gold-order-daily-freshness.md"
   ],
   "quarantine": [
-    "diagrams/activity-daily-medallion-orders-activity.md"
+    "diagrams/activity-daily-medallion-orders-activity.md",
+    "diagrams/activity-orders-stream-landing-activity.md"
   ],
   "query": [
     "queries/customer-ltv.md",
@@ -1568,10 +1832,14 @@
     "queries/total-revenue.md"
   ],
   "raw": [
+    "ingestion/orders-stream-landing.md",
     "lineage/orders-to-revenue.md",
     "packs/pack-gold-order-daily.md",
     "schemas/bronze.md",
     "streams/orders-events.md"
+  ],
+  "read": [
+    "ingestion/orders-stream-landing.md"
   ],
   "reads": [
     "views/gold-customer-ltv.md"
@@ -1593,6 +1861,9 @@
   "refresh": [
     "wireframes/wireframe-executive-revenue-wireframe.md",
     "workflows/daily-medallion-orders.md"
+  ],
+  "register": [
+    "ingestion/product-catalog-sftp-load.md"
   ],
   "replace": [
     "packs/pack-gold-order-daily.md",
@@ -1631,10 +1902,12 @@
   ],
   "retries": [
     "diagrams/class-daily-medallion-orders-class.md",
-    "diagrams/state-daily-medallion-orders-state.md"
+    "diagrams/state-daily-medallion-orders-state.md",
+    "diagrams/state-orders-stream-landing-state.md"
   ],
   "retry": [
-    "diagrams/state-daily-medallion-orders-state.md"
+    "diagrams/state-daily-medallion-orders-state.md",
+    "diagrams/state-orders-stream-landing-state.md"
   ],
   "returns": [
     "glossary/gmv.md",
@@ -1665,19 +1938,25 @@
   "rules": [
     "business-objects/customer-order.md",
     "diagrams/activity-daily-medallion-orders-activity.md",
+    "diagrams/activity-orders-stream-landing-activity.md",
+    "diagrams/sequence-orders-stream-landing-sequence.md",
     "glossary/customer-order.md"
   ],
   "run": [
-    "diagrams/activity-daily-medallion-orders-activity.md"
+    "diagrams/activity-daily-medallion-orders-activity.md",
+    "diagrams/activity-orders-stream-landing-activity.md"
   ],
   "running": [
-    "diagrams/state-daily-medallion-orders-state.md"
+    "diagrams/state-daily-medallion-orders-state.md",
+    "diagrams/state-orders-stream-landing-state.md"
   ],
   "s1": [
-    "diagrams/component-daily-medallion-orders-component.md"
+    "diagrams/component-daily-medallion-orders-component.md",
+    "diagrams/component-orders-stream-landing-component.md"
   ],
   "s2": [
-    "diagrams/component-daily-medallion-orders-component.md"
+    "diagrams/component-daily-medallion-orders-component.md",
+    "diagrams/component-orders-stream-landing-component.md"
   ],
   "s3": [
     "sources/retail-lake.md"
@@ -1700,7 +1979,8 @@
     "sources/retail-lake-walk.md"
   ],
   "schedule": [
-    "diagrams/class-daily-medallion-orders-class.md"
+    "diagrams/class-daily-medallion-orders-class.md",
+    "ingestion/product-catalog-sftp-load.md"
   ],
   "schema": [
     "schemas/bronze.md",
@@ -1742,9 +2022,19 @@
   "semanticmodel": [
     "semantic/retail-commerce-model.md"
   ],
+  "sequence": [
+    "diagrams/sequence-orders-stream-landing-sequence.md"
+  ],
+  "sequencediagram": [
+    "diagrams/sequence-orders-stream-landing-sequence.md"
+  ],
   "severity": [
     "diagrams/class-daily-medallion-orders-class.md",
     "quality/gold-order-daily-freshness.md"
+  ],
+  "sftp": [
+    "ingestion/product-catalog-sftp-load.md",
+    "sources/product-catalog-sftp.md"
   ],
   "silver": [
     "business-objects/customer-order.md",
@@ -1755,7 +2045,9 @@
     "columns/silver-orders-order-ts.md",
     "columns/silver-orders-status.md",
     "diagrams/activity-daily-medallion-orders-activity.md",
+    "diagrams/activity-orders-stream-landing-activity.md",
     "diagrams/architecture-commerce-lake-architecture.md",
+    "diagrams/sequence-orders-stream-landing-sequence.md",
     "lakes/retail-commerce-lake.md",
     "layers/silver.md",
     "lineage/orders-to-revenue.md",
@@ -1783,8 +2075,12 @@
   "skipped": [
     "agents/walk-retail-lake-walk.md"
   ],
+  "sla": [
+    "ingestion/orders-stream-landing.md"
+  ],
   "slv": [
-    "diagrams/architecture-commerce-lake-architecture.md"
+    "diagrams/architecture-commerce-lake-architecture.md",
+    "diagrams/sequence-orders-stream-landing-sequence.md"
   ],
   "sold": [
     "diagrams/erd-orders-erd.md"
@@ -1792,7 +2088,12 @@
   "source": [
     "business-objects/customer-order.md",
     "diagrams/activity-daily-medallion-orders-activity.md",
+    "diagrams/activity-orders-stream-landing-activity.md",
+    "diagrams/sequence-orders-stream-landing-sequence.md",
     "glossary/customer-order.md",
+    "ingestion/orders-stream-landing.md",
+    "ingestion/product-catalog-sftp-load.md",
+    "sources/product-catalog-sftp.md",
     "sources/retail-lake-walk.md",
     "sources/retail-lake.md"
   ],
@@ -1801,9 +2102,12 @@
     "business-objects/customer-order.md",
     "business-objects/daily-order-summary.md",
     "diagrams/architecture-commerce-lake-architecture.md",
+    "ingestion/orders-stream-landing.md",
+    "ingestion/product-catalog-sftp-load.md",
     "lakes/retail-commerce-lake.md"
   ],
   "sourcesystem": [
+    "sources/product-catalog-sftp.md",
     "sources/retail-lake-walk.md",
     "sources/retail-lake.md"
   ],
@@ -1836,40 +2140,60 @@
     "sql/orders.md"
   ],
   "src": [
-    "diagrams/architecture-commerce-lake-architecture.md"
+    "diagrams/architecture-commerce-lake-architecture.md",
+    "diagrams/sequence-orders-stream-landing-sequence.md",
+    "ingestion/orders-stream-landing.md",
+    "ingestion/product-catalog-sftp-load.md"
   ],
   "start": [
-    "diagrams/activity-daily-medallion-orders-activity.md"
+    "diagrams/activity-daily-medallion-orders-activity.md",
+    "diagrams/activity-orders-stream-landing-activity.md"
   ],
   "startuml": [
     "wireframes/wireframe-executive-revenue-wireframe.md"
   ],
   "state": [
-    "diagrams/state-daily-medallion-orders-state.md"
+    "diagrams/state-daily-medallion-orders-state.md",
+    "diagrams/state-orders-stream-landing-state.md"
   ],
   "statediagram": [
-    "diagrams/state-daily-medallion-orders-state.md"
+    "diagrams/state-daily-medallion-orders-state.md",
+    "diagrams/state-orders-stream-landing-state.md"
   ],
   "stats": [
     "agents/walk-retail-lake-walk.md"
   ],
   "steps": [
+    "ingestion/orders-stream-landing.md",
+    "ingestion/product-catalog-sftp-load.md",
     "queries/daily-medallion.md",
     "sql/daily-medallion.md",
     "workflows/daily-medallion-orders.md"
   ],
   "storage": [
     "diagrams/component-daily-medallion-orders-component.md",
+    "diagrams/component-orders-stream-landing-component.md",
+    "ingestion/orders-stream-landing.md",
     "storage/bronze-orders-prefix.md"
   ],
   "storagelocation": [
     "storage/bronze-orders-prefix.md"
   ],
   "stream": [
+    "diagrams/activity-orders-stream-landing-activity.md",
+    "diagrams/component-orders-stream-landing-component.md",
+    "diagrams/sequence-orders-stream-landing-sequence.md",
+    "diagrams/state-orders-stream-landing-state.md",
+    "ingestion/orders-stream-landing.md",
+    "ingestion/product-catalog-sftp-load.md",
     "streams/orders-events.md"
   ],
+  "streaming": [
+    "ingestion/orders-stream-landing.md"
+  ],
   "streams": [
-    "diagrams/architecture-commerce-lake-architecture.md"
+    "diagrams/architecture-commerce-lake-architecture.md",
+    "ingestion/orders-stream-landing.md"
   ],
   "string": [
     "columns/bronze-orders-raw-currency.md",
@@ -1887,22 +2211,29 @@
     "catalogs/retail-unity-style-catalog.md"
   ],
   "subgraph": [
-    "diagrams/component-daily-medallion-orders-component.md"
+    "diagrams/component-daily-medallion-orders-component.md",
+    "diagrams/component-orders-stream-landing-component.md"
   ],
   "subjects": [
     "diagrams/activity-daily-medallion-orders-activity.md",
+    "diagrams/activity-orders-stream-landing-activity.md",
     "diagrams/architecture-commerce-lake-architecture.md",
     "diagrams/class-daily-medallion-orders-class.md",
     "diagrams/component-daily-medallion-orders-component.md",
+    "diagrams/component-orders-stream-landing-component.md",
     "diagrams/erd-orders-erd.md",
+    "diagrams/sequence-orders-stream-landing-sequence.md",
     "diagrams/state-daily-medallion-orders-state.md",
+    "diagrams/state-orders-stream-landing-state.md",
     "wireframes/wireframe-executive-revenue-wireframe.md"
   ],
   "succeeded": [
-    "diagrams/state-daily-medallion-orders-state.md"
+    "diagrams/state-daily-medallion-orders-state.md",
+    "diagrams/state-orders-stream-landing-state.md"
   ],
   "success": [
-    "diagrams/activity-daily-medallion-orders-activity.md"
+    "diagrams/activity-daily-medallion-orders-activity.md",
+    "diagrams/activity-orders-stream-landing-activity.md"
   ],
   "sum": [
     "metrics/gross-merchandise-value.md",
@@ -1934,16 +2265,20 @@
     "catalogs/retail-unity-style-catalog.md"
   ],
   "t1": [
-    "diagrams/component-daily-medallion-orders-component.md"
+    "diagrams/component-daily-medallion-orders-component.md",
+    "diagrams/component-orders-stream-landing-component.md"
   ],
   "t2": [
-    "diagrams/component-daily-medallion-orders-component.md"
+    "diagrams/component-daily-medallion-orders-component.md",
+    "diagrams/component-orders-stream-landing-component.md"
   ],
   "t3": [
-    "diagrams/component-daily-medallion-orders-component.md"
+    "diagrams/component-daily-medallion-orders-component.md",
+    "diagrams/component-orders-stream-landing-component.md"
   ],
   "table": [
     "diagrams/class-daily-medallion-orders-class.md",
+    "ingestion/product-catalog-sftp-load.md",
     "packs/pack-gold-order-daily.md",
     "queries/order-daily.md",
     "queries/orders-raw.md",
@@ -1962,7 +2297,9 @@
     "business-objects/daily-order-summary.md",
     "catalogs/retail-unity-style-catalog.md",
     "diagrams/component-daily-medallion-orders-component.md",
+    "diagrams/component-orders-stream-landing-component.md",
     "diagrams/erd-orders-erd.md",
+    "ingestion/orders-stream-landing.md",
     "lineage/orders-to-revenue.md",
     "marts/revenue-mart.md",
     "packs/pack-gold-order-daily.md",
@@ -1976,25 +2313,34 @@
   ],
   "tag": [
     "diagrams/activity-daily-medallion-orders-activity.md",
+    "diagrams/activity-orders-stream-landing-activity.md",
     "diagrams/architecture-commerce-lake-architecture.md",
     "diagrams/class-daily-medallion-orders-class.md",
     "diagrams/component-daily-medallion-orders-component.md",
+    "diagrams/component-orders-stream-landing-component.md",
     "diagrams/erd-orders-erd.md",
+    "diagrams/sequence-orders-stream-landing-sequence.md",
     "diagrams/state-daily-medallion-orders-state.md",
+    "diagrams/state-orders-stream-landing-state.md",
     "wireframes/wireframe-executive-revenue-wireframe.md"
   ],
   "target": [
+    "ingestion/orders-stream-landing.md",
+    "ingestion/product-catalog-sftp-load.md",
     "quality/gold-order-daily-freshness.md"
   ],
   "task": [
     "diagrams/class-daily-medallion-orders-class.md",
-    "diagrams/component-daily-medallion-orders-component.md"
+    "diagrams/component-daily-medallion-orders-component.md",
+    "diagrams/component-orders-stream-landing-component.md"
   ],
   "tb": [
-    "diagrams/component-daily-medallion-orders-component.md"
+    "diagrams/component-daily-medallion-orders-component.md",
+    "diagrams/component-orders-stream-landing-component.md"
   ],
   "td": [
-    "diagrams/activity-daily-medallion-orders-activity.md"
+    "diagrams/activity-daily-medallion-orders-activity.md",
+    "diagrams/activity-orders-stream-landing-activity.md"
   ],
   "technical": [
     "business-objects/customer-lifetime-value.md",
@@ -2012,6 +2358,8 @@
   ],
   "to": [
     "domains/commerce.md",
+    "ingestion/orders-stream-landing.md",
+    "ingestion/product-catalog-sftp-load.md",
     "lineage/orders-to-revenue.md",
     "semantic/retail-commerce-model.md",
     "workflows/daily-medallion-orders.md"
@@ -2043,7 +2391,9 @@
   ],
   "transform": [
     "diagrams/activity-daily-medallion-orders-activity.md",
-    "diagrams/component-daily-medallion-orders-component.md"
+    "diagrams/activity-orders-stream-landing-activity.md",
+    "diagrams/component-daily-medallion-orders-component.md",
+    "diagrams/component-orders-stream-landing-component.md"
   ],
   "transformation": [
     "transformations/aggregate-order-daily.md",
@@ -2054,7 +2404,8 @@
     "reports/weekly-commerce-digest.md"
   ],
   "trigger": [
-    "diagrams/state-daily-medallion-orders-state.md"
+    "diagrams/state-daily-medallion-orders-state.md",
+    "diagrams/state-orders-stream-landing-state.md"
   ],
   "typically": [
     "marts/revenue-mart.md"
@@ -2062,12 +2413,16 @@
   "unity": [
     "catalogs/retail-unity-style-catalog.md"
   ],
+  "update": [
+    "ingestion/orders-stream-landing.md"
+  ],
   "updated": [
     "agents/walk-retail-lake-walk.md"
   ],
   "uri": [
     "catalogs/retail-unity-style-catalog.md",
     "lakes/retail-commerce-lake.md",
+    "sources/product-catalog-sftp.md",
     "sources/retail-lake-walk.md",
     "sources/retail-lake.md",
     "storage/bronze-orders-prefix.md",
@@ -2081,10 +2436,13 @@
     "columns/bronze-orders-raw-order-ts.md"
   ],
   "v2": [
-    "diagrams/state-daily-medallion-orders-state.md"
+    "diagrams/state-daily-medallion-orders-state.md",
+    "diagrams/state-orders-stream-landing-state.md"
   ],
   "validate": [
-    "diagrams/activity-daily-medallion-orders-activity.md"
+    "diagrams/activity-daily-medallion-orders-activity.md",
+    "diagrams/activity-orders-stream-landing-activity.md",
+    "diagrams/sequence-orders-stream-landing-sequence.md"
   ],
   "validates": [
     "diagrams/class-daily-medallion-orders-class.md"
@@ -2099,6 +2457,9 @@
     "metrics/gross-merchandise-value.md",
     "packs/pack-gold-order-daily.md",
     "views/gold-customer-ltv.md"
+  ],
+  "via": [
+    "sources/product-catalog-sftp.md"
   ],
   "view": [
     "packs/pack-gold-order-daily.md",
@@ -2125,11 +2486,15 @@
   "walked": [
     "sources/retail-lake-walk.md"
   ],
+  "watermark": [
+    "ingestion/orders-stream-landing.md"
+  ],
   "weekly": [
     "reports/weekly-commerce-digest.md"
   ],
   "wf": [
-    "diagrams/component-daily-medallion-orders-component.md"
+    "diagrams/component-daily-medallion-orders-component.md",
+    "diagrams/component-orders-stream-landing-component.md"
   ],
   "where": [
     "queries/orders.md",
@@ -2147,6 +2512,7 @@
     "diagrams/activity-daily-medallion-orders-activity.md",
     "diagrams/class-daily-medallion-orders-class.md",
     "diagrams/component-daily-medallion-orders-component.md",
+    "diagrams/component-orders-stream-landing-component.md",
     "diagrams/state-daily-medallion-orders-state.md",
     "workflows/daily-medallion-orders.md"
   ],
@@ -2163,8 +2529,13 @@
     "catalogs/retail-unity-style-catalog.md",
     "sources/retail-lake-walk.md"
   ],
+  "write": [
+    "diagrams/sequence-orders-stream-landing-sequence.md",
+    "ingestion/orders-stream-landing.md"
+  ],
   "yes": [
-    "diagrams/activity-daily-medallion-orders-activity.md"
+    "diagrams/activity-daily-medallion-orders-activity.md",
+    "diagrams/activity-orders-stream-landing-activity.md"
   ],
   "zone": [
     "layers/bronze.md",

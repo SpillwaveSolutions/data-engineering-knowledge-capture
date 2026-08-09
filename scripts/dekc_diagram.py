@@ -430,6 +430,8 @@ def resolve_subject(bundle: Path, name: str) -> str:
             "workflow": "Workflow",
             "job": "Workflow",
             "pipeline": "Workflow",
+            "ingest": "IngestionJob",
+            "ingestion": "IngestionJob",
             "lake": "DataLake",
             "mart": "DataMart",
             "catalog": "DataCatalog",
@@ -451,6 +453,8 @@ def resolve_subject(bundle: Path, name: str) -> str:
         return concept_ref(n, "dashboards")
     if "report" in low:
         return concept_ref(n, "reports")
+    if any(k in low for k in ("ingest", "landing", "copy activity")):
+        return concept_ref(n, "ingestion")
     if any(k in low for k in ("workflow", "job", "pipeline")):
         return concept_ref(n, "workflows")
     if "lake" in low:
@@ -595,8 +599,12 @@ def main(argv: list[str] | None = None) -> int:
     p = sub.add_parser("templates", help="List built-in templates")
     p.add_argument("--show", nargs=2, metavar=("KIND", "LANG"), help="Print one template")
 
-    p = sub.add_parser("job-pack", help="Scaffold job diagrams: activity + state + class + component")
+    p = sub.add_parser("job-pack", help="Scaffold workflow/job diagrams: activity + state + class + component")
     p.add_argument("--workflow", required=True, help="Workflow name or path")
+    p.add_argument("--language", default="mermaid", choices=LANGUAGES)
+
+    p = sub.add_parser("ingestion-pack", help="Scaffold ingestion job diagrams: sequence + activity + state + component")
+    p.add_argument("--job", required=True, help="IngestionJob name or path")
     p.add_argument("--language", default="mermaid", choices=LANGUAGES)
 
     p = sub.add_parser("report-pack", help="Scaffold report/dashboard wireframe")
@@ -664,6 +672,20 @@ def main(argv: list[str] | None = None) -> int:
                     language=args.language,
                     description=f"{kind} diagram for workflow {wf}",
                     subject=wf,
+                )
+            )
+    elif args.cmd == "ingestion-pack":
+        job = args.job
+        base = Path(job).stem if job.endswith(".md") else slugify(job)
+        for kind in ("sequence", "activity", "state", "component"):
+            results.extend(
+                capture_diagram(
+                    bundle,
+                    name=f"{base}-{kind}",
+                    diagram_kind=kind,
+                    language=args.language,
+                    description=f"{kind} diagram for ingestion job {job}",
+                    subject=job,
                 )
             )
     elif args.cmd == "report-pack":

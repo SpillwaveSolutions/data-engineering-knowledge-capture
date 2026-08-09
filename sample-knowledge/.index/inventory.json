@@ -421,6 +421,24 @@
     "hash": "fc2f7a203acaf16e"
   },
   {
+    "path": "diagrams/activity-orders-stream-landing-activity.md",
+    "type": "Diagram",
+    "title": "orders-stream-landing-activity",
+    "description": "activity diagram for ingestion job /ingestion/orders-stream-landing.md",
+    "layer": null,
+    "tags": [
+      "diagram",
+      "activity",
+      "mermaid",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "diagram-activity-orders-stream-landing-activity",
+    "token_count": 87,
+    "hash": "feb216108d3b95ef"
+  },
+  {
     "path": "diagrams/architecture-commerce-lake-architecture.md",
     "type": "Diagram",
     "title": "Commerce lake architecture",
@@ -475,6 +493,24 @@
     "hash": "0b909bced48429b3"
   },
   {
+    "path": "diagrams/component-orders-stream-landing-component.md",
+    "type": "Diagram",
+    "title": "orders-stream-landing-component",
+    "description": "component diagram for ingestion job /ingestion/orders-stream-landing.md",
+    "layer": null,
+    "tags": [
+      "diagram",
+      "component",
+      "mermaid",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "diagram-component-orders-stream-landing-component",
+    "token_count": 96,
+    "hash": "f607d5edba93ac32"
+  },
+  {
     "path": "diagrams/erd-orders-erd.md",
     "type": "Diagram",
     "title": "Orders ERD",
@@ -493,6 +529,24 @@
     "hash": "9dc80564a05d8d8f"
   },
   {
+    "path": "diagrams/sequence-orders-stream-landing-sequence.md",
+    "type": "Diagram",
+    "title": "orders-stream-landing-sequence",
+    "description": "sequence diagram for ingestion job /ingestion/orders-stream-landing.md",
+    "layer": null,
+    "tags": [
+      "diagram",
+      "sequence",
+      "mermaid",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "diagram-sequence-orders-stream-landing-sequence",
+    "token_count": 102,
+    "hash": "a0a8ba32a8d16724"
+  },
+  {
     "path": "diagrams/state-daily-medallion-orders-state.md",
     "type": "Diagram",
     "title": "daily-medallion-orders-state",
@@ -509,6 +563,24 @@
     "wiki_key": "diagram-state-daily-medallion-orders-state",
     "token_count": 77,
     "hash": "aeedf75758d27777"
+  },
+  {
+    "path": "diagrams/state-orders-stream-landing-state.md",
+    "type": "Diagram",
+    "title": "orders-stream-landing-state",
+    "description": "state diagram for ingestion job /ingestion/orders-stream-landing.md",
+    "layer": null,
+    "tags": [
+      "diagram",
+      "state",
+      "mermaid",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "diagram-state-orders-stream-landing-state",
+    "token_count": 79,
+    "hash": "9906b8f8698a4c8d"
   },
   {
     "path": "domains/commerce.md",
@@ -589,6 +661,44 @@
     "wiki_key": "term-gmv",
     "token_count": 34,
     "hash": "74645969b7523b8a"
+  },
+  {
+    "path": "ingestion/orders-stream-landing.md",
+    "type": "IngestionJob",
+    "title": "orders-stream-landing",
+    "description": "Lands order events from Event Hubs into bronze Delta",
+    "layer": null,
+    "tags": [
+      "ingestion",
+      "job",
+      "streaming",
+      "bronze",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "ingest-orders-stream-landing",
+    "token_count": 99,
+    "hash": "692ad1c03a428c03"
+  },
+  {
+    "path": "ingestion/product-catalog-sftp-load.md",
+    "type": "IngestionJob",
+    "title": "product-catalog-sftp-load",
+    "description": "Nightly full extract of product catalog from SFTP to bronze",
+    "layer": null,
+    "tags": [
+      "ingestion",
+      "job",
+      "file_drop",
+      "bronze",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "ingest-product-catalog-sftp-load",
+    "token_count": 87,
+    "hash": "b95e662b7d533d64"
   },
   {
     "path": "lakes/retail-commerce-lake.md",
@@ -971,6 +1081,24 @@
     "wiki_key": "semantic-retail-commerce-model",
     "token_count": 33,
     "hash": "550d87663c9245f3"
+  },
+  {
+    "path": "sources/product-catalog-sftp.md",
+    "type": "SourceSystem",
+    "title": "product-catalog-sftp",
+    "description": "Nightly product catalog flat files via SFTP",
+    "layer": null,
+    "tags": [
+      "source",
+      "file",
+      "sftp",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "source-product-catalog-sftp",
+    "token_count": 34,
+    "hash": "1a813c72682fc8ba"
   },
   {
     "path": "sources/retail-lake-walk.md",

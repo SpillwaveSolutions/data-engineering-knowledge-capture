@@ -9,6 +9,24 @@ tags: [dekc, log]
 
 ## 2026-08-09
 
+- 2026-08-09T12:27:20Z: Captured source: product-catalog-sftp
+
+- 2026-08-09T12:26:50Z: Captured ingestion job: product-catalog-sftp-load
+
+- 2026-08-09T12:26:50Z: Captured source: product-catalog-sftp
+
+- 2026-08-09T12:26:46Z: Captured ingestion job: product-catalog-sftp-load
+
+- 2026-08-09T12:26:46Z: Captured Diagram: orders-stream-landing-component (component/mermaid)
+
+- 2026-08-09T12:26:46Z: Captured Diagram: orders-stream-landing-state (state/mermaid)
+
+- 2026-08-09T12:26:46Z: Captured Diagram: orders-stream-landing-activity (activity/mermaid)
+
+- 2026-08-09T12:26:46Z: Captured Diagram: orders-stream-landing-sequence (sequence/mermaid)
+
+- 2026-08-09T12:26:46Z: Captured ingestion job: orders-stream-landing
+
 - 2026-08-09T12:22:18Z: Captured Diagram: Commerce lake architecture (architecture/mermaid)
 
 - 2026-08-09T12:22:18Z: Captured Diagram: daily-medallion-orders-component (component/mermaid)

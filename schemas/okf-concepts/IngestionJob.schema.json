@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "dekc://schemas/okf-concepts/IngestionJob.schema.json",
+  "title": "DEKC OKF concept: IngestionJob",
+  "description": "Data ingestion job that lands data from sources/streams into bronze (or other) storage/tables. Distinct from general Workflows that transform or orchestrate multi-stage medallion work.",
+  "type": "object",
+  "required": [
+    "type",
+    "title",
+    "description",
+    "timestamp"
+  ],
+  "properties": {
+    "type": {
+      "const": "IngestionJob"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string"
+    },
+    "timestamp": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "verified": {
+      "type": "boolean"
+    },
+    "generated": {
+      "type": "boolean"
+    },
+    "wiki_key": {
+      "type": "string"
+    },
+    "truth_state": {
+      "type": "string"
+    },
+    "ingestion_mode": {
+      "type": "string",
+      "enum": [
+        "batch",
+        "microbatch",
+        "streaming",
+        "cdc",
+        "full_load",
+        "incremental",
+        "file_drop",
+        "api_pull",
+        "unknown"
+      ],
+      "description": "How data is ingested"
+    },
+    "pattern": {
+      "type": "string",
+      "description": "Ingestion pattern label e.g. stream-to-bronze, sftp-to-bronze, cdc-to-bronze"
+    },
+    "orchestrator": {
+      "type": "string"
+    },
+    "schedule": {
+      "type": "string"
+    },
+    "connector": {
+      "type": "string",
+      "description": "ADF linked service, Airbyte connector, Fivetran connector, etc."
+    },
+    "source_format": {
+      "type": "string"
+    },
+    "target_format": {
+      "type": "string"
+    },
+    "target_layer": {
+      "type": "string",
+      "default": "bronze"
+    },
+    "sla_minutes": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "idempotent": {
+      "type": "boolean"
+    },
+    "watermark_column": {
+      "type": "string"
+    },
+    "checkpoint": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": true
+}

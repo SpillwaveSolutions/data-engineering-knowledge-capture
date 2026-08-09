@@ -264,6 +264,7 @@ class TestDiagramsAndPlatform(unittest.TestCase):
         self.assertIn("DataLake", types)
         self.assertIn("DQRule", types)
         self.assertIn("Diagram", types)
+        self.assertIn("IngestionJob", types)
 
     def test_capture_wireframe_temp(self):
         with tempfile.TemporaryDirectory() as tmp:

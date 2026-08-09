@@ -61,13 +61,17 @@ python3 scripts/dekc_diagram.py job-pack --workflow /workflows/daily-medallion-o
 python3 scripts/dekc_diagram.py capture --name "Orders ERD" --kind erd --language mermaid --subject /tables/gold-order-daily.md
 ```
 
-First-class platform types: **DataLake**, **DataMart**, **DataCatalog**, **DataDomain**, **DataProduct**, **Stream**, **StorageLocation**, **DQRule**.
+First-class platform types: **DataLake**, **DataMart**, **DataCatalog**, **DataDomain**, **DataProduct**, **Stream**, **StorageLocation**, **DQRule**, **IngestionJob**.
 
 ```bash
 python3 scripts/dekc_platform.py lake --name "Retail Lake" --platform fabric-onelake
 python3 scripts/dekc_platform.py catalog --name "Workspace Catalog" --engine unity
 python3 scripts/dekc_platform.py dq-rule --name freshness --target gold-order-daily --rule-type freshness
+python3 scripts/dekc_platform.py ingestion --name orders-stream-landing --mode streaming \
+  --streams orders-events --lands-as bronze-orders-raw
+python3 scripts/dekc_diagram.py ingestion-pack --job /ingestion/orders-stream-landing.md
 ```
+
 
 See [docs/diagrams.md](./docs/diagrams.md).
 

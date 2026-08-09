@@ -66,6 +66,7 @@ From `registry.json`:
 | Stream | streams |
 | StorageLocation | storage |
 | DQRule | quality |
+| IngestionJob | ingestion |
 | Diagram | diagrams |
 | Wireframe | wireframes |
 

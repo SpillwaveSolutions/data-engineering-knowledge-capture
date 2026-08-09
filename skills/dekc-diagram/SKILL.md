@@ -56,3 +56,10 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/dekc_diagram.py" capture \
 List templates: `dekc_diagram.py templates` / `templates --show erd mermaid`.
 
 Prefer linking `--subject` to real concept paths. Never invent lineage in diagrams that the graph does not support—diagrams **document** design intent.
+
+## Ingestion job diagram pack
+
+```bash
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/dekc_diagram.py" ingestion-pack \
+  --job /ingestion/orders-stream-landing.md --language mermaid
+```

@@ -91,8 +91,17 @@ Kinds: wireframe, architecture, component, activity, state, class, erd, sequence
 ### Platform concepts
 
 ```bash
-python3 scripts/dekc_platform.py lake|mart|catalog|domain|product|stream|storage|dq-rule ...
+python3 scripts/dekc_platform.py lake|mart|catalog|domain|product|stream|storage|dq-rule|ingestion ...
+
+# Landing / ingestion jobs (stream, file, CDC, API)
+python3 scripts/dekc_platform.py ingestion \
+  --name orders-stream-landing --mode streaming \
+  --streams orders-events --lands-as bronze-orders-raw
+python3 scripts/dekc_diagram.py ingestion-pack --job /ingestion/orders-stream-landing.md
 ```
+
+See [ingestion-jobs.md](../ingestion-jobs.md).
+
 
 Full guide: [diagrams.md](../diagrams.md).
 

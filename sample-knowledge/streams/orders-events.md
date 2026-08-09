@@ -17,6 +17,8 @@ links:
   rel: lands_as
 - target: /tables/bronze-orders-raw.md
   rel: feeds
+- target: /ingestion/orders-stream-landing.md
+  rel: ingested_by
 ---
 
 # orders-events

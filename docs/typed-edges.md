@@ -55,3 +55,12 @@ Markdown body links remain universal. Frontmatter `links[].rel` enriches them fo
 | `consumes_stream` | Job/Table → Stream | Stream input |
 | `validates` / `quality_of` | DQRule → Table | Quality binding |
 | `validated_by` | Table → DQRule | Inverse |
+
+## Ingestion jobs
+
+| rel | Direction | Meaning |
+|-----|-----------|---------|
+| `ingests_from` | IngestionJob → SourceSystem / Stream | Input origin |
+| `lands_into` / `lands_as` | IngestionJob → Table / Storage | Landing target |
+| `ingested_by` | Source/Stream/Table → IngestionJob | Inverse |
+| `consumes_stream` | IngestionJob → Stream | Streaming input |
