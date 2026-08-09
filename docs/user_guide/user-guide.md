@@ -66,6 +66,45 @@ Skills are also invokable as `$dekc-init`, `$dekc-walk`, etc.
 Use skills under `skills/` plus `AGENTS.md`. Register permissions via `.opencode/opencode.json`.
 
 
+
+## Diagrams, wireframes, lakes, catalogs, DQ
+
+### Wireframes (reports/dashboards)
+
+```bash
+python3 scripts/dekc_diagram.py wireframe \
+  --name "Exec Revenue Wireframe" \
+  --subject /dashboards/executive-revenue.md \
+  --language plantuml
+```
+
+### Architecture / ERD / job diagrams (Mermaid or PlantUML)
+
+```bash
+python3 scripts/dekc_diagram.py capture --name "Lake arch" --kind architecture --language mermaid --subject /lakes/...
+python3 scripts/dekc_diagram.py capture --name "Orders ERD" --kind erd --language mermaid --subject /tables/...
+python3 scripts/dekc_diagram.py job-pack --workflow /workflows/... --language mermaid
+```
+
+Kinds: wireframe, architecture, component, activity, state, class, erd, sequence, deployment, flowchart, c4.
+
+### Platform concepts
+
+```bash
+python3 scripts/dekc_platform.py lake|mart|catalog|domain|product|stream|storage|dq-rule|ingestion ...
+
+# Landing / ingestion jobs (stream, file, CDC, API)
+python3 scripts/dekc_platform.py ingestion \
+  --name orders-stream-landing --mode streaming \
+  --streams orders-events --lands-as bronze-orders-raw
+python3 scripts/dekc_diagram.py ingestion-pack --job /ingestion/orders-stream-landing.md
+```
+
+See [ingestion-jobs.md](../ingestion-jobs.md).
+
+
+Full guide: [diagrams.md](../diagrams.md).
+
 ## Second brain for design work
 
 The knowledge bundle is an indexed, **schema-typed** second brain. Use it before designing reports or landing data so agents reuse existing gold tables, metrics, glossary terms, sources, and jobs.

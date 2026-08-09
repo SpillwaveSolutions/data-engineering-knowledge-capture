@@ -46,9 +46,13 @@ INTENTS = {
             "View",
             "DaxArtifact",
             "Query",
+            "Wireframe",
+            "Diagram",
+            "DataMart",
         ],
         "prefer_layers": ["gold", "silver"],
         "checklist": [
+            "Capture or update wireframe (PlantUML) for the report layout",
             "Identify business objects and glossary terms the report must use",
             "Bind visuals to existing metrics or propose new Metric concepts",
             "Prefer gold/mart tables; document silver only if grain requires it",
@@ -58,6 +62,7 @@ INTENTS = {
         ],
     },
     "land-data": {
+        # includes IngestionJob
         "title": "Land new data (stream or batch)",
         "types": [
             "SourceSystem",
@@ -69,7 +74,8 @@ INTENTS = {
             "LineagePath",
             "Schema",
             "Column",
-        ],
+        
+            "IngestionJob",],
         "prefer_layers": ["bronze", "raw", "silver"],
         "checklist": [
             "Register SourceSystem (stream vs batch/api/file)",
@@ -100,6 +106,29 @@ INTENTS = {
             "Prefer certified gold sources; cite grain and filters",
             "If DAX/SQL exists, capture DaxArtifact/SqlArtifact implements links",
             "Avoid conflicting metric names without supersedes/related_to notes",
+        ],
+    },
+    "design-job": {
+        "title": "Design a job / pipeline",
+        "types": [
+            "Workflow",
+            "Transformation",
+            "Diagram",
+            "DQRule",
+            "Table",
+            "Stream",
+            "StorageLocation",
+            "IngestionJob",
+            "DataLake",
+        ],
+        "prefer_layers": ["bronze", "silver", "gold"],
+        "checklist": [
+            "Capture Workflow with orchestrator and mode",
+            "Attach activity/state/class diagrams via dekc_diagram job-pack",
+            "Capture IngestionJob for landing (mode, connector, lands_as)",
+            "Link reads/writes to tables; streams/storage when landing",
+            "Add DQ rules on outputs",
+            "Do not invent lineage edges without SQL/job evidence",
         ],
     },
     "impact": {

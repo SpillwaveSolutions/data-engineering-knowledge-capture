@@ -10,5 +10,6 @@ tags: [catalog, sources, dekc]
 
 Concepts in this catalog:
 
+- [product-catalog-sftp](/sources/product-catalog-sftp.md)
 - [retail-lake-walk](/sources/retail-lake-walk.md)
 - [retail-lake](/sources/retail-lake.md)

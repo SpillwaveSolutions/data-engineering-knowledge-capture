@@ -9,6 +9,66 @@ tags: [dekc, log]
 
 ## 2026-08-09
 
+- 2026-08-09T12:27:20Z: Captured source: product-catalog-sftp
+
+- 2026-08-09T12:26:50Z: Captured ingestion job: product-catalog-sftp-load
+
+- 2026-08-09T12:26:50Z: Captured source: product-catalog-sftp
+
+- 2026-08-09T12:26:46Z: Captured ingestion job: product-catalog-sftp-load
+
+- 2026-08-09T12:26:46Z: Captured Diagram: orders-stream-landing-component (component/mermaid)
+
+- 2026-08-09T12:26:46Z: Captured Diagram: orders-stream-landing-state (state/mermaid)
+
+- 2026-08-09T12:26:46Z: Captured Diagram: orders-stream-landing-activity (activity/mermaid)
+
+- 2026-08-09T12:26:46Z: Captured Diagram: orders-stream-landing-sequence (sequence/mermaid)
+
+- 2026-08-09T12:26:46Z: Captured ingestion job: orders-stream-landing
+
+- 2026-08-09T12:22:18Z: Captured Diagram: Commerce lake architecture (architecture/mermaid)
+
+- 2026-08-09T12:22:18Z: Captured Diagram: daily-medallion-orders-component (component/mermaid)
+
+- 2026-08-09T12:22:18Z: Captured Diagram: daily-medallion-orders-class (class/mermaid)
+
+- 2026-08-09T12:22:18Z: Captured Diagram: daily-medallion-orders-state (state/mermaid)
+
+- 2026-08-09T12:22:18Z: Captured Diagram: daily-medallion-orders-activity (activity/mermaid)
+
+- 2026-08-09T12:22:18Z: Captured Wireframe: Executive Revenue Wireframe (wireframe/plantuml)
+
+- 2026-08-09T12:22:13Z: Captured Diagram: nightly-silver-orders-component (component/mermaid)
+
+- 2026-08-09T12:22:13Z: Captured Diagram: nightly-silver-orders-class (class/mermaid)
+
+- 2026-08-09T12:22:13Z: Captured Diagram: nightly-silver-orders-state (state/mermaid)
+
+- 2026-08-09T12:22:13Z: Captured Diagram: nightly-silver-orders-activity (activity/mermaid)
+
+- 2026-08-09T12:22:13Z: Captured Diagram: Orders ERD (erd/mermaid)
+
+- 2026-08-09T12:22:13Z: Captured Diagram: Commerce lake architecture (architecture/mermaid)
+
+- 2026-08-09T12:22:13Z: Captured Wireframe: Executive Revenue Wireframe (wireframe/plantuml)
+
+- 2026-08-09T12:22:13Z: Captured data product: Daily Revenue Product
+
+- 2026-08-09T12:22:13Z: Captured DQ rule: gold-order-daily-freshness
+
+- 2026-08-09T12:22:13Z: Captured storage: bronze-orders-prefix
+
+- 2026-08-09T12:22:13Z: Captured stream: orders-events
+
+- 2026-08-09T12:22:13Z: Captured data catalog: Retail Unity-style Catalog
+
+- 2026-08-09T12:22:13Z: Captured data mart: Revenue Mart
+
+- 2026-08-09T12:22:13Z: Captured data domain: Commerce
+
+- 2026-08-09T12:22:13Z: Captured data lake: Retail Commerce Lake
+
 - 2026-08-09T10:28:10Z: Wrote context pack for /tables/gold-order-daily.md
 
 - 2026-08-09T10:28:10Z: Walked lake retail-lake-walk: +15 ~4 skip 0

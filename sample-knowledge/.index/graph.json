@@ -12,6 +12,17 @@
     "/business-objects/daily-order-summary.md",
     "/queries/total-revenue-dax.md"
   ],
+  "/ingestion/orders-stream-landing.md": [
+    "/layers/bronze.md",
+    "/tables/bronze-orders-raw.md",
+    "/storage/bronze-orders-prefix.md"
+  ],
+  "/ingestion/product-catalog-sftp-load.md": [
+    "/layers/bronze.md"
+  ],
+  "/sources/product-catalog-sftp.md": [
+    "/ingestion/product-catalog-sftp-load.md"
+  ],
   "/lineage/orders-to-revenue.md": [
     "/tables/silver-orders.md",
     "/tables/gold-order-daily.md"
@@ -26,6 +37,9 @@
     "/queries/orders.md",
     "/tables/bronze-orders-api.md",
     "/transformations/cleanse-orders.md"
+  ],
+  "/streams/orders-events.md": [
+    "/tables/bronze-orders-raw.md"
   ],
   "/sources/retail-lake-walk.md": [
     "/tables/bronze-orders-api.md",

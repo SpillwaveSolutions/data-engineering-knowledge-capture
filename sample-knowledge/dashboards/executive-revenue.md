@@ -17,6 +17,8 @@ links:
   rel: visualizes
 - target: /tables/gold-order-daily.md
   rel: visualizes
+- target: /wireframes/wireframe-executive-revenue-wireframe.md
+  rel: has_wireframe
 ---
 
 # Executive Revenue

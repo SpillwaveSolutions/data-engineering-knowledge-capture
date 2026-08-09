@@ -65,6 +65,23 @@
     "hash": "27ea4fff16f1b66e"
   },
   {
+    "path": "catalogs/retail-unity-style-catalog.md",
+    "type": "DataCatalog",
+    "title": "Retail Unity-style Catalog",
+    "description": "Workspace catalog for retail schemas",
+    "layer": null,
+    "tags": [
+      "data-catalog",
+      "dekc",
+      "fabric"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "catalog-retail-unity-style-catalog",
+    "token_count": 33,
+    "hash": "427d21af0e154fb8"
+  },
+  {
     "path": "columns/bronze-orders-raw-currency.md",
     "type": "Column",
     "title": "orders_raw.currency",
@@ -386,6 +403,202 @@
     "hash": "ad75df6a5d25bedf"
   },
   {
+    "path": "diagrams/activity-daily-medallion-orders-activity.md",
+    "type": "Diagram",
+    "title": "daily-medallion-orders-activity",
+    "description": "activity diagram for workflow /workflows/daily-medallion-orders.md",
+    "layer": null,
+    "tags": [
+      "diagram",
+      "activity",
+      "mermaid",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "diagram-activity-daily-medallion-orders-activity",
+    "token_count": 85,
+    "hash": "fc2f7a203acaf16e"
+  },
+  {
+    "path": "diagrams/activity-orders-stream-landing-activity.md",
+    "type": "Diagram",
+    "title": "orders-stream-landing-activity",
+    "description": "activity diagram for ingestion job /ingestion/orders-stream-landing.md",
+    "layer": null,
+    "tags": [
+      "diagram",
+      "activity",
+      "mermaid",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "diagram-activity-orders-stream-landing-activity",
+    "token_count": 87,
+    "hash": "feb216108d3b95ef"
+  },
+  {
+    "path": "diagrams/architecture-commerce-lake-architecture.md",
+    "type": "Diagram",
+    "title": "Commerce lake architecture",
+    "description": "architecture diagram (mermaid): Commerce lake architecture",
+    "layer": null,
+    "tags": [
+      "diagram",
+      "architecture",
+      "mermaid",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "diagram-architecture-commerce-lake-architecture",
+    "token_count": 76,
+    "hash": "28109e7bd39071ed"
+  },
+  {
+    "path": "diagrams/class-daily-medallion-orders-class.md",
+    "type": "Diagram",
+    "title": "daily-medallion-orders-class",
+    "description": "class diagram for workflow /workflows/daily-medallion-orders.md",
+    "layer": null,
+    "tags": [
+      "diagram",
+      "class",
+      "mermaid",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "diagram-class-daily-medallion-orders-class",
+    "token_count": 84,
+    "hash": "9d402f6084942bc5"
+  },
+  {
+    "path": "diagrams/component-daily-medallion-orders-component.md",
+    "type": "Diagram",
+    "title": "daily-medallion-orders-component",
+    "description": "component diagram for workflow /workflows/daily-medallion-orders.md",
+    "layer": null,
+    "tags": [
+      "diagram",
+      "component",
+      "mermaid",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "diagram-component-daily-medallion-orders-component",
+    "token_count": 94,
+    "hash": "0b909bced48429b3"
+  },
+  {
+    "path": "diagrams/component-orders-stream-landing-component.md",
+    "type": "Diagram",
+    "title": "orders-stream-landing-component",
+    "description": "component diagram for ingestion job /ingestion/orders-stream-landing.md",
+    "layer": null,
+    "tags": [
+      "diagram",
+      "component",
+      "mermaid",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "diagram-component-orders-stream-landing-component",
+    "token_count": 96,
+    "hash": "f607d5edba93ac32"
+  },
+  {
+    "path": "diagrams/erd-orders-erd.md",
+    "type": "Diagram",
+    "title": "Orders ERD",
+    "description": "Logical ERD for commerce orders",
+    "layer": null,
+    "tags": [
+      "diagram",
+      "erd",
+      "mermaid",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "diagram-erd-orders-erd",
+    "token_count": 87,
+    "hash": "9dc80564a05d8d8f"
+  },
+  {
+    "path": "diagrams/sequence-orders-stream-landing-sequence.md",
+    "type": "Diagram",
+    "title": "orders-stream-landing-sequence",
+    "description": "sequence diagram for ingestion job /ingestion/orders-stream-landing.md",
+    "layer": null,
+    "tags": [
+      "diagram",
+      "sequence",
+      "mermaid",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "diagram-sequence-orders-stream-landing-sequence",
+    "token_count": 102,
+    "hash": "a0a8ba32a8d16724"
+  },
+  {
+    "path": "diagrams/state-daily-medallion-orders-state.md",
+    "type": "Diagram",
+    "title": "daily-medallion-orders-state",
+    "description": "state diagram for workflow /workflows/daily-medallion-orders.md",
+    "layer": null,
+    "tags": [
+      "diagram",
+      "state",
+      "mermaid",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "diagram-state-daily-medallion-orders-state",
+    "token_count": 77,
+    "hash": "aeedf75758d27777"
+  },
+  {
+    "path": "diagrams/state-orders-stream-landing-state.md",
+    "type": "Diagram",
+    "title": "orders-stream-landing-state",
+    "description": "state diagram for ingestion job /ingestion/orders-stream-landing.md",
+    "layer": null,
+    "tags": [
+      "diagram",
+      "state",
+      "mermaid",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "diagram-state-orders-stream-landing-state",
+    "token_count": 79,
+    "hash": "9906b8f8698a4c8d"
+  },
+  {
+    "path": "domains/commerce.md",
+    "type": "DataDomain",
+    "title": "Commerce",
+    "description": "Order-to-cash and merchandising",
+    "layer": null,
+    "tags": [
+      "data-domain",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "domain-commerce",
+    "token_count": 17,
+    "hash": "65aa1b97f57203ed"
+  },
+  {
     "path": "glossary/customer-lifetime-value.md",
     "type": "GlossaryTerm",
     "title": "Customer Lifetime Value",
@@ -448,6 +661,61 @@
     "wiki_key": "term-gmv",
     "token_count": 34,
     "hash": "74645969b7523b8a"
+  },
+  {
+    "path": "ingestion/orders-stream-landing.md",
+    "type": "IngestionJob",
+    "title": "orders-stream-landing",
+    "description": "Lands order events from Event Hubs into bronze Delta",
+    "layer": null,
+    "tags": [
+      "ingestion",
+      "job",
+      "streaming",
+      "bronze",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "ingest-orders-stream-landing",
+    "token_count": 99,
+    "hash": "692ad1c03a428c03"
+  },
+  {
+    "path": "ingestion/product-catalog-sftp-load.md",
+    "type": "IngestionJob",
+    "title": "product-catalog-sftp-load",
+    "description": "Nightly full extract of product catalog from SFTP to bronze",
+    "layer": null,
+    "tags": [
+      "ingestion",
+      "job",
+      "file_drop",
+      "bronze",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "ingest-product-catalog-sftp-load",
+    "token_count": 87,
+    "hash": "b95e662b7d533d64"
+  },
+  {
+    "path": "lakes/retail-commerce-lake.md",
+    "type": "DataLake",
+    "title": "Retail Commerce Lake",
+    "description": "Primary commerce lakehouse",
+    "layer": null,
+    "tags": [
+      "data-lake",
+      "dekc",
+      "fabric-onelake"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "lake-retail-commerce-lake",
+    "token_count": 47,
+    "hash": "f80925d436946c36"
   },
   {
     "path": "layers/bronze.md",
@@ -517,6 +785,23 @@
     "hash": "b9086afc65f1f833"
   },
   {
+    "path": "marts/revenue-mart.md",
+    "type": "DataMart",
+    "title": "Revenue Mart",
+    "description": "Gold revenue aggregates for exec reporting",
+    "layer": null,
+    "tags": [
+      "data-mart",
+      "gold",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "mart-revenue-mart",
+    "token_count": 31,
+    "hash": "7778e529dce9a5ef"
+  },
+  {
     "path": "metrics/gross-merchandise-value.md",
     "type": "Metric",
     "title": "Gross Merchandise Value",
@@ -563,6 +848,40 @@
     "wiki_key": "pack-gold-order-daily",
     "token_count": 184,
     "hash": "ca022c342a713da5"
+  },
+  {
+    "path": "products/daily-revenue-product.md",
+    "type": "DataProduct",
+    "title": "Daily Revenue Product",
+    "description": "Certified daily revenue data product for BI",
+    "layer": null,
+    "tags": [
+      "data-product",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "product-daily-revenue-product",
+    "token_count": 30,
+    "hash": "888adaf58e46ca42"
+  },
+  {
+    "path": "quality/gold-order-daily-freshness.md",
+    "type": "DQRule",
+    "title": "gold-order-daily-freshness",
+    "description": "Gold mart must be fresh within 1 day",
+    "layer": null,
+    "tags": [
+      "dq",
+      "quality",
+      "freshness",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "dq-gold-order-daily-freshness",
+    "token_count": 40,
+    "hash": "6efbbfb153e0e767"
   },
   {
     "path": "queries/customer-ltv.md",
@@ -764,6 +1083,24 @@
     "hash": "550d87663c9245f3"
   },
   {
+    "path": "sources/product-catalog-sftp.md",
+    "type": "SourceSystem",
+    "title": "product-catalog-sftp",
+    "description": "Nightly product catalog flat files via SFTP",
+    "layer": null,
+    "tags": [
+      "source",
+      "file",
+      "sftp",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "source-product-catalog-sftp",
+    "token_count": 34,
+    "hash": "1a813c72682fc8ba"
+  },
+  {
     "path": "sources/retail-lake-walk.md",
     "type": "SourceSystem",
     "title": "retail-lake-walk",
@@ -876,6 +1213,40 @@
     "wiki_key": "sql-orders",
     "token_count": 31,
     "hash": "7e9c59adbe60e09a"
+  },
+  {
+    "path": "storage/bronze-orders-prefix.md",
+    "type": "StorageLocation",
+    "title": "bronze-orders-prefix",
+    "description": "Storage: bronze-orders-prefix",
+    "layer": "bronze",
+    "tags": [
+      "storage",
+      "path",
+      "dekc"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "storage-bronze-orders-prefix",
+    "token_count": 25,
+    "hash": "bdd3351b3984b112"
+  },
+  {
+    "path": "streams/orders-events.md",
+    "type": "Stream",
+    "title": "orders-events",
+    "description": "Order placement events",
+    "layer": null,
+    "tags": [
+      "stream",
+      "dekc",
+      "eventhubs"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "stream-orders-events",
+    "token_count": 36,
+    "hash": "edc2d682b54e669f"
   },
   {
     "path": "tables/bronze-orders-api.md",
@@ -997,6 +1368,25 @@
     "wiki_key": "view-gold-customer-ltv",
     "token_count": 37,
     "hash": "e469046fc96462a2"
+  },
+  {
+    "path": "wireframes/wireframe-executive-revenue-wireframe.md",
+    "type": "Wireframe",
+    "title": "Executive Revenue Wireframe",
+    "description": "PlantUML salt wireframe for exec revenue dashboard",
+    "layer": null,
+    "tags": [
+      "diagram",
+      "wireframe",
+      "plantuml",
+      "dekc",
+      "wireframe"
+    ],
+    "verified": true,
+    "status": "active",
+    "wiki_key": "wireframe-wireframe-executive-revenue-wireframe",
+    "token_count": 78,
+    "hash": "432c49a33002bb4a"
   },
   {
     "path": "workflows/daily-medallion-orders.md",

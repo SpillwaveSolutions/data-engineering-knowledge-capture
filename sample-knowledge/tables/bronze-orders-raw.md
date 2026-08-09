@@ -17,6 +17,12 @@ links:
   rel: layered_as
 - target: /sources/retail-lake-walk.md
   rel: sourced_from
+- target: /streams/orders-events.md
+  rel: sourced_from
+- target: /ingestion/orders-stream-landing.md
+  rel: sourced_from
+- target: /ingestion/orders-stream-landing.md
+  rel: ingested_by
 sql_fingerprint: 247273013766
 ---
 

@@ -17,6 +17,10 @@ links:
   rel: layered_as
 - target: /sources/retail-lake-walk.md
   rel: sourced_from
+- target: /quality/gold-order-daily-freshness.md
+  rel: validated_by
+- target: /diagrams/erd-orders-erd.md
+  rel: documented_by
 sql_fingerprint: 281615144300
 ---
 
