@@ -76,7 +76,6 @@ class TestInitAndCapture(unittest.TestCase):
             self.assertEqual(proc.returncode, 0, proc.stderr + proc.stdout)
             bundle = repo / "knowledge"
             self.assertTrue((bundle / "index.md").is_file())
-            # parent flags before subcommand
             proc = subprocess.run(
                 [
                     sys.executable,
@@ -162,6 +161,8 @@ class TestSchemasAndBrain(unittest.TestCase):
         self.assertEqual(proc.returncode, 0, proc.stderr)
         data = json.loads(proc.stdout)
         self.assertIn("Table", data.get("concepts") or [])
+        self.assertIn("Wireframe", data.get("concepts") or [])
+        self.assertIn("DataLake", data.get("concepts") or [])
 
     def test_schema_validate_sample(self):
         proc = subprocess.run(
@@ -236,6 +237,93 @@ class TestSchemasAndBrain(unittest.TestCase):
         fm, _ = parse_frontmatter(sample)
         self.assertIsInstance(fm.get("links"), list)
         self.assertEqual(fm["links"][0]["rel"], "feeds")
+
+
+class TestDiagramsAndPlatform(unittest.TestCase):
+    def test_diagram_templates(self):
+        proc = subprocess.run(
+            [
+                sys.executable,
+                str(SCRIPTS / "dekc_diagram.py"),
+                "--json",
+                "templates",
+            ],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        data = json.loads(proc.stdout)
+        self.assertIn("wireframe", data)
+        self.assertIn("erd", data)
+
+    def test_sample_has_wireframe_and_lake(self):
+        concepts = list_concepts(ROOT / "sample-knowledge")
+        types = {fm.get("type") for _, fm, _ in concepts}
+        self.assertIn("Wireframe", types)
+        self.assertIn("DataLake", types)
+        self.assertIn("DQRule", types)
+        self.assertIn("Diagram", types)
+
+    def test_capture_wireframe_temp(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+            subprocess.run(
+                [
+                    sys.executable,
+                    str(SCRIPTS / "dekc_common.py"),
+                    "init-bundle",
+                    "--repo",
+                    str(repo),
+                    "--bundle",
+                    "knowledge",
+                ],
+                check=True,
+                capture_output=True,
+            )
+            # dashboard stub
+            subprocess.run(
+                [
+                    sys.executable,
+                    str(SCRIPTS / "dekc_capture.py"),
+                    "--repo",
+                    str(repo),
+                    "--bundle",
+                    "knowledge",
+                    "dashboard",
+                    "--name",
+                    "Test Dash",
+                    "--description",
+                    "test",
+                ],
+                check=True,
+                capture_output=True,
+            )
+            proc = subprocess.run(
+                [
+                    sys.executable,
+                    str(SCRIPTS / "dekc_diagram.py"),
+                    "--repo",
+                    str(repo),
+                    "--bundle",
+                    "knowledge",
+                    "wireframe",
+                    "--name",
+                    "Test WF",
+                    "--subject",
+                    "Test Dash",
+                    "--language",
+                    "plantuml",
+                ],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(proc.returncode, 0, proc.stderr + proc.stdout)
+            wfs = list((repo / "knowledge" / "wireframes").glob("*.md"))
+            self.assertTrue(any(p.name != "index.md" for p in wfs))
+            text = next(p for p in wfs if p.name != "index.md").read_text()
+            self.assertIn("```plantuml", text)
 
 
 if __name__ == "__main__":

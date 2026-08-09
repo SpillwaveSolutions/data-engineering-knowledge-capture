@@ -4,7 +4,7 @@
 DEKC extends Project Knowledge Capture (PKC) and stores everything as OKF
 concepts (Markdown + YAML frontmatter). It specializes catalogs for data
 platforms: schemas, tables, views, queries, lineage, medallion layers,
-semantic models, SQL/DAX, dashboards, business objects, and glossary.
+semantic models, SQL/DAX, dashboards, diagrams/wireframes (Mermaid/PlantUML), data lakes/marts/catalogs, DQ rules, business objects, and glossary.
 """
 
 from __future__ import annotations
@@ -20,6 +20,13 @@ from typing import Any
 
 CATALOGS = (
     "sources",
+    "lakes",
+    "marts",
+    "catalogs",
+    "domains",
+    "products",
+    "streams",
+    "storage",
     "layers",
     "schemas",
     "tables",
@@ -32,10 +39,13 @@ CATALOGS = (
     "workflows",
     "lineage",
     "contracts",
+    "quality",
     "semantic",
     "metrics",
     "reports",
     "dashboards",
+    "diagrams",
+    "wireframes",
     "business-objects",
     "glossary",
     "packs",
@@ -44,6 +54,13 @@ CATALOGS = (
 
 TYPE_TO_DIR = {
     "SourceSystem": "sources",
+    "DataLake": "lakes",
+    "DataMart": "marts",
+    "DataCatalog": "catalogs",
+    "DataDomain": "domains",
+    "DataProduct": "products",
+    "Stream": "streams",
+    "StorageLocation": "storage",
     "Layer": "layers",
     "Schema": "schemas",
     "Table": "tables",
@@ -56,15 +73,19 @@ TYPE_TO_DIR = {
     "Workflow": "workflows",
     "LineagePath": "lineage",
     "DataContract": "contracts",
+    "DQRule": "quality",
     "SemanticModel": "semantic",
     "Metric": "metrics",
     "Report": "reports",
     "Dashboard": "dashboards",
+    "Diagram": "diagrams",
+    "Wireframe": "wireframes",
     "BusinessObject": "business-objects",
     "GlossaryTerm": "glossary",
     "ContextPack": "packs",
     "AgentNode": "agents",
     "Dataset": "tables",
+    "DesignPattern": "packs",
 }
 
 DEFAULT_RELATIONS = (
@@ -92,6 +113,16 @@ DEFAULT_RELATIONS = (
     "models",
     "measures",
     "visualizes",
+    "part_of_mart",
+    "part_of_lake",
+    "quality_of",
+    "validates",
+    "consumes_stream",
+    "publishes",
+    "belongs_to_domain",
+    "cataloged_in",
+    "stored_in",
+    "documents_diagram",
     "implements_contract",
     "glosses",
     "businessizes",

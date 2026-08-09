@@ -122,5 +122,7 @@ python3 tests/test_dekc.py
 | dashboards / DAX | report-cataloger / dekc-semantic |
 | grade / audit RE quality | re-adversary-judge / dekc-grade + skeptics |
 | medallion health | layer-auditor / dekc-doctor |
+| wireframe / architecture / ERD / job diagrams | dekc-diagram / dekc_diagram.py |
+| lake / mart / catalog / stream / DQ | dekc-platform / dekc_platform.py |
 | search the second brain | dekc-search / dekc-index |
 | multi-agent loop authoring | okf-agent-graph `/ager-*` + DEKC KnowledgeBind |

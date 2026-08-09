@@ -52,3 +52,21 @@ From `registry.json`:
 3. Add type-specific fields (`layer`, `fqn`, `orchestrator`, …).  
 4. Add typed `links[].rel` (see [docs/typed-edges.md](../docs/typed-edges.md)).  
 5. Prefer capture scripts over freehand so frontmatter stays schema-aligned.
+
+
+## Platform & diagram types (v0.2)
+
+| Type | Catalog |
+|------|---------|
+| DataLake | lakes |
+| DataMart | marts |
+| DataCatalog | catalogs |
+| DataDomain | domains |
+| DataProduct | products |
+| Stream | streams |
+| StorageLocation | storage |
+| DQRule | quality |
+| Diagram | diagrams |
+| Wireframe | wireframes |
+
+Diagram bodies use fenced `mermaid` or `plantuml` code. See [docs/diagrams.md](../docs/diagrams.md).

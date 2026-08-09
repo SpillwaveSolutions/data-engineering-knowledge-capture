@@ -27,6 +27,9 @@
     "/tables/bronze-orders-api.md",
     "/transformations/cleanse-orders.md"
   ],
+  "/streams/orders-events.md": [
+    "/tables/bronze-orders-raw.md"
+  ],
   "/sources/retail-lake-walk.md": [
     "/tables/bronze-orders-api.md",
     "/tables/bronze-orders-raw.md",

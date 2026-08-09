@@ -10,6 +10,15 @@ verified: true
 generated: true
 wiki_key: workflow-daily-medallion-orders
 truth_state: current
+links:
+- target: /diagrams/activity-daily-medallion-orders-activity.md
+  rel: documented_by
+- target: /diagrams/state-daily-medallion-orders-state.md
+  rel: documented_by
+- target: /diagrams/class-daily-medallion-orders-class.md
+  rel: documented_by
+- target: /diagrams/component-daily-medallion-orders-component.md
+  rel: documented_by
 ---
 
 # daily-medallion-orders

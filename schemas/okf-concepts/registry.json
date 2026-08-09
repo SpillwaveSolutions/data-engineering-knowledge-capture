@@ -1,8 +1,8 @@
 {
   "name": "dekc-okf-concept-schemas",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "okf_version": "0.2",
-  "description": "Standard OKF frontmatter schemas for Data Engineering Knowledge Capture second brain",
+  "description": "Standard OKF frontmatter schemas for DEKC second brain including diagrams, lakes, marts, catalogs, streams, storage, DQ",
   "base": "BaseConcept.schema.json",
   "concepts": [
     "AgentNode",
@@ -10,11 +10,18 @@
     "BusinessObject",
     "Column",
     "ContextPack",
+    "DQRule",
     "Dashboard",
+    "DataCatalog",
     "DataContract",
+    "DataDomain",
+    "DataLake",
+    "DataMart",
+    "DataProduct",
     "Dataset",
     "DaxArtifact",
     "DesignPattern",
+    "Diagram",
     "GlossaryTerm",
     "Layer",
     "LineagePath",
@@ -25,13 +32,23 @@
     "SemanticModel",
     "SourceSystem",
     "SqlArtifact",
+    "StorageLocation",
+    "Stream",
     "Table",
     "Transformation",
     "View",
+    "Wireframe",
     "Workflow"
   ],
   "catalogs": [
     "sources",
+    "lakes",
+    "marts",
+    "catalogs",
+    "domains",
+    "products",
+    "streams",
+    "storage",
     "layers",
     "schemas",
     "tables",
@@ -44,14 +61,34 @@
     "workflows",
     "lineage",
     "contracts",
+    "quality",
     "semantic",
     "metrics",
     "reports",
     "dashboards",
+    "diagrams",
+    "wireframes",
     "business-objects",
     "glossary",
     "packs",
     "agents"
+  ],
+  "diagram_kinds": [
+    "wireframe",
+    "architecture",
+    "component",
+    "activity",
+    "state",
+    "class",
+    "erd",
+    "sequence",
+    "deployment",
+    "flowchart",
+    "c4"
+  ],
+  "diagram_languages": [
+    "mermaid",
+    "plantuml"
   ],
   "intents": {
     "design-report": [
@@ -62,16 +99,26 @@
       "BusinessObject",
       "GlossaryTerm",
       "Table",
-      "View"
+      "View",
+      "Wireframe",
+      "Diagram",
+      "DataMart",
+      "DataProduct"
     ],
     "land-data": [
       "SourceSystem",
+      "Stream",
+      "StorageLocation",
       "Workflow",
       "Transformation",
       "Table",
       "Layer",
+      "DataLake",
+      "DataCatalog",
       "DataContract",
-      "LineagePath"
+      "DQRule",
+      "LineagePath",
+      "Diagram"
     ],
     "design-metric": [
       "Metric",
@@ -89,7 +136,19 @@
       "Workflow",
       "Dashboard",
       "Report",
-      "BusinessObject"
+      "BusinessObject",
+      "DataProduct",
+      "DQRule",
+      "Diagram"
+    ],
+    "design-job": [
+      "Workflow",
+      "Transformation",
+      "Diagram",
+      "DQRule",
+      "Table",
+      "Stream",
+      "StorageLocation"
     ]
   }
 }

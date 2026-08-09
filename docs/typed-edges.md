@@ -37,3 +37,21 @@ Markdown body links remain universal. Frontmatter `links[].rel` enriches them fo
 2. Prefer absolute targets (`/tables/…`).
 3. Keep a human Markdown link for the same target.
 4. Direction is not symmetric — packs walk outbound edges.
+
+## Diagrams & platform
+
+| rel | Direction | Meaning |
+|-----|-----------|---------|
+| `documents` | Diagram → subject | Diagram documents asset/job |
+| `documented_by` | Subject → Diagram | Inverse for packs |
+| `wireframes` | Wireframe → Report/Dashboard | Layout design |
+| `has_wireframe` | Report/Dashboard → Wireframe | Inverse |
+| `part_of_lake` | Mart/Table → DataLake | Membership |
+| `part_of_mart` | Table → DataMart | Membership |
+| `cataloged_in` | Schema/Table → DataCatalog | Catalog registration |
+| `belongs_to_domain` | Product/Mart → DataDomain | Domain ownership |
+| `publishes` | DataProduct → Table/View | Product outputs |
+| `stored_in` | Table → StorageLocation | Physical placement |
+| `consumes_stream` | Job/Table → Stream | Stream input |
+| `validates` / `quality_of` | DQRule → Table | Quality binding |
+| `validated_by` | Table → DQRule | Inverse |

@@ -47,6 +47,31 @@ python3 scripts/dekc_schemas.py validate --bundle sample-knowledge
 python3 scripts/dekc_index.py --bundle sample-knowledge build   # refresh search index
 ```
 
+
+## Diagrams, wireframes & platform concepts
+
+Capture **Mermaid** and **PlantUML** listings inside OKF Markdown for:
+
+- Report/dashboard **wireframes** (PlantUML salt)
+- **Architecture**, **component**, **activity**, **state**, **class**, **ERD**, **sequence** diagrams (jobs, lakes, models)
+
+```bash
+python3 scripts/dekc_diagram.py wireframe --name "Exec UI" --subject /dashboards/executive-revenue.md
+python3 scripts/dekc_diagram.py job-pack --workflow /workflows/daily-medallion-orders.md
+python3 scripts/dekc_diagram.py capture --name "Orders ERD" --kind erd --language mermaid --subject /tables/gold-order-daily.md
+```
+
+First-class platform types: **DataLake**, **DataMart**, **DataCatalog**, **DataDomain**, **DataProduct**, **Stream**, **StorageLocation**, **DQRule**.
+
+```bash
+python3 scripts/dekc_platform.py lake --name "Retail Lake" --platform fabric-onelake
+python3 scripts/dekc_platform.py catalog --name "Workspace Catalog" --engine unity
+python3 scripts/dekc_platform.py dq-rule --name freshness --target gold-order-daily --rule-type freshness
+```
+
+See [docs/diagrams.md](./docs/diagrams.md).
+
+
 ## Ecosystem
 
 ```text
