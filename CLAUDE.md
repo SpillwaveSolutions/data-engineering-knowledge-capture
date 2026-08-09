@@ -33,3 +33,10 @@ Add new `scripts/dekc_*.py` to `package.json` typecheck/test lists and CI.
 - OKF frontmatter required: `type`, `title`, `description`, `timestamp`
 - Absolute in-bundle links; typed `links[].rel` for lineage/business edges
 - Never invent edges; prefer scripts over freehand Markdown when possible
+
+## Docs
+
+- User guide: `docs/user_guide/user-guide.md`
+- Design (AGER loops + Fabric/AWS/GCP + streams/jobs): `docs/designs/current_design_doc.md`
+- AGER: https://github.com/SpillwaveSolutions/okf-agent-graph
+
