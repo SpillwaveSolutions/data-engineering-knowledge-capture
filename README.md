@@ -215,10 +215,24 @@ python3 scripts/dekc_doctor.py --bundle sample-knowledge
 
 ## Second-brain index
 
+> **Do not commit the index.** It is fully derived and rebuilds in seconds;
+> `search.json` alone runs to megabytes and would churn every diff. Add this to
+> your `.gitignore` (a copy ships at `templates/gitignore-fragment`):
+>
+> ```gitignore
+> **/.index/
+> ```
+>
+> `**/.index/` rather than `*/.index/`, so it holds at any nesting depth and for
+> every bundle rather than one hardcoded name. A repo with two bundles is where
+> the narrower pattern shows: ignoring `knowledge/.index/` leaves the second
+> bundle's index sitting in `git status`.
+
+
 `dekc_index.py build` writes:
 
 ```text
-knowledge/.index/
+<bundle>/.index/
   inventory.json
   search.json
   graph.json
