@@ -14,11 +14,41 @@ ROOT = Path(__file__).resolve().parents[1]
 SCRIPTS = ROOT / "scripts"
 sys.path.insert(0, str(SCRIPTS))
 
-from dekc_common import slugify, list_concepts, parse_frontmatter  # noqa: E402
+from dekc_common import slugify, list_concepts, parse_frontmatter, dump_frontmatter  # noqa: E402
 from dekc_lineage import build_graph  # noqa: E402
 from dekc_validate import validate_bundle  # noqa: E402
 from dekc_index import build_index, search_index  # noqa: E402
 from dekc_walk import extract_sql_tables  # noqa: E402
+
+
+class TestFrontmatterRoundTrip(unittest.TestCase):
+    """parse(dump(x)) == x.
+
+    Regression: the dumper escaped backslashes and quotes, the reader stripped
+    only the surrounding quotes. Every write-modify-write cycle re-escaped
+    already-escaped text, doubling the backslash count each pass -- and both
+    write_concept and refresh_catalog_index do exactly that read-modify-write,
+    so a single edit corrupted every quoted string in the file.
+    """
+
+    VALUES = ['[{"a":"b"}]', "back\\slash", 'quote"inside', 'both\\"mixed', "plain"]
+
+    def test_single_round_trip_is_identity(self):
+        for v in self.VALUES:
+            with self.subTest(value=v):
+                fm = {"type": "Concept", "title": "T", "v": v}
+                self.assertEqual(parse_frontmatter(dump_frontmatter(fm))[0]["v"], v)
+
+    def test_repeated_round_trips_do_not_grow(self):
+        fm = {"type": "Concept", "title": "T", "sources_json": '[{"a":"b"}]'}
+        first = None
+        for _ in range(5):
+            text = dump_frontmatter(fm)
+            line = [l for l in text.splitlines() if l.startswith("sources_json")][0]
+            if first is None:
+                first = line
+            self.assertEqual(line, first, "escaping grew across a round trip")
+            fm, _ = parse_frontmatter(text)
 
 
 class TestSlugify(unittest.TestCase):
