@@ -48,6 +48,21 @@ def extract_edges_from_sql(sql: str) -> list[tuple[str, str]]:
     return edges
 
 
+# Relations that mean "data moves from source to target". These are the ones
+# dekc_platform and dekc_capture actually emit and that docs/typed-edges.md
+# documents as flow -- lands_as, lands_into, visualizes and consumes_stream were
+# written by the plugin and then ignored here, so packs built from them came out
+# incomplete with no indication anything was dropped.
+FORWARD_FLOW = (
+    "feeds", "transforms_to", "writes_to", "promotes_to",
+    "lands_as", "lands_into",
+)
+# Relations that mean the opposite: the TARGET feeds the source.
+REVERSE_FLOW = (
+    "reads_from", "queries", "sourced_from", "derived_from",
+    "visualizes", "consumes_stream",
+)
+
 def build_graph(bundle: Path) -> dict[str, list[str]]:
     """Adjacency from typed feeds/transforms_to/reads_from/writes_to/queries edges."""
     adj: dict[str, list[str]] = defaultdict(list)
@@ -60,9 +75,9 @@ def build_graph(bundle: Path) -> dict[str, list[str]]:
             tgt = link.get("target") or ""
             if not tgt:
                 continue
-            if r in ("feeds", "transforms_to", "writes_to", "promotes_to"):
+            if r in FORWARD_FLOW:
                 adj[rel].append(tgt)
-            elif r in ("reads_from", "queries", "sourced_from", "derived_from"):
+            elif r in REVERSE_FLOW:
                 # reverse: target feeds source
                 adj[tgt].append(rel)
         # also parse SQL blocks for edges

@@ -357,6 +357,33 @@ def _parse_simple_yaml(text: str) -> dict[str, Any]:
 
 
 
+def _unescape(s: str) -> str:
+    """Reverse the escaping the dumper applies to a quoted scalar.
+
+    Without this, `parse(dump(x)) != x` for any value containing a quote or a
+    backslash: the dumper escapes, the reader only strips the quotes, and every
+    read-modify-write cycle re-escapes what was already escaped. Backslash count
+    doubles per pass, so a script that edits one field corrupts every quoted
+    string in the file -- and `write_concept` and `refresh_catalog_index` both
+    do exactly that read-modify-write.
+
+    Self-concealing: reading the file back with this same parser returns a value
+    that looks right, so the damage lives only in the bytes on disk.
+
+    Single-pass, so a literal backslash-quote in the source survives intact.
+    """
+    out: list[str] = []
+    i = 0
+    while i < len(s):
+        if s[i] == "\\" and i + 1 < len(s) and s[i + 1] in ('"', "'", "\\"):
+            out.append(s[i + 1])
+            i += 2
+        else:
+            out.append(s[i])
+            i += 1
+    return "".join(out)
+
+
 def _scalar(v: str) -> Any:
     if v in ("true", "True"):
         return True
@@ -365,7 +392,7 @@ def _scalar(v: str) -> Any:
     if v in ("null", "Null", "~", ""):
         return None
     if (v.startswith('"') and v.endswith('"')) or (v.startswith("'") and v.endswith("'")):
-        return v[1:-1]
+        return _unescape(v[1:-1])
     try:
         if "." in v:
             return float(v)
@@ -393,13 +420,25 @@ def resolve_knowledge_root(repo_root: Path, override: str | None = None) -> Path
         return root if root.is_absolute() else (repo_root / root)
     cfg = load_config(repo_root)
     name = cfg.get("knowledge_root") or "knowledge"
+    intended = repo_root / name
     for candidate in (
-        repo_root / name,
+        intended,
         repo_root / "sample-knowledge",
         repo_root / ".okf",
         repo_root / "knowledge",
     ):
         if candidate.is_dir() and (candidate / "index.md").is_file():
+            # Say so when we did NOT land on the intended root. There are 16
+            # call sites and only dekc_doctor announced the bundle it used, so
+            # with any other command you could not tell. This repo ships a
+            # sample-knowledge/, so a capture run inside a clone before
+            # initializing a bundle silently wrote there.
+            if candidate != intended:
+                print(
+                    f"dekc: '{intended}' is not an initialized bundle; "
+                    f"using '{candidate}' instead. Pass --bundle to be explicit.",
+                    file=sys.stderr,
+                )
             return candidate
     return repo_root / name
 
@@ -567,7 +606,34 @@ def ensure_catalog_index(bundle: Path, catalog: str, title: str | None = None) -
     return index
 
 
+# Catalogs the sibling capture plugins also declare. Their renderers emit a bare
+# `- [label](path)` with no annotation, so adding ours to a shared catalog makes
+# the file flip on every alternation between plugins. Scope the annotation to
+# catalogs only this plugin owns; correctness of a shared bundle beats a nicety.
+_SAC_SHARED_CATALOGS = frozenset(
+    {"agents", "diagrams", "domains", "glossary", "packs", "products",
+     "storage", "workflows"}
+)
+
+
+def _escape_link_label(label: str) -> str:
+    """Make a concept title safe to use as a Markdown link label.
+
+    An unescaped `[AREA]` title renders as `[[AREA]](/cat/x.md)`, which the OKF
+    graph reader's link regex cannot match. That yields a MISSING edge rather
+    than a broken one, and validate reports only broken edges -- so the concept
+    silently loses its catalog backlink.
+    """
+    return label.replace("[", "\\[").replace("]", "\\]")
+
+
 def refresh_catalog_index(bundle: Path, catalog: str) -> None:
+    # Refuse catalogs this plugin does not declare, so an outside caller cannot
+    # drive this renderer over a sibling plugin's catalog. Note this alone does
+    # NOT stabilise a shared bundle -- for a catalog two plugins both declare it
+    # passes in both. That is what the annotation scoping below is for.
+    if catalog not in CATALOGS:
+        return
     cat_dir = bundle / catalog
     if not cat_dir.is_dir():
         return
@@ -582,9 +648,13 @@ def refresh_catalog_index(bundle: Path, catalog: str) -> None:
         if p.name == "index.md":
             continue
         fm_c, _ = parse_frontmatter(p.read_text(encoding="utf-8"))
-        label = fm_c.get("title") or p.stem
+        label = _escape_link_label(fm_c.get("title") or p.stem)
         layer = fm_c.get("layer")
-        suffix = f" · {layer}" if layer else ""
+        # Only annotate catalogs no sibling plugin renders. On a shared catalog
+        # the annotation is what makes the file churn back and forth.
+        suffix = (
+            f" · {layer}" if layer and catalog not in _SAC_SHARED_CATALOGS else ""
+        )
         entries.append(f"- [{label}](/{catalog}/{p.name}){suffix}")
     body = f"# {title}\n\nConcepts in this catalog:\n\n"
     body += "\n".join(entries) + ("\n" if entries else "_None yet._\n")
