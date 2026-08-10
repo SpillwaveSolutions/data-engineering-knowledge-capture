@@ -93,6 +93,36 @@ class TestResolveKnowledgeRoot(unittest.TestCase):
             self.assertEqual(resolve_knowledge_root(repo).name, "sample-knowledge")
 
 
+class TestFrontmatterRoundTrip(unittest.TestCase):
+    """parse(dump(x)) == x.
+
+    Regression: the dumper escaped backslashes and quotes, the reader stripped
+    only the surrounding quotes. Every write-modify-write cycle re-escaped
+    already-escaped text, doubling the backslash count each pass -- and both
+    write_concept and refresh_catalog_index do exactly that read-modify-write,
+    so a single edit corrupted every quoted string in the file.
+    """
+
+    VALUES = ['[{"a":"b"}]', "back\\slash", 'quote"inside', 'both\\"mixed', "plain"]
+
+    def test_single_round_trip_is_identity(self):
+        for v in self.VALUES:
+            with self.subTest(value=v):
+                fm = {"type": "Concept", "title": "T", "v": v}
+                self.assertEqual(parse_frontmatter(dump_frontmatter(fm))[0]["v"], v)
+
+    def test_repeated_round_trips_do_not_grow(self):
+        fm = {"type": "Concept", "title": "T", "sources_json": '[{"a":"b"}]'}
+        first = None
+        for _ in range(5):
+            text = dump_frontmatter(fm)
+            line = [l for l in text.splitlines() if l.startswith("sources_json")][0]
+            if first is None:
+                first = line
+            self.assertEqual(line, first, "escaping grew across a round trip")
+            fm, _ = parse_frontmatter(text)
+
+
 class TestSlugify(unittest.TestCase):
     def test_underscores(self):
         self.assertEqual(slugify("order_daily"), "order-daily")

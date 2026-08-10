@@ -357,6 +357,33 @@ def _parse_simple_yaml(text: str) -> dict[str, Any]:
 
 
 
+def _unescape(s: str) -> str:
+    """Reverse the escaping the dumper applies to a quoted scalar.
+
+    Without this, `parse(dump(x)) != x` for any value containing a quote or a
+    backslash: the dumper escapes, the reader only strips the quotes, and every
+    read-modify-write cycle re-escapes what was already escaped. Backslash count
+    doubles per pass, so a script that edits one field corrupts every quoted
+    string in the file -- and `write_concept` and `refresh_catalog_index` both
+    do exactly that read-modify-write.
+
+    Self-concealing: reading the file back with this same parser returns a value
+    that looks right, so the damage lives only in the bytes on disk.
+
+    Single-pass, so a literal backslash-quote in the source survives intact.
+    """
+    out: list[str] = []
+    i = 0
+    while i < len(s):
+        if s[i] == "\\" and i + 1 < len(s) and s[i + 1] in ('"', "'", "\\"):
+            out.append(s[i + 1])
+            i += 2
+        else:
+            out.append(s[i])
+            i += 1
+    return "".join(out)
+
+
 def _scalar(v: str) -> Any:
     if v in ("true", "True"):
         return True
@@ -365,7 +392,7 @@ def _scalar(v: str) -> Any:
     if v in ("null", "Null", "~", ""):
         return None
     if (v.startswith('"') and v.endswith('"')) or (v.startswith("'") and v.endswith("'")):
-        return v[1:-1]
+        return _unescape(v[1:-1])
     try:
         if "." in v:
             return float(v)
