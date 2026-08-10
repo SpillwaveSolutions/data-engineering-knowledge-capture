@@ -62,16 +62,23 @@ esac
 
 python3 "$ROOT/scripts/dekc_validate.py" --bundle "$BUNDLE" >/tmp/dekc-curate-validate.txt 2>&1 || true
 # Refresh indexes lightly when catalog files change
+# Refresh only the catalog containing the edited file. Refreshing all 32 on
+# every edit is a whole-file read-modify-write per catalog, so rapid edits raced
+# by construction -- and it did far more work than the change required.
 python3 - <<PY
 from pathlib import Path
 import sys
 sys.path.insert(0, "${ROOT}/scripts")
 from dekc_common import refresh_catalog_index, CATALOGS
 bundle = Path("${BUNDLE}")
-for c in CATALOGS:
-    if (bundle / c).is_dir():
-        refresh_catalog_index(bundle, c)
-print("dekc-curate: refreshed catalogs for", bundle)
+edited = Path("${FILE}")
+try:
+    catalog = edited.resolve().relative_to(bundle.resolve()).parts[0]
+except (ValueError, IndexError):
+    catalog = None
+if catalog in CATALOGS and (bundle / catalog).is_dir():
+    refresh_catalog_index(bundle, catalog)
+    print("dekc-curate: refreshed", catalog, "for", bundle)
 PY
 
 exit 0

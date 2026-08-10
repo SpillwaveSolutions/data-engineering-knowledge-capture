@@ -27,7 +27,7 @@ from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from dekc_common import list_concepts, resolve_knowledge_root  # noqa: E402
-from dekc_lineage import build_graph  # noqa: E402
+from dekc_lineage import FORWARD_FLOW, REVERSE_FLOW, build_graph  # noqa: E402
 
 TOKEN_RE = re.compile(r"[a-z0-9_]{2,}", re.I)
 STOP = {
@@ -114,6 +114,19 @@ def build_index(bundle: Path) -> dict[str, Any]:
     (index_dir / "search.json").write_text(
         json.dumps({k: v for k, v in sorted(inverted.items())}, indent=2), encoding="utf-8"
     )
+    _edge_count = sum(len(v) for v in graph.values())
+    if _edge_count == 0 and concepts:
+        # An empty lineage graph is indistinguishable from a failed build unless
+        # we say why. graph.json is lineage adjacency, not the general OKF graph,
+        # so a bundle authored with a non-lineage vocabulary legitimately yields
+        # nothing -- but silently writing 0 makes that look broken.
+        print(
+            f"dekc: no lineage relations found across {len(concepts)} concepts; "
+            "graph.json is empty. Lineage edges come from "
+            f"{', '.join(FORWARD_FLOW + REVERSE_FLOW)} — a bundle using a "
+            "non-lineage vocabulary will produce none.",
+            file=sys.stderr,
+        )
     (index_dir / "graph.json").write_text(json.dumps(graph, indent=2), encoding="utf-8")
     (index_dir / "embeddings.jsonl").write_text("\n".join(emb_lines) + ("\n" if emb_lines else ""), encoding="utf-8")
 
@@ -121,7 +134,7 @@ def build_index(bundle: Path) -> dict[str, Any]:
         "built_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
         "concept_count": len(inventory),
         "token_count": len(inverted),
-        "edge_count": sum(len(v) for v in graph.values()),
+        "edge_count": _edge_count,
         "bundle": str(bundle),
         "engine": "dekc-local-bow-v1",
         "files": [

@@ -30,6 +30,31 @@ from dekc_index import build_index, search_index  # noqa: E402
 from dekc_walk import extract_sql_tables  # noqa: E402
 
 
+class TestLineageRelations(unittest.TestCase):
+    def test_help_advertises_only_relations_that_produce_edges(self):
+        """dekc_link --help used to list DEFAULT_RELATIONS[:8], which had ZERO
+        overlap with what build_graph honours — every relation the CLI's own
+        help named produced no lineage edge. It now names the honoured set."""
+        from dekc_lineage import FORWARD_FLOW, REVERSE_FLOW
+        from dekc_common import DEFAULT_RELATIONS
+
+        honoured = set(FORWARD_FLOW) | set(REVERSE_FLOW)
+        self.assertTrue(honoured)
+        # The old help text: none of it did anything.
+        self.assertEqual(set(DEFAULT_RELATIONS[:8]) & honoured, set())
+
+    def test_flow_relations_the_plugin_emits_are_honoured(self):
+        """lands_as, lands_into, visualizes and consumes_stream are written by
+        dekc_platform and documented in typed-edges.md as flow, but build_graph
+        ignored them — so packs built from them were silently incomplete."""
+        from dekc_lineage import FORWARD_FLOW, REVERSE_FLOW
+
+        honoured = set(FORWARD_FLOW) | set(REVERSE_FLOW)
+        for rel in ("lands_as", "lands_into", "visualizes", "consumes_stream"):
+            with self.subTest(rel=rel):
+                self.assertIn(rel, honoured)
+
+
 class TestCatalogIndex(unittest.TestCase):
     STRICT = re.compile(r"\[([^\]]+)\]\(([^)]+)\)")
     AWARE = re.compile(r"\[((?:\\.|\[[^\[\]]*\]|[^\]])+)\]\(([^)]+)\)")
