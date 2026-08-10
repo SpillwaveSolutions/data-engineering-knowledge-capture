@@ -6,7 +6,6 @@ from __future__ import annotations
 import json
 import re
 import subprocess
-import re
 import sys
 import tempfile
 import unittest
