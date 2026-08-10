@@ -8,6 +8,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from dekc_lineage import FORWARD_FLOW, REVERSE_FLOW
 from dekc_common import (  # noqa: E402
     DEFAULT_RELATIONS,
     add_typed_link,
@@ -22,7 +23,13 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("src", help="Source concept path")
     parser.add_argument("tgt", help="Target concept path or absolute /ref")
-    parser.add_argument("--rel", required=True, help=f"Relation ({', '.join(DEFAULT_RELATIONS[:8])}…)")
+    parser.add_argument("--rel", required=True, help=(
+            "Relation. Lineage-bearing values (these produce graph edges): "
+            + ", ".join(FORWARD_FLOW + REVERSE_FLOW)
+            + f". Any of the {len(DEFAULT_RELATIONS)} documented relations is "
+            "accepted; the rest are recorded in frontmatter but do not appear "
+            "in the lineage graph."
+        ))
     parser.add_argument("--repo", default=".")
     parser.add_argument("--bundle", default=None)
     args = parser.parse_args(argv)
