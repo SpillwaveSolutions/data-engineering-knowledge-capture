@@ -1,0 +1,72 @@
+# Changelog
+
+Notable changes to **data-engineering-knowledge-capture**. Newest first.
+
+## 0.2.0 — 2026-08-10
+
+Six fixes, all found by running this plugin alongside `project-knowledge-capture`
+and `system-architecture-capture` against a single shared bundle.
+
+### Fixed
+
+- **Frontmatter round-trip doubled backslash escaping.** The dumper escaped
+  backslashes and quotes; the reader stripped only the surrounding quotes. Every
+  write-modify-write cycle re-escaped already-escaped text, doubling the
+  backslash count each pass. Worse here than in the sibling plugins, because both
+  `write_concept` and `refresh_catalog_index` do a read-modify-write and the
+  latter is driven by the curate hook — so ordinary editing compounded it. It was
+  also self-concealing: reading back with the same parser returned a value that
+  looked correct. (#3)
+
+- **A bracketed concept title dropped the catalog edge.** `Fact [Sales]` rendered
+  as `[Fact [Sales]](/tables/a.md)`, which the graph reader's link regex cannot
+  match. That produces a *missing* edge rather than a broken one, and `validate`
+  reports only broken edges — so the concept lost its catalog backlink silently.
+  Note this half needs the matching reader change to take effect: backslash
+  escaping does not rescue a reader whose label class is `[^\]]+`. (#2)
+
+- **The `· <layer>` annotation broke shared bundles.** It fired for any concept
+  with a `layer` key in any of the 32 catalogs, including the 8 that
+  `system-architecture-capture` also declares — whose renderer emits a bare
+  `- [label](path)`. So a shared catalog flipped on every alternation between
+  plugins. Now scoped to catalogs only this plugin owns; all three plugins render
+  a shared catalog byte-identically. (#4)
+
+- **`refresh_catalog_index` accepted any catalog name.** It now refuses catalogs
+  this plugin does not declare, so an outside caller cannot drive this renderer
+  over a sibling's catalog. On its own this does *not* stabilise a shared
+  bundle — for a catalog two plugins both declare it passes in both — which is
+  why the annotation scoping above is the load-bearing change. (#4)
+
+- **`resolve_knowledge_root` fell through to `sample-knowledge/` in silence.**
+  When the configured root is not an initialized bundle, resolution probes other
+  candidates. That is reasonable; not saying so was not. There are 16 call sites
+  and only `dekc_doctor` announced the bundle it used — and this repo ships a
+  `sample-knowledge/`, so a capture run inside a clone wrote there. (#5)
+
+- **The curate hook refreshed all 32 catalogs on every edit.** Each refresh is a
+  whole-file read-modify-write, so rapid edits raced by construction. Now scoped
+  to the catalog containing the edited file. (#6)
+
+- **`dekc_link --help` advertised eight relations, none of which produced a
+  lineage edge.** The intersection of `DEFAULT_RELATIONS[:8]` with the set
+  `build_graph` honours was empty, and `--rel` is unvalidated. Four relations the
+  plugin itself emits and documents as flow — `lands_as`, `lands_into`,
+  `visualizes`, `consumes_stream` — were also ignored, so packs built from them
+  were incomplete. The honoured set is now named constants, those four are
+  honoured, and the help names what actually works. `implements`/`documents`
+  still produce no edge: `graph.json` is lineage adjacency by design. (#7)
+
+### Added
+
+- A `.gitignore` fragment at `templates/gitignore-fragment` and a README note,
+  since nothing previously told users the derived `.index/` should not be
+  committed. Uses `**/.index/`, which holds at any depth and for every bundle
+  rather than one hardcoded name. (#8)
+
+- `dekc_index` now explains a zero-edge lineage graph instead of writing a bare
+  `0` that is indistinguishable from a failed build.
+
+## 0.1.0
+
+Initial release.

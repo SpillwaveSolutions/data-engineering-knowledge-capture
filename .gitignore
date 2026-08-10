@@ -27,3 +27,6 @@ screenshots/
 routeTree.gen.ts
 src/routeTree.gen.ts
 .tanstack/
+
+# Derived full-text index — see README, rebuilds in seconds
+**/.index/

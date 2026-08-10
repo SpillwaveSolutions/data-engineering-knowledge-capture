@@ -11,7 +11,7 @@
       "name": "data-engineering-knowledge-capture",
       "source": "./",
       "description": "Data lake second brain: schemas, lineage, medallion, semantic layer, glossary. Depends on PKC + OKF.",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "author": { "name": "Rick Hightower" },
       "homepage": "https://github.com/SpillwaveSolutions/data-engineering-knowledge-capture",
       "repository": "https://github.com/SpillwaveSolutions/data-engineering-knowledge-capture",

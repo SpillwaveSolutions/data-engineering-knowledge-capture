@@ -1,6 +1,6 @@
 {
   "name": "data-engineering-knowledge-capture",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Data Engineering Knowledge Capture (DEKC) — schemas, lineage, medallion layers, semantic models, business glossary. Extends PKC; depends on OKF. Codex-native skills + hooks port.",
   "author": {
     "name": "Rick Hightower",

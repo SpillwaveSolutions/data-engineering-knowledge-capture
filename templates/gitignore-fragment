@@ -1,0 +1,5 @@
+# Derived full-text index — dekc_index.py rebuilds it in seconds.
+# Do not commit: search.json alone runs to megabytes and would churn every
+# diff. `**/.index/` rather than `*/.index/` so it holds at any depth, and
+# for every bundle rather than one hardcoded name.
+**/.index/

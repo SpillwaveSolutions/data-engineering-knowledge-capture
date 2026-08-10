@@ -117,7 +117,7 @@ export function DekcExplorer() {
                   DEKC
                 </h1>
                 <span className="rounded-full border border-border px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-muted">
-                  v0.1.0
+                  v0.2.0
                 </span>
               </div>
               <p className="truncate text-xs text-muted">
