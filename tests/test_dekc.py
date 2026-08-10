@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 import sys
 import tempfile
@@ -325,6 +326,43 @@ class TestDiagramsAndPlatform(unittest.TestCase):
             self.assertTrue(any(p.name != "index.md" for p in wfs))
             text = next(p for p in wfs if p.name != "index.md").read_text()
             self.assertIn("```plantuml", text)
+
+
+class TestVersionConsistency(unittest.TestCase):
+    """The plugin version lives in every manifest that ships with a release
+    and has drifted before: a 0.1.0 -> 0.2.0 bump landed in package.json and
+    three others but left 8 more manifests stale (issue #8 / PR #12)."""
+
+    MANIFESTS = [
+        ("package.json", ("version",)),
+        ("marketplace.json", ("plugins", 0, "version")),
+        (".claude-plugin/plugin.json", ("version",)),
+        (".claude-plugin/marketplace.json", ("plugins", 0, "version")),
+        (".grok-plugin/marketplace.json", ("version",)),
+        (".grok-plugin/marketplace.json", ("plugins", 0, "version")),
+        (".codex-plugin/plugin.json", ("version",)),
+        (".opencode/plugin/dekc.json", ("version",)),
+        ("public/data/catalog.json", ("version",)),
+    ]
+
+    def test_version_is_consistent_across_manifests(self):
+        found = {}
+        for rel, path in self.MANIFESTS:
+            f = ROOT / rel
+            if not f.exists():
+                continue
+            node = json.loads(f.read_text())
+            for key in path:
+                node = node[key]
+            found[f"{rel}:{'.'.join(str(p) for p in path)}"] = node
+        self.assertEqual(len(set(found.values())), 1, f"version drift: {found}")
+
+    def test_readme_version_matches_package_json(self):
+        expected = json.loads((ROOT / "package.json").read_text())["version"]
+        readme = (ROOT / "README.md").read_text()
+        m = re.search(r"\*\*Version\*\*\s*\|\s*([0-9]+\.[0-9]+\.[0-9]+)\s*\|", readme)
+        self.assertIsNotNone(m, "README version row not found")
+        self.assertEqual(m.group(1), expected)
 
 
 if __name__ == "__main__":

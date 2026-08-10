@@ -1,13 +1,13 @@
 {
   "name": "dekc-plugin-marketplace",
   "description": "Optional native Grok marketplace metadata. Grok Build loads Claude plugins with zero config; this pins identity for listings.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "plugins": [
     {
       "name": "data-engineering-knowledge-capture",
       "source": ".",
       "description": "DEKC — data engineering knowledge capture on PKC + OKF. Claude-compatible.",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "compatibility": {
         "claude_plugin": true,
         "zero_config": true
