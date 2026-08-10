@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 import subprocess
+import re
 import sys
 import tempfile
 import unittest
@@ -14,11 +15,82 @@ ROOT = Path(__file__).resolve().parents[1]
 SCRIPTS = ROOT / "scripts"
 sys.path.insert(0, str(SCRIPTS))
 
-from dekc_common import slugify, list_concepts, parse_frontmatter, dump_frontmatter  # noqa: E402
+from dekc_common import (  # noqa: E402
+    CATALOGS,
+    dump_frontmatter,
+    list_concepts,
+    parse_frontmatter,
+    refresh_catalog_index,
+    resolve_knowledge_root,
+    slugify,
+)
 from dekc_lineage import build_graph  # noqa: E402
 from dekc_validate import validate_bundle  # noqa: E402
 from dekc_index import build_index, search_index  # noqa: E402
 from dekc_walk import extract_sql_tables  # noqa: E402
+
+
+class TestCatalogIndex(unittest.TestCase):
+    STRICT = re.compile(r"\[([^\]]+)\]\(([^)]+)\)")
+    AWARE = re.compile(r"\[((?:\\.|\[[^\[\]]*\]|[^\]])+)\]\(([^)]+)\)")
+
+    def _bundle(self, td, catalog, title, layer=None):
+        b = Path(td)
+        (b / "index.md").write_text("---\ntype: Bundle\ntitle: T\n---\n\n# T\n", encoding="utf-8")
+        (b / catalog).mkdir(parents=True, exist_ok=True)
+        lay = f"layer: {layer}\n" if layer else ""
+        (b / catalog / "a.md").write_text(
+            f"---\ntype: Table\ntitle: {title}\n{lay}---\n\n# A\n", encoding="utf-8")
+        refresh_catalog_index(b, catalog)
+        body = (b / catalog / "index.md").read_text(encoding="utf-8")
+        return [l for l in body.splitlines() if l.startswith("- [")][0]
+
+    def test_bracketed_title_is_escaped(self):
+        with tempfile.TemporaryDirectory() as td:
+            line = self._bundle(td, "tables", "Fact [Sales]")
+        self.assertIn(r"\[Sales\]", line, f"label not escaped: {line!r}")
+        self.assertEqual(self.AWARE.findall(line)[0][1], "/tables/a.md")
+        # Escaping alone does not rescue a `[^\]]+` reader; that class has no
+        # notion of an escape. This half depends on the reader change landing.
+        self.assertFalse(self.STRICT.findall(line))
+
+    def test_layer_annotation_only_on_catalogs_we_alone_own(self):
+        """A shared catalog must render byte-identically to the sibling
+        plugins, or the file flips every time the other one runs."""
+        with tempfile.TemporaryDirectory() as td:
+            shared = self._bundle(td, "glossary", "Alpha", layer="gold")
+        self.assertNotIn("\u00b7 gold", shared, f"annotated a shared catalog: {shared!r}")
+        with tempfile.TemporaryDirectory() as td:
+            own = self._bundle(td, "layers", "Gold tier", layer="gold")
+        self.assertIn("\u00b7 gold", own, f"lost the annotation on our own catalog: {own!r}")
+
+    def test_refuses_a_catalog_this_plugin_does_not_declare(self):
+        self.assertNotIn("adrs", CATALOGS)
+        with tempfile.TemporaryDirectory() as td:
+            b = Path(td)
+            (b / "adrs").mkdir()
+            marker = "- [Untouched](/adrs/a.md)\n"
+            (b / "adrs" / "index.md").write_text(marker, encoding="utf-8")
+            refresh_catalog_index(b, "adrs")
+            self.assertEqual((b / "adrs" / "index.md").read_text(encoding="utf-8"), marker)
+
+
+class TestResolveKnowledgeRoot(unittest.TestCase):
+    def test_configured_root_wins_when_initialized(self):
+        with tempfile.TemporaryDirectory() as td:
+            repo = Path(td)
+            for name in ("knowledge", "sample-knowledge"):
+                (repo / name).mkdir()
+                (repo / name / "index.md").write_text("# x\n", encoding="utf-8")
+            self.assertEqual(resolve_knowledge_root(repo).name, "knowledge")
+
+    def test_falls_back_only_when_intended_root_is_not_a_bundle(self):
+        with tempfile.TemporaryDirectory() as td:
+            repo = Path(td)
+            (repo / "knowledge").mkdir()
+            (repo / "sample-knowledge").mkdir()
+            (repo / "sample-knowledge" / "index.md").write_text("# x\n", encoding="utf-8")
+            self.assertEqual(resolve_knowledge_root(repo).name, "sample-knowledge")
 
 
 class TestFrontmatterRoundTrip(unittest.TestCase):
