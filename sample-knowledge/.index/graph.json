@@ -1,21 +1,36 @@
 {
   "/views/gold-customer-ltv.md": [
-    "/business-objects/customer-lifetime-value.md"
+    "/business-objects/customer-lifetime-value.md",
+    "/reports/weekly-commerce-digest.md"
   ],
   "/tables/silver-orders.md": [
     "/business-objects/customer-order.md",
+    "/tables/gold-order-daily.md",
     "/queries/customer-ltv.md",
+    "/views/gold-customer-ltv.md",
     "/queries/order-daily.md",
     "/transformations/aggregate-order-daily.md"
   ],
   "/tables/gold-order-daily.md": [
     "/business-objects/daily-order-summary.md",
-    "/queries/total-revenue-dax.md"
+    "/dashboards/executive-revenue.md",
+    "/queries/total-revenue-dax.md",
+    "/reports/weekly-commerce-digest.md"
+  ],
+  "/metrics/gross-merchandise-value.md": [
+    "/dashboards/executive-revenue.md"
+  ],
+  "/metrics/order-count.md": [
+    "/dashboards/executive-revenue.md"
   ],
   "/ingestion/orders-stream-landing.md": [
     "/layers/bronze.md",
     "/tables/bronze-orders-raw.md",
     "/storage/bronze-orders-prefix.md"
+  ],
+  "/streams/orders-events.md": [
+    "/ingestion/orders-stream-landing.md",
+    "/tables/bronze-orders-raw.md"
   ],
   "/ingestion/product-catalog-sftp-load.md": [
     "/layers/bronze.md"
@@ -28,18 +43,13 @@
     "/tables/gold-order-daily.md"
   ],
   "/tables/bronze-orders-api.md": [
-    "/tables/gold-order-daily.md",
-    "/views/gold-customer-ltv.md",
     "/queries/orders-raw.md",
     "/tables/bronze-orders-raw.md"
   ],
   "/tables/bronze-orders-raw.md": [
     "/queries/orders.md",
-    "/tables/bronze-orders-api.md",
+    "/tables/silver-orders.md",
     "/transformations/cleanse-orders.md"
-  ],
-  "/streams/orders-events.md": [
-    "/tables/bronze-orders-raw.md"
   ],
   "/sources/retail-lake-walk.md": [
     "/tables/bronze-orders-api.md",

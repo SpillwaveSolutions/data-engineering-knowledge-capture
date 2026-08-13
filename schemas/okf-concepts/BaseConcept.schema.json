@@ -1,14 +1,12 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "dekc://schemas/okf-concepts/BaseConcept.schema.json",
-  "title": "DEKC BaseConcept",
-  "description": "Common OKF frontmatter for all DEKC concepts. Type-specific schemas allOf this shape.",
+  "title": "DEKC BaseConcept (aligns with shared okf-plugin envelope)",
+  "description": "DEKC frontmatter. Required matches shared BaseConcept v1: type + title only. description and timestamp remain recommended. truth_state is the union of DEKC and PKC/SAC.",
   "type": "object",
   "required": [
     "type",
-    "title",
-    "description",
-    "timestamp"
+    "title"
   ],
   "properties": {
     "type": {
@@ -73,6 +71,9 @@
       "type": "string",
       "enum": [
         "current",
+        "snapshot",
+        "superseded",
+        "archived",
         "historical",
         "proposed"
       ]

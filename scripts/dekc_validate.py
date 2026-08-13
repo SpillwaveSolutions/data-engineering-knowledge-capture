@@ -42,7 +42,7 @@ def validate_bundle(bundle: Path) -> dict:
     for catalog in CATALOGS:
         paths.add(f"{catalog}/index.md")
 
-    required = ("type", "title", "description", "timestamp")
+    required = ("type", "title")
     for path, fm, body in concepts:
         rel = path.relative_to(bundle).as_posix()
         for field in required:

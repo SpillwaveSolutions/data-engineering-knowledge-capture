@@ -2,7 +2,19 @@
 
 Notable changes to **data-engineering-knowledge-capture**. Newest first.
 
+## 0.2.1 — 2026-08-13
+
+### Changed
+
+- **Aligned BaseConcept with the shared okf-plugin envelope.** Required frontmatter
+  is now `type` + `title` only (`description` and `timestamp` stay recommended).
+  `dekc_validate.py` and every type schema were updated so a mixed second brain
+  with PKC/SAC nodes that omit those fields still validates.
+- **`truth_state` union.** Accepts PKC/SAC values (`snapshot`, `superseded`,
+  `archived`) in addition to DEKC's `current | historical | proposed`.
+
 ## 0.2.0 — 2026-08-10
+
 
 Six fixes, all found by running this plugin alongside `project-knowledge-capture`
 and `system-architecture-capture` against a single shared bundle.
