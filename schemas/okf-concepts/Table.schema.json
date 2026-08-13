@@ -6,9 +6,6 @@
   "type": "object",
   "required": [
     "type",
-    "title",
-    "description",
-    "timestamp",
     "title"
   ],
   "properties": {

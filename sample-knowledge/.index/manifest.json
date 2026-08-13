@@ -1,9 +1,9 @@
 {
-  "built_at": "2026-08-10T18:49:16Z",
+  "built_at": "2026-08-13T19:46:37Z",
   "concept_count": 83,
   "token_count": 424,
-  "edge_count": 34,
-  "bundle": "/Users/richardhightower/clients/spillwave/src/data-engineering-knowledge-capture/sample-knowledge",
+  "edge_count": 40,
+  "bundle": "/workspace/repos/data-engineering-knowledge-capture/sample-knowledge",
   "engine": "dekc-local-bow-v1",
   "files": [
     ".index/inventory.json",

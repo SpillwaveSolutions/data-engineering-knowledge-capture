@@ -311,6 +311,14 @@ class TestSchemasAndBrain(unittest.TestCase):
         data = json.loads(proc.stdout)
         self.assertTrue(data["ok"], data.get("issues"))
 
+    def test_type_and_title_only_is_valid(self):
+        from dekc_schemas import validate_frontmatter, load_schema
+
+        schema = load_schema("Table")
+        errs = validate_frontmatter({"type": "Table", "title": "orders"}, schema)
+        self.assertEqual(errs, [], errs)
+
+
     def test_brain_design_report(self):
         proc = subprocess.run(
             [

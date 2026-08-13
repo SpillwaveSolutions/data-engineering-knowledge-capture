@@ -48,7 +48,8 @@ From `registry.json`:
 ## Authoring rule
 
 1. Pick a type from the registry.  
-2. Fill required BaseConcept fields: `type`, `title`, `description`, `timestamp`.  
+2. Fill required BaseConcept fields: `type`, `title`. `description` and `timestamp` are recommended.  
+
 3. Add type-specific fields (`layer`, `fqn`, `orchestrator`, …).  
 4. Add typed `links[].rel` (see [docs/typed-edges.md](../docs/typed-edges.md)).  
 5. Prefer capture scripts over freehand so frontmatter stays schema-aligned.
