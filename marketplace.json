@@ -1,7 +1,7 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "dekc-plugin-marketplace",
-  "description": "Data Engineering Knowledge Capture — PKC + OKF extension for data platforms",
+  "description": "Data Engineering Knowledge Capture \u2014 PKC + OKF extension for data platforms",
   "owner": {
     "name": "Rick Hightower",
     "url": "https://github.com/RichardHightower"
@@ -11,12 +11,19 @@
       "name": "data-engineering-knowledge-capture",
       "source": "./",
       "description": "Data lake second brain: schemas, lineage, medallion, semantic layer, glossary. Depends on PKC + OKF.",
-      "version": "0.2.0",
-      "author": { "name": "Rick Hightower" },
+      "version": "0.3.0",
+      "author": {
+        "name": "Rick Hightower"
+      },
       "homepage": "https://github.com/SpillwaveSolutions/data-engineering-knowledge-capture",
       "repository": "https://github.com/SpillwaveSolutions/data-engineering-knowledge-capture",
       "license": "MIT",
-      "keywords": ["dekc", "pkc", "okf", "data-engineering"],
+      "keywords": [
+        "dekc",
+        "pkc",
+        "okf",
+        "data-engineering"
+      ],
       "category": "productivity"
     }
   ]

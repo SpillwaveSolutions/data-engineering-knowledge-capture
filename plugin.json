@@ -1,7 +1,8 @@
 {
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "data-engineering-knowledge-capture",
   "version": "0.3.0",
-  "description": "Data Engineering Knowledge Capture (DEKC) \u2014 extends PKC + OKF for schemas, lineage, medallion layers, SQL/DAX, semantic models, business objects, and an indexed second brain. Agents walk data lakes. Works in Claude Code, Grok Build, Codex, and OpenCode.",
+  "description": "Data Engineering Knowledge Capture: schemas, lineage, medallion, semantic models, and glossary into a durable OKF knowledge graph. Multi-host bindings and write isolation.",
   "author": {
     "name": "Rick Hightower",
     "url": "https://github.com/RichardHightower"
@@ -10,18 +11,14 @@
   "repository": "https://github.com/SpillwaveSolutions/data-engineering-knowledge-capture",
   "license": "MIT",
   "keywords": [
-    "dekc",
-    "pkc",
+    "data-engineering-knowledge-capture",
     "okf",
-    "data-engineering",
-    "lineage",
-    "medallion",
-    "semantic-layer",
-    "glossary",
-    "data-lake",
+    "isolation",
+    "agent-plugins",
     "claude-code",
     "grok-build",
     "codex",
-    "opencode"
+    "deep-agents",
+    "grok-bot"
   ]
 }

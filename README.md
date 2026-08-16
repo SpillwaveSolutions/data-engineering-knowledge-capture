@@ -8,9 +8,9 @@ DEKC **extends [Project Knowledge Capture (PKC)](https://github.com/SpillwaveSol
 |---|---|
 | **Plugin name** | `data-engineering-knowledge-capture` |
 | **Repo** | [SpillwaveSolutions/data-engineering-knowledge-capture](https://github.com/SpillwaveSolutions/data-engineering-knowledge-capture) |
-| **Version** | 0.2.0 |
+| **Version** | 0.3.0 |
 | **License** | MIT |
-| **Hosts** | Claude Code · Grok Build · Codex · OpenCode |
+| **Hosts** | Claude Code · Grok Build · Codex · OpenCode · Agent Plugins 1.0 · Grok Bot · LangChain Deep Agents |
 
 ## Docs
 
@@ -20,6 +20,25 @@ DEKC **extends [Project Knowledge Capture (PKC)](https://github.com/SpillwaveSol
 | **[Design doc](./docs/designs/current_design_doc.md)** | Agent graph loops (AGER), Azure Fabric / AWS / GCP reverse engineering, streams & jobs |
 | **[Typed edges](./docs/typed-edges.md)** | Relation vocabulary for lineage and business meaning |
 | **[PORTS](./PORTS.md)** | Claude / Grok / Codex / OpenCode packaging |
+| **[Onboarding](./docs/ONBOARDING.md)** | Grok Bot / any host start |
+| **[Grok Bot](./docs/GROK_BOT.md)** | Cloud Grok Bot binding |
+| **[Deep Agents](./docs/LANG_CHAIN_DEEP_AGENTS.md)** | LangChain Deep Agents |
+| **[Isolation](./docs/ISOLATION.md)** | Worktree + PR write isolation |
+
+
+## Multi-host
+
+| Host | How it loads |
+|------|----------------|
+| Claude Code | Marketplace / local plugin (`.claude-plugin`) |
+| Grok Build | Claude-compatible, zero-config (`.grok-plugin` pins identity) |
+| Codex | `.codex-plugin` + `hooks/codex-hooks.json` |
+| OpenCode | Skills + `AGENTS.md` |
+| Agent Plugins 1.0 | Root `plugin.json` |
+| Grok Bot | Skills + [docs/GROK_BOT.md](docs/GROK_BOT.md) (not a Claude-style install) |
+| LangChain Deep Agents | `skills=` / SkillsMiddleware — [docs/LANG_CHAIN_DEEP_AGENTS.md](docs/LANG_CHAIN_DEEP_AGENTS.md) |
+
+Write isolation (worktree + PR) is in [docs/ISOLATION.md](docs/ISOLATION.md). Public examples use fictional **lumenfield-detector** and **northstar-console** only. Point `SECOND_BRAIN_ROOT` at a path the human already has. Never hard-code a private remote.
 
 ## Why DEKC
 

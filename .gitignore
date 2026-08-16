@@ -30,3 +30,7 @@ src/routeTree.gen.ts
 
 # Derived full-text index — see README, rebuilds in seconds
 **/.index/
+
+# Isolation session bookkeeping
+.brain-sessions/
+.brain-worktrees/
