@@ -36,7 +36,7 @@ from dekc_common import (  # noqa: E402
     resolve_knowledge_root,
     slugify,
     utc_now,
-    write_concept,
+    write_knowledge,
     path_for_type,
     refresh_catalog_index,
 )
@@ -292,7 +292,7 @@ def walk_lake(
             f"Root: `{lake_root}`\n\n"
             f"## Stats\n\n```json\n{json.dumps(result.to_dict()['counts'], indent=2)}\n```\n"
         )
-        _, action = write_concept(bundle, receipt_rel, fm, body)
+        _, action = write_knowledge(bundle, receipt_rel, fm, body)
         result.record(receipt_rel, action)
         refresh_catalog_index(bundle, "agents")
         append_log(
@@ -312,7 +312,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--max-files", type=int, default=500)
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--json", action="store_true")
+    parser.add_argument("--author", default="")
     args = parser.parse_args(argv)
+    from dekc_common import resolve_author
+    if not args.dry_run:
+        resolve_author(args.author)
 
     repo = Path(args.repo).resolve()
     bundle = resolve_knowledge_root(repo, args.bundle)

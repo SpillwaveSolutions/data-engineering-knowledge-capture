@@ -10,9 +10,12 @@ semantic models, SQL/DAX, dashboards, diagrams/wireframes (Mermaid/PlantUML), da
 from __future__ import annotations
 
 import argparse
+import contextvars
 import hashlib
 import json
+import os
 import re
+import secrets
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -51,6 +54,7 @@ CATALOGS = (
     "glossary",
     "packs",
     "agents",
+    "write-events",
 )
 
 TYPE_TO_DIR = {
@@ -88,6 +92,7 @@ TYPE_TO_DIR = {
     "AgentNode": "agents",
     "Dataset": "tables",
     "DesignPattern": "packs",
+    "WriteEvent": "write-events",
 }
 
 DEFAULT_RELATIONS = (
@@ -574,6 +579,95 @@ def write_concept(
     fm = {k: v for k, v in frontmatter.items()}
     path.write_text(dump_frontmatter(fm) + "\n" + body.rstrip() + "\n", encoding="utf-8")
     return path, "created"
+
+
+_AUTHOR: contextvars.ContextVar[str] = contextvars.ContextVar("dekc_author", default="")
+
+
+def resolve_author(explicit: str | None = None) -> str:
+    """Fail-closed identity claim. Prefer --author, else SECOND_BRAIN_IDENTITY."""
+    author = (explicit or os.environ.get("SECOND_BRAIN_IDENTITY") or "").strip()
+    if not author:
+        print(
+            json.dumps(
+                {
+                    "error": "claim an identity first",
+                    "hint": "pass --author or set SECOND_BRAIN_IDENTITY",
+                }
+            )
+        )
+        raise SystemExit(1)
+    _AUTHOR.set(author)
+    return author
+
+
+def emit_write_event(
+    bundle: Path,
+    *,
+    author: str,
+    typ: str,
+    dest: Path,
+    host: str = "",
+) -> Path | None:
+    """Record a WriteEvent node for a successful knowledge write. Skip self."""
+    if typ == "WriteEvent":
+        return None
+    try:
+        rel = "/" + str(dest.relative_to(bundle)).replace("\\", "/")
+    except ValueError:
+        rel = "/" + dest.name
+    event_id = f"{int(datetime.now(timezone.utc).timestamp())}-{secrets.token_hex(3)}"
+    ev_rel = f"write-events/{event_id}.md"
+    fm = {
+        "type": "WriteEvent",
+        "title": f"write {typ} {dest.name}",
+        "status": "recorded",
+        "timestamp": utc_now(),
+        "author": author,
+        "tags": ["write-event", typ.lower()],
+        "links": [{"target": rel, "rel": "documents"}],
+    }
+    body = (
+        f"# Write {typ}\n\n"
+        f"- actor: `{author}`\n"
+        f"- host: `{host or 'unknown'}`\n"
+        f"- path: `{rel}`\n"
+        f"- type: `{typ}`\n"
+    )
+    write_concept(bundle, ev_rel, fm, body, force=True)
+    ensure_catalog_index(bundle, "write-events", "Write Events")
+    return bundle / ev_rel
+
+
+def write_knowledge(
+    bundle: Path,
+    rel_path: str,
+    frontmatter: dict[str, Any],
+    body: str,
+    *,
+    author: str | None = None,
+    host: str | None = None,
+    force: bool = False,
+    emit_event: bool = True,
+) -> tuple[Path, str]:
+    """Stamp author, write via write_concept, emit WriteEvent on created/updated.
+
+    write_concept stays pure. Callers that own a knowledge write go through here.
+    """
+    claimed = (author or "").strip() or _AUTHOR.get()
+    if not claimed:
+        claimed = resolve_author(author)
+    fm = {**frontmatter, "author": claimed}
+    path, action = write_concept(bundle, rel_path, fm, body, force=force)
+    if emit_event and action in ("created", "updated"):
+        emit_write_event(
+            bundle,
+            author=claimed,
+            typ=str(fm.get("type") or "Concept"),
+            dest=path,
+            host=host if host is not None else os.environ.get("SECOND_BRAIN_HOST", ""),
+        )
+    return path, action
 
 
 def add_typed_link(fm: dict[str, Any], target: str, rel: str) -> dict[str, Any]:

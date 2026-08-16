@@ -22,7 +22,7 @@ from dekc_common import (  # noqa: E402
     resolve_knowledge_root,
     slugify,
     utc_now,
-    write_concept,
+    write_knowledge,
     parse_frontmatter,
     dump_frontmatter,
 )
@@ -76,7 +76,7 @@ def capture_data_lake(
     for layer in layers or ["bronze", "silver", "gold"]:
         body += f"- [{layer}](/layers/{slugify(layer)}.md)\n"
     body += "\n## Architecture\n\n```mermaid\nflowchart LR\n  S[Sources] --> B[Bronze] --> V[Silver] --> G[Gold]\n```\n"
-    _, action = write_concept(bundle, rel, fm, body)
+    _, action = write_knowledge(bundle, rel, fm, body)
     refresh_catalog_index(bundle, "lakes")
     append_log(bundle, f"Captured data lake: {name}")
     return [(rel, action)]
@@ -121,7 +121,7 @@ def capture_data_mart(
     body = f"# {name}\n\n{description or ''}\n\nCurated business-facing mart (typically gold).\n"
     if tables:
         body += "\n## Tables\n\n" + "\n".join(f"- {concept_ref(t, 'tables')}" for t in tables) + "\n"
-    _, action = write_concept(bundle, rel, fm, body)
+    _, action = write_knowledge(bundle, rel, fm, body)
     refresh_catalog_index(bundle, "marts")
     append_log(bundle, f"Captured data mart: {name}")
     return [(rel, action)]
@@ -161,7 +161,7 @@ def capture_data_catalog(
     body = f"# {name}\n\n{description or ''}\n\n"
     body += f"**Engine:** {engine or 'n/a'}  \n**URI:** `{uri or 'n/a'}`\n\n"
     body += "System of record for schemas/tables (Glue, Unity, Purview, DataHub, …).\n"
-    _, action = write_concept(bundle, rel, fm, body)
+    _, action = write_knowledge(bundle, rel, fm, body)
     refresh_catalog_index(bundle, "catalogs")
     append_log(bundle, f"Captured data catalog: {name}")
     return [(rel, action)]
@@ -193,7 +193,7 @@ def capture_data_domain(
     body = f"# {name}\n\n{description or ''}\n\n"
     if owner:
         body += f"**Owner:** {owner}\n"
-    _, action = write_concept(bundle, rel, fm, body)
+    _, action = write_knowledge(bundle, rel, fm, body)
     refresh_catalog_index(bundle, "domains")
     append_log(bundle, f"Captured data domain: {name}")
     return [(rel, action)]
@@ -233,7 +233,7 @@ def capture_data_product(
     if links:
         fm["links"] = links
     body = f"# {name}\n\n{description or ''}\n\nPublishable data product for consumers (reports, apps, downstream domains).\n"
-    _, action = write_concept(bundle, rel, fm, body)
+    _, action = write_knowledge(bundle, rel, fm, body)
     refresh_catalog_index(bundle, "products")
     append_log(bundle, f"Captured data product: {name}")
     return [(rel, action)]
@@ -280,7 +280,7 @@ def capture_stream(
     if lands_as:
         body += f"**Lands as:** {concept_ref(lands_as, 'tables')}\n\n"
     body += "```mermaid\nflowchart LR\n  P[Producers] --> S[Stream] --> B[Bronze landing]\n```\n"
-    _, action = write_concept(bundle, rel, fm, body)
+    _, action = write_knowledge(bundle, rel, fm, body)
     refresh_catalog_index(bundle, "streams")
     append_log(bundle, f"Captured stream: {name}")
     return [(rel, action)]
@@ -322,7 +322,7 @@ def capture_storage(
         fm["links"] = links
     body = f"# {name}\n\n{description or ''}\n\n"
     body += f"**Kind:** {kind}  \n**URI:** `{uri or 'n/a'}`  \n**Format:** {format or 'n/a'}\n"
-    _, action = write_concept(bundle, rel, fm, body)
+    _, action = write_knowledge(bundle, rel, fm, body)
     refresh_catalog_index(bundle, "storage")
     append_log(bundle, f"Captured storage: {name}")
     return [(rel, action)]
@@ -370,7 +370,7 @@ def capture_dq_rule(
         body += f"## Expression\n\n```\n{expression.strip()}\n```\n"
     if target:
         body += f"\n**Target:** {concept_ref(target, 'tables')}\n"
-    _, action = write_concept(bundle, rel, fm, body)
+    _, action = write_knowledge(bundle, rel, fm, body)
     refresh_catalog_index(bundle, "quality")
     append_log(bundle, f"Captured DQ rule: {name}")
     return [(rel, action)]
@@ -502,7 +502,7 @@ def capture_ingestion_job(
     body += "  JOB --> DQ[Optional DQ]\n"
     body += "```\n"
 
-    _, action = write_concept(bundle, rel, fm, body)
+    _, action = write_knowledge(bundle, rel, fm, body)
     refresh_catalog_index(bundle, "ingestion")
     append_log(bundle, f"Captured ingestion job: {name}")
     return [(rel, action)]
@@ -513,6 +513,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--repo", default=".")
     parser.add_argument("--bundle", default=None)
     parser.add_argument("--json", action="store_true")
+    parser.add_argument("--author", default="")
     sub = parser.add_subparsers(dest="cmd", required=True)
 
     p = sub.add_parser("lake")
@@ -596,6 +597,8 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--target", default=None)
 
     args = parser.parse_args(argv)
+    from dekc_common import resolve_author
+    resolve_author(args.author)
     repo = Path(args.repo).resolve()
     bundle = resolve_knowledge_root(repo, args.bundle)
     ensure_bundle(bundle)

@@ -23,7 +23,7 @@ from dekc_common import (  # noqa: E402
     resolve_knowledge_root,
     slugify,
     utc_now,
-    write_concept,
+    write_knowledge,
 )
 from dekc_doctor import doctor  # noqa: E402
 from dekc_lineage import build_graph  # noqa: E402
@@ -308,7 +308,7 @@ def write_judgment(bundle: Path, report: dict) -> str:
         "wiki_key": f"judgment-auto-{day}",
         "truth_state": "current",
     }
-    write_concept(bundle, rel, fm, body, force=True)
+    write_knowledge(bundle, rel, fm, body, force=True)
     refresh_catalog_index(bundle, "agents")
     append_log(bundle, f"Automated RE grade score={report['score']} pass={report['pass']}")
     return rel
@@ -320,7 +320,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--bundle", default=None)
     parser.add_argument("--json", action="store_true")
     parser.add_argument("--write", action="store_true", help="Write judgment under bundle/agents/")
+    parser.add_argument("--author", default="")
     args = parser.parse_args(argv)
+    from dekc_common import resolve_author
+    if getattr(args, 'write', False):
+        resolve_author(args.author)
     repo = Path(args.repo).resolve()
     bundle = resolve_knowledge_root(repo, args.bundle)
     report = grade_bundle(bundle)

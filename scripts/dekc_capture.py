@@ -21,7 +21,7 @@ from dekc_common import (  # noqa: E402
     scrub_text,
     slugify,
     utc_now,
-    write_concept,
+    write_knowledge,
 )
 
 
@@ -56,7 +56,7 @@ def capture_source(
         "truth_state": "current",
     }
     body = f"# {name}\n\n## Kind\n\n{kind}\n\n## URI\n\n`{uri or 'n/a'}`\n\n## Notes\n\n{description or '_No notes._'}\n"
-    _, action = write_concept(bundle, rel, fm, body)
+    _, action = write_knowledge(bundle, rel, fm, body)
     refresh_catalog_index(bundle, "sources")
     append_log(bundle, f"Captured source: {name}")
     return [(rel, action)]
@@ -99,7 +99,7 @@ def capture_table(
             "links": [{"target": f"/{rel}", "rel": "contains"}],
         }
         sbody = f"# {schema}\n\nTables and views in this schema.\n\n- [{name}](/{rel})\n"
-        _, sa = write_concept(bundle, srel, sfm, sbody)
+        _, sa = write_knowledge(bundle, srel, sfm, sbody)
         results.append((srel, sa))
         refresh_catalog_index(bundle, "schemas")
     if source:
@@ -132,7 +132,7 @@ def capture_table(
             f"- Nullable: {cfm['nullable']}\n\n"
             f"{col.get('description') or ''}\n"
         )
-        _, ca = write_concept(bundle, crel, cfm, cbody)
+        _, ca = write_knowledge(bundle, crel, cfm, cbody)
         results.append((crel, ca))
         links.append({"target": f"/{crel}", "rel": "contains"})
 
@@ -171,7 +171,7 @@ def capture_table(
             body += f"| `{cname}` | `{ctype}` | {cdesc} |\n"
     if sql:
         body += f"\n## SQL\n\n```sql\n{_scrub(sql).strip()}\n```\n"
-    _, action = write_concept(bundle, rel, fm, body)
+    _, action = write_knowledge(bundle, rel, fm, body)
     results.insert(0, (rel, action))
     refresh_catalog_index(bundle, "tables")
     refresh_catalog_index(bundle, "columns")
@@ -215,7 +215,7 @@ def capture_view(
         body += "\n## Reads from\n\n"
         for src in reads_from:
             body += f"- [{src}]({concept_ref(src, 'tables')})\n"
-    _, action = write_concept(bundle, rel, fm, body)
+    _, action = write_knowledge(bundle, rel, fm, body)
     refresh_catalog_index(bundle, "views")
     append_log(bundle, f"Captured view: {name}")
     return [(rel, action)]
@@ -256,7 +256,7 @@ def capture_query(
             "links": [{"target": f"/{rel}", "rel": "implements"}],
         }
         sbody = f"# {name} (SQL)\n\n```sql\n{_scrub(body_sql).strip()}\n```\n"
-        _, sa = write_concept(bundle, srel, sfm, sbody)
+        _, sa = write_knowledge(bundle, srel, sfm, sbody)
         results.append((srel, sa))
         links.append({"target": f"/{srel}", "rel": "implements"})
         refresh_catalog_index(bundle, "sql")
@@ -277,7 +277,7 @@ def capture_query(
             "links": [{"target": f"/{rel}", "rel": "implements"}],
         }
         dbody = f"# {name} (DAX)\n\n```dax\n{_scrub(body_sql).strip()}\n```\n"
-        _, da = write_concept(bundle, drel, dfm, dbody)
+        _, da = write_knowledge(bundle, drel, dfm, dbody)
         results.append((drel, da))
         links.append({"target": f"/{drel}", "rel": "implements"})
         refresh_catalog_index(bundle, "dax")
@@ -299,7 +299,7 @@ def capture_query(
     if links:
         fm["links"] = links
     body = f"# {name}\n\n{description or ''}\n\n## {dialect.upper()}\n\n```{dialect}\n{_scrub(body_sql).strip()}\n```\n"
-    _, action = write_concept(bundle, rel, fm, body)
+    _, action = write_knowledge(bundle, rel, fm, body)
     results.insert(0, (rel, action))
     refresh_catalog_index(bundle, "queries")
     append_log(bundle, f"Captured query: {name}")
@@ -339,7 +339,7 @@ def capture_dashboard(
     if links:
         fm["links"] = links
     body = f"# {name}\n\nTool: **{tool}**\n\n{description or ''}\n"
-    _, action = write_concept(bundle, rel, fm, body)
+    _, action = write_knowledge(bundle, rel, fm, body)
     refresh_catalog_index(bundle, "dashboards")
     append_log(bundle, f"Captured dashboard: {name}")
     return [(rel, action)]
@@ -371,7 +371,7 @@ def capture_report(
     if links:
         fm["links"] = links
     body = f"# {name}\n\n{description or ''}\n"
-    _, action = write_concept(bundle, rel, fm, body)
+    _, action = write_knowledge(bundle, rel, fm, body)
     refresh_catalog_index(bundle, "reports")
     append_log(bundle, f"Captured report: {name}")
     return [(rel, action)]
@@ -408,7 +408,7 @@ def capture_semantic_model(
     if links:
         fm["links"] = links
     body = f"# {name}\n\n{description or ''}\n\nSemantic layer binding technical tables to business metrics.\n"
-    _, action = write_concept(bundle, rel, fm, body)
+    _, action = write_knowledge(bundle, rel, fm, body)
     refresh_catalog_index(bundle, "semantic")
     append_log(bundle, f"Captured semantic model: {name}")
     return [(rel, action)]
@@ -448,7 +448,7 @@ def capture_metric(
     body = f"# {name}\n\n## Definition\n\n{definition or '_TBD_'}\n"
     if expression:
         body += f"\n## Expression ({dialect})\n\n```{dialect}\n{expression.strip()}\n```\n"
-    _, action = write_concept(bundle, rel, fm, body)
+    _, action = write_knowledge(bundle, rel, fm, body)
     refresh_catalog_index(bundle, "metrics")
     append_log(bundle, f"Captured metric: {name}")
     return [(rel, action)]
@@ -483,7 +483,7 @@ def capture_workflow(
         body += "\n## Steps\n\n"
         for i, step in enumerate(steps, 1):
             body += f"{i}. {step}\n"
-    _, action = write_concept(bundle, rel, fm, body)
+    _, action = write_knowledge(bundle, rel, fm, body)
     refresh_catalog_index(bundle, "workflows")
     append_log(bundle, f"Captured workflow: {name}")
     return [(rel, action)]
@@ -531,7 +531,7 @@ def capture_transformation(
     body = f"# {name}\n\n**{from_layer} → {to_layer}**\n\n{description or ''}\n"
     if sql:
         body += f"\n## SQL\n\n```sql\n{_scrub(sql).strip()}\n```\n"
-    _, action = write_concept(bundle, rel, fm, body)
+    _, action = write_knowledge(bundle, rel, fm, body)
     refresh_catalog_index(bundle, "transformations")
     append_log(bundle, f"Captured transformation: {name}")
     return [(rel, action)]
@@ -587,7 +587,7 @@ def capture_lineage_path(
     for i in range(len(resolved) - 1):
         body += f"  n{i} --> n{i+1}\n"
     body += "```\n"
-    _, action = write_concept(bundle, rel, fm, body)
+    _, action = write_knowledge(bundle, rel, fm, body)
     refresh_catalog_index(bundle, "lineage")
     append_log(bundle, f"Captured lineage path: {name}")
     return [(rel, action)]
@@ -651,7 +651,7 @@ def capture_business_object(
         body += "\n## Technical sources\n\n"
         for t in derived_from:
             body += f"- [{t}]({concept_ref(t, 'tables')})\n"
-    _, action = write_concept(bundle, rel, fm, body)
+    _, action = write_knowledge(bundle, rel, fm, body)
     results.append((rel, action))
     refresh_catalog_index(bundle, "business-objects")
     append_log(bundle, f"Captured business object: {name}")
@@ -691,7 +691,7 @@ def capture_glossary_term(
     body = f"# {term}\n\n## Definition\n\n{definition}\n"
     if synonyms:
         body += "\n## Synonyms\n\n" + ", ".join(f"`{s}`" for s in synonyms) + "\n"
-    _, action = write_concept(bundle, rel, fm, body)
+    _, action = write_knowledge(bundle, rel, fm, body)
     refresh_catalog_index(bundle, "glossary")
     append_log(bundle, f"Captured glossary term: {term}")
     return [(rel, action)]
@@ -721,6 +721,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--repo", default=".")
     parser.add_argument("--bundle", default=None)
     parser.add_argument("--json", action="store_true")
+    parser.add_argument("--author", default="")
     sub = parser.add_subparsers(dest="cmd", required=True)
 
     def add_common(p: argparse.ArgumentParser) -> None:
@@ -814,6 +815,8 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--related", nargs="*", default=[])
 
     args = parser.parse_args(argv)
+    from dekc_common import resolve_author
+    resolve_author(args.author)
     repo = Path(args.repo).resolve()
     bundle = resolve_knowledge_root(repo, args.bundle)
     ensure_bundle(bundle)

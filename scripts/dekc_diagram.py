@@ -27,7 +27,7 @@ from dekc_common import (  # noqa: E402
     resolve_knowledge_root,
     slugify,
     utc_now,
-    write_concept,
+    write_knowledge,
     parse_frontmatter,
     dump_frontmatter,
 )
@@ -540,7 +540,7 @@ def capture_diagram(
     body += "\n## Notes\n\n"
     body += "_Edit the fenced listing above; keep language tag as `mermaid` or `plantuml`._\n"
 
-    _, action = write_concept(bundle, rel, fm, body)
+    _, action = write_knowledge(bundle, rel, fm, body)
     catalog = "wireframes" if is_wireframe else "diagrams"
     refresh_catalog_index(bundle, catalog)
     for ref in resolved_subjects:
@@ -575,6 +575,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--repo", default=".")
     parser.add_argument("--bundle", default=None)
     parser.add_argument("--json", action="store_true")
+    parser.add_argument("--author", default="")
     sub = parser.add_subparsers(dest="cmd", required=True)
 
     p = sub.add_parser("capture", help="Capture a diagram or wireframe concept")
@@ -627,6 +628,8 @@ def main(argv: list[str] | None = None) -> int:
                 print(f"{k}: {', '.join(langs)}")
         return 0
 
+    from dekc_common import resolve_author
+    resolve_author(args.author)
     repo = Path(args.repo).resolve()
     bundle = resolve_knowledge_root(repo, args.bundle)
     ensure_bundle(bundle)

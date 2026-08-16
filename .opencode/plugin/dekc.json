@@ -1,6 +1,6 @@
 {
   "name": "data-engineering-knowledge-capture",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "OpenCode port of DEKC \u2014 same skills/agents/scripts as Claude & Codex. Policy via AGENTS.md.",
   "skills": "../../skills",
   "agents": "../../agents",

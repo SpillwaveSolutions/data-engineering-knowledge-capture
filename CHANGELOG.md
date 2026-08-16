@@ -2,6 +2,15 @@
 
 Notable changes to **data-engineering-knowledge-capture**. Newest first.
 
+## 0.3.1 — 2026-08-16
+
+### Added
+
+- Required identity on every knowledge write: `--author` or `SECOND_BRAIN_IDENTITY`.
+- `write_knowledge()` stamps `author` and emits a `WriteEvent`. `write_concept` stays pure.
+- Wired through capture, walk, platform, diagram, business, brain `--write`, pack `--write`, grade `--write`, and link.
+- Fail-closed tests. Scan / pack / grade / brain print-only paths do not require identity.
+
 ## 0.3.0 — 2026-08-15
 
 ### Added

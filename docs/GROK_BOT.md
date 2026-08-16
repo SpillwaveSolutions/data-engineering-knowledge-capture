@@ -43,9 +43,12 @@ export SECOND_BRAIN_IDENTITY="grok-bot/data-engineering-knowledge-capture"
 The model proposes structure. Scripts materialize Markdown + YAML.
 
 ```bash
+python3 scripts/dekc_capture.py --bundle "${SECOND_BRAIN_ROOT:-sample-knowledge}" --author "${SECOND_BRAIN_IDENTITY}" table --name example --layer silver
 python3 scripts/dekc_pack.py tables/example.md --bundle "${SECOND_BRAIN_ROOT:-sample-knowledge}" --hops 2
 python3 scripts/dekc_validate.py --bundle "${SECOND_BRAIN_ROOT:-sample-knowledge}"
 ```
+
+Writes fail closed without `--author` or `SECOND_BRAIN_IDENTITY`. Successful knowledge writes stamp `author` and emit a `WriteEvent`.
 
 **Forbidden:** silent raw dumps into the knowledge tree without type, provenance, or validation.
 
