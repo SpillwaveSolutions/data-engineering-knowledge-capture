@@ -6,6 +6,7 @@ Public tests use only fictional project names.
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -25,10 +26,13 @@ def git(repo: Path, *args: str) -> subprocess.CompletedProcess:
 
 
 def run_session(*args: str) -> subprocess.CompletedProcess:
+    env = os.environ.copy()
+    env.pop("SECOND_BRAIN_IDENTITY", None)
     return subprocess.run(
         [sys.executable, str(SESSION), *args],
         capture_output=True,
         text=True,
+        env=env,
     )
 
 

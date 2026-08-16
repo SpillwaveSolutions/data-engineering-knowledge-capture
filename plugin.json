@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "data-engineering-knowledge-capture",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Data Engineering Knowledge Capture: schemas, lineage, medallion, semantic models, and glossary into a durable OKF knowledge graph. Multi-host bindings and write isolation.",
   "author": {
     "name": "Rick Hightower",

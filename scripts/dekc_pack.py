@@ -16,7 +16,7 @@ from dekc_common import (  # noqa: E402
     path_for_type,
     resolve_knowledge_root,
     utc_now,
-    write_concept,
+    write_knowledge,
     refresh_catalog_index,
     append_log,
 )
@@ -141,7 +141,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--json", action="store_true")
     parser.add_argument("--mermaid", action="store_true")
     parser.add_argument("--write", action="store_true", help="Write pack under packs/")
+    parser.add_argument("--author", default="")
     args = parser.parse_args(argv)
+    from dekc_common import resolve_author
+    if getattr(args, 'write', False):
+        resolve_author(args.author)
 
     if args.tiny:
         args.hops = 1
@@ -168,7 +172,7 @@ def main(argv: list[str] | None = None) -> int:
             "wiki_key": f"pack-{slug}",
             "truth_state": "current",
         }
-        write_concept(bundle, rel, fm, result["markdown"])
+        write_knowledge(bundle, rel, fm, result["markdown"])
         refresh_catalog_index(bundle, "packs")
         append_log(bundle, f"Wrote context pack for {result['focus']}")
 

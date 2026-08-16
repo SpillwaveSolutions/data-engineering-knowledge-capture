@@ -23,7 +23,7 @@ from dekc_common import (  # noqa: E402
     resolve_knowledge_root,
     slugify,
     utc_now,
-    write_concept,
+    write_knowledge,
 )
 from dekc_index import build_index, search_index  # noqa: E402
 from dekc_lineage import build_graph, mermaid  # noqa: E402
@@ -378,7 +378,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--json", action="store_true")
     parser.add_argument("--write", action="store_true", help="Write ContextPack under packs/")
     parser.add_argument("--list-intents", action="store_true")
+    parser.add_argument("--author", default="")
     args = parser.parse_args(argv)
+    from dekc_common import resolve_author
+    if getattr(args, 'write', False):
+        resolve_author(args.author)
 
     if args.list_intents:
         print(json.dumps({k: v["title"] for k, v in INTENTS.items()}, indent=2))
@@ -411,7 +415,7 @@ def main(argv: list[str] | None = None) -> int:
             "wiki_key": f"brain-{slug}",
             "truth_state": "current",
         }
-        write_concept(bundle, rel, fm, result["markdown"], force=True)
+        write_knowledge(bundle, rel, fm, result["markdown"], force=True)
         refresh_catalog_index(bundle, "packs")
         append_log(bundle, f"Second-brain pack intent={args.intent} query={args.query!r}")
         result["written"] = rel

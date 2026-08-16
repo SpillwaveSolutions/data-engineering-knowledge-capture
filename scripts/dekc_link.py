@@ -14,7 +14,9 @@ from dekc_common import (  # noqa: E402
     add_typed_link,
     append_log,
     dump_frontmatter,
+    emit_write_event,
     parse_frontmatter,
+    resolve_author,
     resolve_knowledge_root,
 )
 
@@ -32,7 +34,9 @@ def main(argv: list[str] | None = None) -> int:
         ))
     parser.add_argument("--repo", default=".")
     parser.add_argument("--bundle", default=None)
+    parser.add_argument("--author", default="")
     args = parser.parse_args(argv)
+    author = resolve_author(args.author)
 
     bundle = resolve_knowledge_root(Path(args.repo).resolve(), args.bundle)
     src = args.src.lstrip("/")
@@ -43,10 +47,17 @@ def main(argv: list[str] | None = None) -> int:
     tgt = args.tgt if args.tgt.startswith("/") else "/" + args.tgt.lstrip("/")
     fm, body = parse_frontmatter(path.read_text(encoding="utf-8"))
     add_typed_link(fm, tgt, args.rel)
+    fm["author"] = author
     # ensure body link
     if tgt not in body:
         body = body.rstrip() + f"\n\n- [{Path(tgt).stem}]({tgt}) (`{args.rel}`)\n"
     path.write_text(dump_frontmatter(fm) + "\n" + body.rstrip() + "\n", encoding="utf-8")
+    emit_write_event(
+        bundle,
+        author=author,
+        typ=str(fm.get("type") or "Concept"),
+        dest=path,
+    )
     append_log(bundle, f"Linked {src} -[{args.rel}]-> {tgt}")
     print(f"linked {src} -[{args.rel}]-> {tgt}")
     return 0

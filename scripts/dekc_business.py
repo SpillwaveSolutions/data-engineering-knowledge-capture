@@ -117,6 +117,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Promote technical assets to business objects")
     parser.add_argument("--repo", default=".")
     parser.add_argument("--bundle", default=None)
+    parser.add_argument("--author", default="")
     sub = parser.add_subparsers(dest="cmd", required=True)
 
     p = sub.add_parser("promote")
@@ -138,6 +139,8 @@ def main(argv: list[str] | None = None) -> int:
         print(humanize(args.name))
         return 0
 
+    from dekc_common import resolve_author
+    resolve_author(args.author)
     repo = Path(args.repo).resolve()
     bundle = resolve_knowledge_root(repo, args.bundle)
 

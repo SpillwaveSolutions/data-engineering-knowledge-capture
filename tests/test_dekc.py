@@ -211,6 +211,8 @@ class TestInitAndCapture(unittest.TestCase):
                     str(repo),
                     "--bundle",
                     "knowledge",
+                    "--author",
+                    "claude-code/lumenfield-detector",
                     "--json",
                     "table",
                     "--name",
@@ -244,6 +246,8 @@ class TestWalkFixture(unittest.TestCase):
                     str(repo),
                     "--bundle",
                     "knowledge",
+                    "--author",
+                    "claude-code/lumenfield-detector",
                     "--json",
                 ],
                 capture_output=True,
@@ -426,6 +430,8 @@ class TestDiagramsAndPlatform(unittest.TestCase):
                     str(repo),
                     "--bundle",
                     "knowledge",
+                    "--author",
+                    "claude-code/lumenfield-detector",
                     "dashboard",
                     "--name",
                     "Test Dash",
@@ -443,6 +449,8 @@ class TestDiagramsAndPlatform(unittest.TestCase):
                     str(repo),
                     "--bundle",
                     "knowledge",
+                    "--author",
+                    "claude-code/lumenfield-detector",
                     "wireframe",
                     "--name",
                     "Test WF",
@@ -499,5 +507,117 @@ class TestVersionConsistency(unittest.TestCase):
         self.assertEqual(m.group(1), expected)
 
 
+class TestRequiredIdentity(unittest.TestCase):
+    def test_resolve_author_fail_closed(self):
+        import os
+        from dekc_common import resolve_author
+
+        prev = os.environ.pop("SECOND_BRAIN_IDENTITY", None)
+        try:
+            with self.assertRaises(SystemExit):
+                resolve_author(None)
+            with self.assertRaises(SystemExit):
+                resolve_author("")
+            self.assertEqual(
+                resolve_author("grok-bot/northstar-console"),
+                "grok-bot/northstar-console",
+            )
+        finally:
+            if prev is not None:
+                os.environ["SECOND_BRAIN_IDENTITY"] = prev
+
+    def test_flag_beats_env(self):
+        import os
+        from dekc_common import resolve_author
+
+        prev = os.environ.get("SECOND_BRAIN_IDENTITY")
+        os.environ["SECOND_BRAIN_IDENTITY"] = "grok-bot/northstar-console"
+        try:
+            self.assertEqual(resolve_author(None), "grok-bot/northstar-console")
+            self.assertEqual(
+                resolve_author("claude-code/lumenfield-detector"),
+                "claude-code/lumenfield-detector",
+            )
+        finally:
+            if prev is None:
+                os.environ.pop("SECOND_BRAIN_IDENTITY", None)
+            else:
+                os.environ["SECOND_BRAIN_IDENTITY"] = prev
+
+    def test_capture_stamps_author_and_emits_event(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+            subprocess.run(
+                [
+                    sys.executable,
+                    str(SCRIPTS / "dekc_common.py"),
+                    "init-bundle",
+                    "--repo",
+                    str(repo),
+                    "--bundle",
+                    "knowledge",
+                ],
+                check=True,
+                capture_output=True,
+            )
+            proc = subprocess.run(
+                [
+                    sys.executable,
+                    str(SCRIPTS / "dekc_capture.py"),
+                    "--repo",
+                    str(repo),
+                    "--bundle",
+                    "knowledge",
+                    "--author",
+                    "claude-code/lumenfield-detector",
+                    "table",
+                    "--name",
+                    "orders",
+                    "--layer",
+                    "silver",
+                ],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(proc.returncode, 0, proc.stderr + proc.stdout)
+            path = repo / "knowledge" / "tables" / "silver-orders.md"
+            self.assertTrue(path.is_file())
+            fm, _ = parse_frontmatter(path.read_text(encoding="utf-8"))
+            self.assertEqual(fm.get("author"), "claude-code/lumenfield-detector")
+            events = [
+                p
+                for p in (repo / "knowledge" / "write-events").glob("*.md")
+                if p.name != "index.md"
+            ]
+            self.assertGreater(len(events), 0)
+            ev_fm, _ = parse_frontmatter(events[0].read_text(encoding="utf-8"))
+            self.assertEqual(ev_fm.get("type"), "WriteEvent")
+
+    def test_cli_capture_without_identity_fails(self):
+        import os
+
+        env = os.environ.copy()
+        env.pop("SECOND_BRAIN_IDENTITY", None)
+        with tempfile.TemporaryDirectory() as tmp:
+            proc = subprocess.run(
+                [
+                    sys.executable,
+                    str(SCRIPTS / "dekc_capture.py"),
+                    "--repo",
+                    tmp,
+                    "table",
+                    "--name",
+                    "x",
+                ],
+                capture_output=True,
+                text=True,
+                env=env,
+            )
+            self.assertNotEqual(proc.returncode, 0)
+            self.assertIn("identity", (proc.stdout + proc.stderr).lower())
+
+
 if __name__ == "__main__":
     unittest.main()
+
