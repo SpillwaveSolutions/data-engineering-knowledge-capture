@@ -10,13 +10,24 @@
     {
       "name": "data-engineering-knowledge-capture",
       "source": "./",
-      "description": "Capture data-platform knowledge — schemas, lineage, medallion, semantic layer, business glossary — into OKF. Extends PKC; depends on OKF.",
-      "version": "0.2.0",
-      "author": { "name": "Rick Hightower" },
+      "description": "Capture data-platform knowledge \u2014 schemas, lineage, medallion, semantic layer, business glossary \u2014 into OKF. Extends PKC; depends on OKF.",
+      "version": "0.3.0",
+      "author": {
+        "name": "Rick Hightower"
+      },
       "homepage": "https://github.com/SpillwaveSolutions/data-engineering-knowledge-capture",
       "repository": "https://github.com/SpillwaveSolutions/data-engineering-knowledge-capture",
       "license": "MIT",
-      "keywords": ["dekc", "pkc", "okf", "data-engineering", "lineage", "medallion", "claude-code", "grok-build"],
+      "keywords": [
+        "dekc",
+        "pkc",
+        "okf",
+        "data-engineering",
+        "lineage",
+        "medallion",
+        "claude-code",
+        "grok-build"
+      ],
       "category": "productivity"
     }
   ]

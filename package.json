@@ -13,7 +13,7 @@
     "build:dev": "vite build --mode development",
     "preview": "vite preview --host 0.0.0.0 --port 8080",
     "typecheck": "tsc --noEmit",
-    "test": "python3 tests/test_dekc.py",
+    "test": "python3 tests/test_dekc.py && python3 tests/test_isolation.py",
     "lint": "eslint .",
     "format": "prettier --write .",
     "test:js": "node --test 'scripts/**/*.test.mjs'",
@@ -23,7 +23,7 @@
     "brain": "python3 scripts/dekc_brain.py revenue --intent design-report --bundle sample-knowledge",
     "schemas": "python3 scripts/dekc_schemas.py list",
     "index": "python3 scripts/dekc_index.py --repo . --bundle sample-knowledge build",
-    "py:compile": "python3 -m py_compile scripts/dekc_common.py scripts/dekc_capture.py scripts/dekc_walk.py scripts/dekc_lineage.py scripts/dekc_business.py scripts/dekc_index.py scripts/dekc_validate.py scripts/dekc_pack.py scripts/dekc_search.py scripts/dekc_doctor.py scripts/dekc_link.py scripts/dekc_grade.py scripts/dekc_brain.py scripts/dekc_schemas.py scripts/dekc_diagram.py scripts/dekc_platform.py"
+    "py:compile": "python3 -m py_compile scripts/dekc_common.py scripts/dekc_capture.py scripts/dekc_walk.py scripts/dekc_lineage.py scripts/dekc_business.py scripts/dekc_index.py scripts/dekc_validate.py scripts/dekc_pack.py scripts/dekc_search.py scripts/dekc_doctor.py scripts/dekc_link.py scripts/dekc_grade.py scripts/dekc_brain.py scripts/dekc_schemas.py scripts/dekc_diagram.py scripts/dekc_platform.py scripts/brain_session.py"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.4",
@@ -99,6 +99,6 @@
     "vite": "^8.2.0"
   },
   "description": "Data Engineering Knowledge Capture (DEKC) \u2014 Claude/Grok/Codex/OpenCode plugin + explorer",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "license": "MIT"
 }

@@ -10,8 +10,13 @@ Agent-facing instructions for **Claude Code**, **Grok Build**, **Codex**, and **
 | **Grok Build** | Zero-config Claude plugin compatibility |
 | **Codex** | `.codex-plugin/plugin.json` + skills + `hooks/codex-hooks.json` |
 | **OpenCode** | Skills + policy via this file; `.opencode/plugin/dekc.json` registration |
+| **Agent Plugins 1.0** | Root `plugin.json` |
+| **Grok Bot** | Skills + `docs/GROK_BOT.md` (not a Claude-style install) |
+| **LangChain Deep Agents** | `skills=` / SkillsMiddleware — `docs/LANG_CHAIN_DEEP_AGENTS.md` |
 
-One plugin tree, four hosts. Do not diverge packaging without updating [PORTS.md](./PORTS.md).
+Write isolation: `docs/ISOLATION.md`. Open `/dekc-session` before writing a shared second brain.
+
+One plugin tree, multiple hosts. Do not diverge packaging without updating [PORTS.md](./PORTS.md).
 
 ## Docs
 

@@ -17,7 +17,7 @@ jobs:
           python-version: "3.12"
 
       - name: Unit tests
-        run: python3 tests/test_dekc.py
+        run: python3 tests/test_dekc.py && python3 tests/test_isolation.py
 
       - name: Compile scripts
         run: |
@@ -32,7 +32,8 @@ jobs:
             scripts/dekc_pack.py \
             scripts/dekc_search.py \
             scripts/dekc_doctor.py \
-            scripts/dekc_link.py
+            scripts/dekc_link.py \
+            scripts/brain_session.py
 
       - name: Validate + doctor sample-knowledge
         run: |

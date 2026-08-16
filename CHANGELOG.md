@@ -2,6 +2,14 @@
 
 Notable changes to **data-engineering-knowledge-capture**. Newest first.
 
+## 0.3.0 — 2026-08-15
+
+### Added
+
+- **Multi-host bindings + write isolation.** Root Agent Plugins 1.0 `plugin.json`, Grok Bot / Deep Agents / isolation / onboarding docs, host wrappers, vendored `scripts/brain_session.py`, and `dekc-session` skill/command.
+- Concurrent writers read `main` and write `brain/<actor>/<session-id>`. Close via PR against the checkout's existing remote.
+- Isolation tests use fictional **lumenfield-detector** / **northstar-console** actors only.
+
 ## 0.2.1 — 2026-08-13
 
 ### Changed
