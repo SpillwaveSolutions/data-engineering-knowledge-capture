@@ -2,6 +2,16 @@
 
 Notable changes to **data-engineering-knowledge-capture**. Newest first.
 
+## 0.3.2 — 2026-08-16
+
+### Added
+
+- ContextPack token budget matches second-brain-core 0.3.3 / PKC 0.7.2: default 1/4 of `SECOND_BRAIN_WINDOW_TOKENS` (128000 → 32000). Override with `--max-tokens` or `SECOND_BRAIN_PACK_MAX_TOKENS`.
+- Pack is **fail-closed** when the rendered subgraph exceeds the budget. `--write` is skipped.
+- Bodies off unless that node is the pack root. Neighbors keep title, type, path, and frontmatter `description` only.
+- Node clip (`--max-nodes` / `--tiny`) is not a token budget.
+- Implements part of [okf-plugin#55](https://github.com/SpillwaveSolutions/okf-plugin/issues/55).
+
 ## 0.3.1 — 2026-08-16
 
 ### Added
