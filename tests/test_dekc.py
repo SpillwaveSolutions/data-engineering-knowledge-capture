@@ -7,6 +7,7 @@ import json
 import re
 import subprocess
 import sys
+import shutil
 import tempfile
 import unittest
 from pathlib import Path
@@ -616,6 +617,81 @@ class TestRequiredIdentity(unittest.TestCase):
             )
             self.assertNotEqual(proc.returncode, 0)
             self.assertIn("identity", (proc.stdout + proc.stderr).lower())
+
+
+
+
+class TestPackTokenBudget(unittest.TestCase):
+    def test_bodies_off_unless_root(self):
+        from dekc_pack import finalize_markdown, pack
+        tmp = Path(tempfile.mkdtemp())
+        try:
+            tables = tmp / "tables"
+            tables.mkdir()
+            (tmp / "index.md").write_text("---\nokf_version: \"0.2\"\ntitle: t\n---\n", encoding="utf-8")
+            (tables / "root.md").write_text(
+                "---\ntype: Table\ntitle: Lumenfield Root\n"
+                "description: root-desc\n"
+                "links:\n  - target: /tables/neighbor.md\n    rel: feeds\n"
+                "---\n# Lumenfield Root\n\nROOT_BODY_MARKER secret-of-root\n",
+                encoding="utf-8",
+            )
+            (tables / "neighbor.md").write_text(
+                "---\ntype: Table\ntitle: Neighbor\n"
+                "description: neighbor-frontmatter-only\n---\n"
+                "# Neighbor\n\nNEIGHBOR_BODY_MARKER must-not-pack\n",
+                encoding="utf-8",
+            )
+            result = pack(tmp, "tables/root.md", hops=1, max_nodes=8)
+            md, _meta = finalize_markdown(result, bundle=tmp)
+            self.assertIn("ROOT_BODY_MARKER", md)
+            self.assertNotIn("NEIGHBOR_BODY_MARKER", md)
+            self.assertIn("neighbor-frontmatter-only", md)
+        finally:
+            shutil.rmtree(tmp)
+
+    def test_over_budget_fails_closed(self):
+        from dekc_pack import PackBudgetError, finalize_markdown, pack
+        from dekc_pack import main as pack_main
+        tmp = Path(tempfile.mkdtemp())
+        try:
+            tables = tmp / "tables"
+            tables.mkdir()
+            (tmp / "index.md").write_text("---\nokf_version: \"0.2\"\ntitle: t\n---\n", encoding="utf-8")
+            fat = "# Fat Root\n\n" + ("word " * 400)
+            (tables / "fat.md").write_text(
+                "---\ntype: Table\ntitle: Fat Root\n---\n" + fat,
+                encoding="utf-8",
+            )
+            result = pack(tmp, "tables/fat.md", hops=0, max_nodes=1)
+            with self.assertRaises(PackBudgetError) as ctx:
+                finalize_markdown(result, bundle=tmp, max_tokens=20)
+            self.assertGreater(ctx.exception.tokens, ctx.exception.budget)
+            self.assertEqual(ctx.exception.budget, 20)
+            rc = pack_main(
+                [
+                    "tables/fat.md",
+                    "--repo",
+                    str(tmp),
+                    "--bundle",
+                    str(tmp),
+                    "--max-nodes",
+                    "1",
+                    "--hops",
+                    "0",
+                    "--max-tokens",
+                    "20",
+                    "--write",
+                    "--json",
+                    "--author",
+                    "grok-bot/northstar-console",
+                ]
+            )
+            self.assertNotEqual(rc, 0)
+            packs = list(tmp.rglob("pack-fat.md"))
+            self.assertEqual(packs, [])
+        finally:
+            shutil.rmtree(tmp)
 
 
 if __name__ == "__main__":
