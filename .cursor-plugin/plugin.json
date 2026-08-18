@@ -1,11 +1,9 @@
 {
-  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "data-engineering-knowledge-capture",
   "version": "0.3.3",
   "description": "Data Engineering Knowledge Capture: schemas, lineage, medallion, semantic models, and glossary into a durable OKF knowledge graph. Multi-host bindings and write isolation.",
   "author": {
-    "name": "Rick Hightower",
-    "url": "https://github.com/RichardHightower"
+    "name": "Rick Hightower"
   },
   "homepage": "https://github.com/SpillwaveSolutions/data-engineering-knowledge-capture",
   "repository": "https://github.com/SpillwaveSolutions/data-engineering-knowledge-capture",
@@ -20,6 +18,10 @@
     "codex",
     "deep-agents",
     "grok-bot",
-    "cursor"
-  ]
+    "cursor",
+    "second-brain"
+  ],
+  "skills": "skills/",
+  "rules": ".cursor/rules/",
+  "commands": "commands/"
 }
