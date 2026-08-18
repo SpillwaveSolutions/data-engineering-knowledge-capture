@@ -11,7 +11,7 @@
       "name": "data-engineering-knowledge-capture",
       "source": "./",
       "description": "Capture data-platform knowledge \u2014 schemas, lineage, medallion, semantic layer, business glossary \u2014 into OKF. Extends PKC; depends on OKF.",
-      "version": "0.3.2",
+      "version": "0.3.3",
       "author": {
         "name": "Rick Hightower"
       },

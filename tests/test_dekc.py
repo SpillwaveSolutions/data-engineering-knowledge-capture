@@ -479,6 +479,7 @@ class TestVersionConsistency(unittest.TestCase):
     MANIFESTS = [
         ("package.json", ("version",)),
         ("marketplace.json", ("plugins", 0, "version")),
+        (".cursor-plugin/plugin.json", ("version",)),
         (".claude-plugin/plugin.json", ("version",)),
         (".claude-plugin/marketplace.json", ("plugins", 0, "version")),
         (".grok-plugin/marketplace.json", ("version",)),
