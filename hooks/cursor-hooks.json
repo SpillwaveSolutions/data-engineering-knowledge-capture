@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "description": "Cursor-native hook port of Claude Code hooks.json. Shared scripts; event names mapped.",
+  "hooks": {
+    "postToolUse": [
+      {
+        "command": "./\"./scripts/dekc-curate.sh\"",
+        "matcher": "Write|Edit|MultiEdit",
+        "timeout": 45
+      }
+    ],
+    "afterFileEdit": [
+      {
+        "command": "./\"./scripts/dekc-curate.sh\"",
+        "timeout": 45
+      }
+    ]
+  }
+}

@@ -12,5 +12,6 @@
         ]
       }
     ]
-  }
+  },
+  "description": "Codex port of Claude Code hooks. Same scripts; ExitPlanMode omitted (no such tool)."
 }
