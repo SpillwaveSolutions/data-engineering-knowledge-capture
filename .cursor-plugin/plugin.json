@@ -1,6 +1,6 @@
 {
   "name": "data-engineering-knowledge-capture",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "Data Engineering Knowledge Capture: schemas, lineage, medallion, semantic models, and glossary into a durable OKF knowledge graph. Multi-host bindings and write isolation.",
   "author": {
     "name": "Rick Hightower"
@@ -19,7 +19,9 @@
     "deep-agents",
     "grok-bot",
     "cursor",
-    "second-brain"
+    "second-brain",
+    "worklog",
+    "wiki-ticket-sdd"
   ],
   "skills": "skills/",
   "rules": ".cursor/rules/",
