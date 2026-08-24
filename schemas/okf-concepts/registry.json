@@ -2,7 +2,7 @@
   "name": "dekc-okf-concept-schemas",
   "version": "0.3.0",
   "okf_version": "0.2",
-  "description": "DEKC data-plane nouns. AgentNode/Workflow live in AGER; ContextPack in okf-plugin; Diagram/Wireframe in SAC.",
+  "description": "DEKC data-plane nouns. AgentNode and orchestration graphs live in AGER; ContextPack in okf-plugin; visual artifacts in SAC.",
   "base": "BaseConcept.schema.json",
   "concepts": [
     "BusinessObject",
@@ -91,8 +91,6 @@
       "GlossaryTerm",
       "Table",
       "View",
-      "Wireframe",
-      "Diagram",
       "DataMart",
       "DataProduct"
     ],
@@ -100,7 +98,6 @@
       "SourceSystem",
       "Stream",
       "StorageLocation",
-      "Workflow",
       "Transformation",
       "Table",
       "Layer",
@@ -109,7 +106,6 @@
       "DataContract",
       "DQRule",
       "LineagePath",
-      "Diagram",
       "IngestionJob"
     ],
     "design-metric": [
@@ -125,18 +121,14 @@
       "View",
       "Query",
       "Transformation",
-      "Workflow",
       "Dashboard",
       "Report",
       "BusinessObject",
       "DataProduct",
-      "DQRule",
-      "Diagram"
+      "DQRule"
     ],
     "design-job": [
-      "Workflow",
       "Transformation",
-      "Diagram",
       "DQRule",
       "Table",
       "Stream",
