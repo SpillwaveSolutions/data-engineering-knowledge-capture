@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.4.0 — 2026-08-24
+
+### Changed
+
+- **Noun ownership.** DEKC keeps the data plane. Removed leaked types:
+  `AgentNode`, `Workflow` (AGER), `ContextPack` / `BaseConcept` (okf-plugin),
+  `Diagram` / `Wireframe` (SAC).
+- Registry 0.3.0 lists the 29 DEKC nouns. README has the full table.
+- Dual-owned names documented: `Dashboard`, `DataLake`, `GlossaryTerm` (also SAC).
+
 ## 0.3.5
 
 - WikiTicket SDD (worklog) is the tracking system for this plugin.

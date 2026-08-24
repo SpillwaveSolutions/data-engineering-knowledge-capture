@@ -1,15 +1,12 @@
 {
   "name": "dekc-okf-concept-schemas",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "okf_version": "0.2",
-  "description": "Standard OKF frontmatter schemas for DEKC second brain including diagrams, lakes, marts, catalogs, streams, storage, DQ",
+  "description": "DEKC data-plane nouns. AgentNode/Workflow live in AGER; ContextPack in okf-plugin; Diagram/Wireframe in SAC.",
   "base": "BaseConcept.schema.json",
   "concepts": [
-    "AgentNode",
-    "BaseConcept",
     "BusinessObject",
     "Column",
-    "ContextPack",
     "DQRule",
     "Dashboard",
     "DataCatalog",
@@ -21,7 +18,6 @@
     "Dataset",
     "DaxArtifact",
     "DesignPattern",
-    "Diagram",
     "GlossaryTerm",
     "IngestionJob",
     "Layer",
@@ -37,9 +33,7 @@
     "Stream",
     "Table",
     "Transformation",
-    "View",
-    "Wireframe",
-    "Workflow"
+    "View"
   ],
   "catalogs": [
     "sources",
@@ -59,7 +53,6 @@
     "sql",
     "dax",
     "transformations",
-    "workflows",
     "ingestion",
     "lineage",
     "contracts",
@@ -68,12 +61,8 @@
     "metrics",
     "reports",
     "dashboards",
-    "diagrams",
-    "wireframes",
     "business-objects",
-    "glossary",
-    "packs",
-    "agents"
+    "glossary"
   ],
   "diagram_kinds": [
     "wireframe",
