@@ -16,6 +16,7 @@ DEKC **extends [Project Knowledge Capture (PKC)](https://github.com/SpillwaveSol
 
 | Doc | Audience |
 |-----|----------|
+| **[Noun-ownership migration](./docs/user_guide/noun-ownership-migration.md)** | Existing brains: `Workflow` → `IngestionJob`; mixed AGER/SAC types |
 | **[User guide](./docs/user_guide/user-guide.md)** | Install, walk a lake, promote business objects, multi-cloud recipes |
 | **[Design doc](./docs/designs/current_design_doc.md)** | Agent graph loops (AGER), Azure Fabric / AWS / GCP reverse engineering, streams & jobs |
 | **[Typed edges](./docs/typed-edges.md)** | Relation vocabulary for lineage and business meaning |
