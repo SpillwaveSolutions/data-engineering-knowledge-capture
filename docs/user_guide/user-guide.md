@@ -10,7 +10,9 @@ truth_state: current
 
 **Data Engineering Knowledge Capture** turns data platforms into a durable, Git-native [OKF](https://github.com/SpillwaveSolutions/okf-plugin) knowledge graph, with multi-agent walk loops designed using [AGER](https://github.com/SpillwaveSolutions/okf-agent-graph) (OKF Agent Graph Engineering Runtime).
 
-Plugin release **0.2.0**. Storage format is OKF **0.2**. Agent loops follow AGER **0.3** roles (orchestrator / worker / judge / synthesizer) even when you run DEKC skills without a separate AGER bundle.
+Plugin release **0.4.0**. Storage format is OKF **0.2**. Agent loops follow AGER **0.3** roles (orchestrator / worker / judge / synthesizer) even when you run DEKC skills without a separate AGER bundle.
+
+Existing second brains: [noun-ownership migration](./noun-ownership-migration.md) (`Workflow` jobs → `IngestionJob`; diagrams stay SAC).
 
 ## Who this is for
 

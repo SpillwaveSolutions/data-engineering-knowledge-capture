@@ -99,6 +99,6 @@
     "vite": "^8.2.0"
   },
   "description": "Data Engineering Knowledge Capture (DEKC) \u2014 Claude/Grok/Codex/OpenCode plugin + explorer",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "license": "MIT"
 }

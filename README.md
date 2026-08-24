@@ -8,7 +8,7 @@ DEKC **extends [Project Knowledge Capture (PKC)](https://github.com/SpillwaveSol
 |---|---|
 | **Plugin name** | `data-engineering-knowledge-capture` |
 | **Repo** | [SpillwaveSolutions/data-engineering-knowledge-capture](https://github.com/SpillwaveSolutions/data-engineering-knowledge-capture) |
-| **Version** | 0.4.0 |
+| **Version** | 0.4.1 |
 | **License** | MIT |
 | **Hosts** | Claude Code · Grok Build · Codex · OpenCode · Agent Plugins 1.0 · Grok Bot · LangChain Deep Agents |
 
@@ -16,6 +16,7 @@ DEKC **extends [Project Knowledge Capture (PKC)](https://github.com/SpillwaveSol
 
 | Doc | Audience |
 |-----|----------|
+| **[Noun-ownership migration](./docs/user_guide/noun-ownership-migration.md)** | Existing brains: `Workflow` → `IngestionJob`; mixed AGER/SAC types |
 | **[User guide](./docs/user_guide/user-guide.md)** | Install, walk a lake, promote business objects, multi-cloud recipes |
 | **[Design doc](./docs/designs/current_design_doc.md)** | Agent graph loops (AGER), Azure Fabric / AWS / GCP reverse engineering, streams & jobs |
 | **[Typed edges](./docs/typed-edges.md)** | Relation vocabulary for lineage and business meaning |
