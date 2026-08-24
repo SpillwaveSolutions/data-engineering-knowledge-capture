@@ -96,5 +96,6 @@
       "type": "string"
     }
   },
-  "additionalProperties": true
+  "additionalProperties": true,
+  "x-impact": "medium"
 }

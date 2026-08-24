@@ -293,8 +293,11 @@ class TestSchemasAndBrain(unittest.TestCase):
         self.assertEqual(proc.returncode, 0, proc.stderr)
         data = json.loads(proc.stdout)
         self.assertIn("Table", data.get("concepts") or [])
-        self.assertIn("Wireframe", data.get("concepts") or [])
+        self.assertIn("IngestionJob", data.get("concepts") or [])
         self.assertIn("DataLake", data.get("concepts") or [])
+        self.assertNotIn("Wireframe", data.get("concepts") or [])
+        self.assertNotIn("AgentNode", data.get("concepts") or [])
+        self.assertNotIn("Workflow", data.get("concepts") or [])
 
     def test_schema_validate_sample(self):
         proc = subprocess.run(

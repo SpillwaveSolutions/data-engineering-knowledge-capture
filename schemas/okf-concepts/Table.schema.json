@@ -118,5 +118,6 @@
       "description": "delta|iceberg|parquet|csv|..."
     }
   },
-  "additionalProperties": true
+  "additionalProperties": true,
+  "x-impact": "medium"
 }

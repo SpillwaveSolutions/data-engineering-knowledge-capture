@@ -10,7 +10,9 @@ For the full history of the LLM-wiki / second-brain effort, also read [second-br
 
 ## What this plugin owns
 
-This pack owns data-platform nouns: Dataset, Table, View, Schema, Column, Query, SqlArtifact, DaxArtifact, Stream, IngestionJob, Transformation, Workflow, LineagePath, DataLake, DataMart, DataProduct, DataDomain, DataCatalog, DataContract, Layer, SemanticModel, Metric, Report, Dashboard, BusinessObject, GlossaryTerm, DQRule, SourceSystem, StorageLocation, and related DEKC types.
+This pack owns data-platform nouns: Dataset, Table, View, Schema, Column, Query, SqlArtifact, DaxArtifact, Stream, IngestionJob, Transformation, LineagePath, DataLake, DataMart, DataProduct, DataDomain, DataCatalog, DataContract, Layer, SemanticModel, Metric, Report, Dashboard, BusinessObject, GlossaryTerm, DQRule, SourceSystem, StorageLocation, DesignPattern.
+
+`Workflow` and `AgentNode` live in AGER. `ContextPack` / `Catalog` live in okf-plugin. `Diagram` / `Wireframe` live in SAC.
 
 ## Destination state
 

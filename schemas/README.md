@@ -7,8 +7,15 @@ Everything captured in a DEKC knowledge bundle (tables, lineage, streams, metric
 | Path | Purpose |
 |------|---------|
 | [`okf-concepts/`](./okf-concepts/) | Per-type JSON Schema for concept frontmatter |
-| [`okf-concepts/BaseConcept.schema.json`](./okf-concepts/BaseConcept.schema.json) | Shared required fields |
-| [`okf-concepts/registry.json`](./okf-concepts/registry.json) | Catalog of types + design **intents** |
+| [`okf-concepts/registry.json`](./okf-concepts/registry.json) | Catalog of 29 DEKC types + design **intents** |
+
+The OKF envelope (`BaseConcept`) and `Catalog` / `ContextPack` live in [okf-plugin](https://github.com/SpillwaveSolutions/okf-plugin). Do not fork them here.
+
+## Nouns (this plugin)
+
+BusinessObject, Column, DQRule, Dashboard, DataCatalog, DataContract, DataDomain, DataLake, DataMart, DataProduct, Dataset, DaxArtifact, DesignPattern, GlossaryTerm, IngestionJob, Layer, LineagePath, Metric, Query, Report, Schema, SemanticModel, SourceSystem, SqlArtifact, StorageLocation, Stream, Table, Transformation, View.
+
+`AgentNode` / `Workflow` → AGER. `Diagram` / `Wireframe` → SAC.
 
 ## Why this exists
 
@@ -41,21 +48,19 @@ From `registry.json`:
 | Intent | Prefer concept types |
 |--------|----------------------|
 | `design-report` | Dashboard, Report, Metric, SemanticModel, BusinessObject, GlossaryTerm, Table, View |
-| `land-data` | SourceSystem, Workflow, Transformation, Table, Layer, DataContract, LineagePath |
+| `land-data` | SourceSystem, IngestionJob, Transformation, Table, Layer, DataContract, LineagePath |
 | `design-metric` | Metric, BusinessObject, GlossaryTerm, Table, DaxArtifact, SemanticModel |
-| `impact` | Table, View, Query, Transformation, Workflow, Dashboard, Report, BusinessObject |
+| `impact` | Table, View, Query, Transformation, IngestionJob, Dashboard, Report, BusinessObject |
 
 ## Authoring rule
 
 1. Pick a type from the registry.  
 2. Fill required BaseConcept fields: `type`, `title`. `description` and `timestamp` are recommended.  
-
 3. Add type-specific fields (`layer`, `fqn`, `orchestrator`, …).  
 4. Add typed `links[].rel` (see [docs/typed-edges.md](../docs/typed-edges.md)).  
 5. Prefer capture scripts over freehand so frontmatter stays schema-aligned.
 
-
-## Platform & diagram types (v0.2)
+## Platform types
 
 | Type | Catalog |
 |------|---------|
@@ -68,7 +73,5 @@ From `registry.json`:
 | StorageLocation | storage |
 | DQRule | quality |
 | IngestionJob | ingestion |
-| Diagram | diagrams |
-| Wireframe | wireframes |
 
-Diagram bodies use fenced `mermaid` or `plantuml` code. See [docs/diagrams.md](../docs/diagrams.md).
+Diagrams/wireframes are SAC nouns. DEKC sample knowledge may still *link* to them; it does not own the types.

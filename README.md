@@ -8,7 +8,7 @@ DEKC **extends [Project Knowledge Capture (PKC)](https://github.com/SpillwaveSol
 |---|---|
 | **Plugin name** | `data-engineering-knowledge-capture` |
 | **Repo** | [SpillwaveSolutions/data-engineering-knowledge-capture](https://github.com/SpillwaveSolutions/data-engineering-knowledge-capture) |
-| **Version** | 0.3.2 |
+| **Version** | 0.4.0 |
 | **License** | MIT |
 | **Hosts** | Claude Code · Grok Build · Codex · OpenCode · Agent Plugins 1.0 · Grok Bot · LangChain Deep Agents |
 
@@ -46,6 +46,23 @@ Data teams lose institutional memory in tribal knowledge: “what does this gold
 
 DEKC turns lakehouse / warehouse / stream reality into a **reviewable OKF knowledge graph** that agents can walk, pack, and search — while promoting technical assets into **business objects with glossary definitions**.
 
+## Nouns (this plugin)
+
+DEKC owns the **data plane**. Catalog / ContextPack live in okf-plugin. `AgentNode` / `Workflow` live in AGER. `Diagram` / `Wireframe` live in SAC.
+
+BusinessObject, Column, DQRule, Dashboard, DataCatalog, DataContract, DataDomain, DataLake, DataMart, DataProduct, Dataset, DaxArtifact, DesignPattern, GlossaryTerm, IngestionJob, Layer, LineagePath, Metric, Query, Report, Schema, SemanticModel, SourceSystem, SqlArtifact, StorageLocation, Stream, Table, Transformation, View.
+
+| Group | Nouns |
+|-------|-------|
+| Assets | Dataset, Table, View, Column, Schema, Query, SqlArtifact, DaxArtifact |
+| Platform | SourceSystem, DataLake, DataMart, DataCatalog, DataDomain, DataProduct, StorageLocation, Stream, Layer |
+| Movement | IngestionJob, Transformation, LineagePath, DataContract, DQRule |
+| Semantic | SemanticModel, Metric, Report, Dashboard, BusinessObject, GlossaryTerm |
+| Other | DesignPattern |
+
+`Dashboard`, `DataLake`, and `GlossaryTerm` also exist in SAC with architecture/runtime meaning. Orchestration graphs (`Workflow`) and walk-loop agents (`AgentNode`) belong to AGER — DEKC records jobs as `IngestionJob` / `Transformation`.
+
+Standard concept schemas: [`schemas/okf-concepts/`](./schemas/okf-concepts/). Registry: [`schemas/README.md`](./schemas/README.md).
 
 ## Second brain (core goal)
 
@@ -58,7 +75,7 @@ DEKC is a **schema-typed OKF second brain** for data engineering work. Capture p
 | **Design a metric** | `python3 scripts/dekc_brain.py "GMV" --intent design-metric` |
 | **Impact analysis** | `python3 scripts/dekc_brain.py "gold order_daily" --intent impact` |
 
-Standard concept schemas: [`schemas/okf-concepts/`](./schemas/okf-concepts/) (Table, SourceSystem, Workflow, Metric, Dashboard, BusinessObject, …). Registry: [`schemas/README.md`](./schemas/README.md).
+Standard concept schemas: [`schemas/okf-concepts/`](./schemas/okf-concepts/) (Table, SourceSystem, Metric, Dashboard, BusinessObject, …). Registry: [`schemas/README.md`](./schemas/README.md).
 
 ```bash
 python3 scripts/dekc_schemas.py list
