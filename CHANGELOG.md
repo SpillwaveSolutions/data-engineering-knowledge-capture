@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.4.1 — 2026-08-24
+
 - Noun-ownership migration guide:
   [`docs/user_guide/noun-ownership-migration.md`](docs/user_guide/noun-ownership-migration.md)
   (data `Workflow` → `IngestionJob`; mixed Diagram/AgentNode stay with SAC/AGER).
