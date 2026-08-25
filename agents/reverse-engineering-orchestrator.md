@@ -59,10 +59,14 @@ Optional health baseline: **layer-auditor** (doctor/validate) before skeptics.
 ## Scripts (prefer deterministic)
 
 ```bash
+# Filesystem SQL/parquet mirror (not a Fabric control-plane scanner)
 python3 "${CLAUDE_PLUGIN_ROOT}/scripts/dekc_walk.py" <mirror> --repo . --bundle knowledge
+# Optional: ingest exported Fabric REST / PBI JSON
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/dekc_walk.py" --fabric-items items.json --pbi-bindings reports.json --repo . --bundle knowledge
 python3 "${CLAUDE_PLUGIN_ROOT}/scripts/dekc_lineage.py" --repo . --bundle knowledge materialize
 python3 "${CLAUDE_PLUGIN_ROOT}/scripts/dekc_business.py" --repo . --bundle knowledge promote-layer --layer gold
 python3 "${CLAUDE_PLUGIN_ROOT}/scripts/dekc_grade.py" --repo . --bundle knowledge --json
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/dekc_grade.py" --repo . --bundle knowledge --prefix semantic,tables/gold-,reports,dashboards
 python3 "${CLAUDE_PLUGIN_ROOT}/scripts/dekc_index.py" --repo . --bundle knowledge build
 python3 "${CLAUDE_PLUGIN_ROOT}/scripts/dekc_doctor.py" --repo . --bundle knowledge
 ```
@@ -71,7 +75,7 @@ Write judgments under `knowledge/agents/judgment-<run>.md` (or `agents/` if colo
 
 ## Cloud profiles (brief)
 
-- **fabric**: Eventstream/Event Hubs, Pipelines, Lakehouse layers, semantic model + Power BI  
+- **fabric**: Eventstream/Event Hubs, Pipelines, Lakehouse layers, semantic model + Power BI. Export workspace items JSON and pass `--fabric-items` — `dekc_walk.py` does not call Fabric REST. Fabric `Report` ≠ DEKC Dashboard.
 - **aws**: Kinesis/Firehose, S3 prefixes, Glue catalog/jobs, MWAA/Step Functions  
 - **gcp**: Pub/Sub, Dataflow, BQ datasets, Dataform/dbt, Composer  
 

@@ -13,7 +13,7 @@
     "build:dev": "vite build --mode development",
     "preview": "vite preview --host 0.0.0.0 --port 8080",
     "typecheck": "tsc --noEmit",
-    "test": "python3 tests/test_dekc.py && python3 tests/test_isolation.py",
+    "test": "python3 tests/test_dekc.py && python3 tests/test_fabric_walk_fixes.py && python3 tests/test_isolation.py",
     "lint": "eslint .",
     "format": "prettier --write .",
     "test:js": "node --test 'scripts/**/*.test.mjs'",
@@ -99,6 +99,6 @@
     "vite": "^8.2.0"
   },
   "description": "Data Engineering Knowledge Capture (DEKC) \u2014 Claude/Grok/Codex/OpenCode plugin + explorer",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "license": "MIT"
 }

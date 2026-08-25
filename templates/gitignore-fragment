@@ -3,3 +3,8 @@
 # diff. `**/.index/` rather than `*/.index/` so it holds at any depth, and
 # for every bundle rather than one hardcoded name.
 **/.index/
+
+# Per-object WriteEvents — opt in with DEKC_WRITE_EVENTS=1 or --write-event.
+# Keep the catalog index if you generate one; ignore the timestamp flood (#37).
+**/write-events/*
+!**/write-events/index.md

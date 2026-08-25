@@ -10,16 +10,25 @@ from collections import Counter
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from dekc_common import list_concepts, resolve_knowledge_root  # noqa: E402
+from dekc_common import DEKC_OWNED_TYPES, list_concepts, resolve_knowledge_root  # noqa: E402
 from dekc_validate import validate_bundle  # noqa: E402
 from dekc_lineage import build_graph  # noqa: E402
 
 
-def doctor(bundle: Path) -> dict:
-    concepts = list_concepts(bundle)
-    types = Counter((fm.get("type") or "?") for _, fm, _ in concepts)
+def doctor(
+    bundle: Path,
+    *,
+    types: set[str] | frozenset[str] | None = None,
+    prefixes: list[str] | None = None,
+    tags: list[str] | None = None,
+    since: str | None = None,
+    include_all: bool = False,
+) -> dict:
+    owned = None if include_all else (types or DEKC_OWNED_TYPES)
+    concepts = list_concepts(bundle, types=owned, prefixes=prefixes, tags=tags, since=since)
+    types_c = Counter((fm.get("type") or "?") for _, fm, _ in concepts)
     layers = Counter((fm.get("layer") or "—") for _, fm, _ in concepts if fm.get("type") in ("Table", "View"))
-    graph = build_graph(bundle)
+    graph = build_graph(bundle, types=owned, prefixes=prefixes, tags=tags, since=since)
     orphans = []
     linked = set()
     for s, tgts in graph.items():
@@ -30,16 +39,16 @@ def doctor(bundle: Path) -> dict:
         if fm.get("type") in ("Table", "View", "Query", "BusinessObject") and rel not in linked:
             orphans.append(rel)
     validation = validate_bundle(bundle)
-    bo_count = types.get("BusinessObject", 0)
-    gloss = types.get("GlossaryTerm", 0)
-    tables = types.get("Table", 0)
+    bo_count = types_c.get("BusinessObject", 0)
+    gloss = types_c.get("GlossaryTerm", 0)
+    tables = types_c.get("Table", 0) + types_c.get("View", 0)
     coverage = round(bo_count / tables, 2) if tables else 0.0
     index_ok = (bundle / ".index" / "manifest.json").is_file()
 
     return {
         "bundle": str(bundle),
         "concept_count": len(concepts),
-        "types": dict(types),
+        "types": dict(types_c),
         "layers": dict(layers),
         "edge_count": sum(len(v) for v in graph.values()),
         "orphan_technical": orphans[:20],
@@ -58,9 +67,25 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--repo", default=".")
     parser.add_argument("--bundle", default=None)
     parser.add_argument("--json", action="store_true")
+    parser.add_argument(
+        "--all",
+        action="store_true",
+        help="Score the whole mixed bundle. Default: DEKC nouns only (#39).",
+    )
+    parser.add_argument("--prefix", default="", help="Comma-separated path prefixes")
+    parser.add_argument("--tag", default="")
+    parser.add_argument("--since", default="")
     args = parser.parse_args(argv)
     bundle = resolve_knowledge_root(Path(args.repo).resolve(), args.bundle)
-    report = doctor(bundle)
+    prefixes = [p.strip() for p in args.prefix.split(",") if p.strip()]
+    tags = [t.strip() for t in args.tag.split(",") if t.strip()]
+    report = doctor(
+        bundle,
+        prefixes=prefixes or None,
+        tags=tags or None,
+        since=args.since or None,
+        include_all=args.all,
+    )
     if args.json:
         print(json.dumps(report, indent=2))
     else:

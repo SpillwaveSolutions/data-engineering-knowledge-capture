@@ -13,6 +13,19 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/dekc_grade.py" --repo . --bundle knowledg
 python3 "${CLAUDE_PLUGIN_ROOT}/scripts/dekc_grade.py" --repo . --bundle knowledge --write
 ```
 
+Default scores **DEKC nouns only** (29 types). Mixed SAC+PKC brains (~15k Module/Function nodes) will not dominate.
+
+```bash
+# Walk-scoped
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/dekc_grade.py" --repo . --bundle knowledge \
+  --prefix semantic,tables/gold-,reports,dashboards,ingestion
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/dekc_grade.py" --repo . --bundle knowledge --tag fabric-walk-2026-08-24
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/dekc_doctor.py" --repo . --bundle knowledge   # DEKC technical
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/dekc_doctor.py" --repo . --bundle knowledge --all  # bundle-wide OKF
+```
+
+Dict-valued `description` fields (bad YAML / mixed bundles) are coerced; grade does not traceback.
+
 ## Adversarial loop (required for acceptance)
 
 1. Spawn **lineage-skeptic**, **business-skeptic**, **stream-job-skeptic**, **coverage-skeptic**
