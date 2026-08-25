@@ -16,7 +16,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from dekc_common import (  # noqa: E402
+    DEKC_OWNED_TYPES,
     append_log,
+    as_text,
     list_concepts,
     path_for_type,
     refresh_catalog_index,
@@ -70,8 +72,17 @@ def _layer_names(fm: dict) -> set[str]:
     return found
 
 
-def grade_bundle(bundle: Path) -> dict:
-    concepts = list_concepts(bundle)
+def grade_bundle(
+    bundle: Path,
+    *,
+    types: set[str] | frozenset[str] | None = None,
+    prefixes: list[str] | None = None,
+    tags: list[str] | None = None,
+    since: str | None = None,
+    include_all: bool = False,
+) -> dict:
+    owned = None if include_all else (types or DEKC_OWNED_TYPES)
+    concepts = list_concepts(bundle, types=owned, prefixes=prefixes, tags=tags, since=since)
     by_type: Counter[str] = Counter()
     tables: list[tuple[Path, dict, str]] = []
     gold_tables: list[str] = []
@@ -81,12 +92,16 @@ def grade_bundle(bundle: Path) -> dict:
     secrets: list[str] = []
     has_source_cite = 0
     layers_present: set[str] = set()
+    parse_warnings: list[str] = []
 
     for path, fm, body in concepts:
         t = fm.get("type") or "?"
         by_type[t] += 1
         rel = _rel(bundle, path)
-        blob = (fm.get("description") or "") + "\n" + (body or "")
+        desc = fm.get("description")
+        if desc is not None and not isinstance(desc, str):
+            parse_warnings.append(f"{rel}: description is {type(desc).__name__}, coerced")
+        blob = as_text(desc) + "\n" + (body or "")
         if SECRET_HINT.search(blob):
             secrets.append(rel)
         layers_present |= _layer_names(fm)
@@ -95,23 +110,40 @@ def grade_bundle(bundle: Path) -> dict:
             layer = (fm.get("layer") or "").lower()
             if layer == "gold" or "gold" in rel or "/mart" in rel:
                 gold_tables.append(rel)
+        if t == "View":
+            layer = (fm.get("layer") or "").lower()
+            if layer == "gold" or "gold" in rel:
+                gold_tables.append(rel)
         if t == "SourceSystem":
             kind = (fm.get("source_kind") or fm.get("kind") or "").lower()
-            tags = [str(x).lower() for x in (fm.get("tags") or [])]
-            if kind == "stream" or "stream" in tags:
+            src_tags = [str(x).lower() for x in (fm.get("tags") or [])]
+            if kind == "stream" or "stream" in src_tags:
                 streams.append(rel)
-        if t == "Workflow":
+        if t in ("Workflow", "IngestionJob"):
             workflows.append(rel)
         if t == "BusinessObject":
             bos.append(rel)
-        if t in ("Table", "View", "Transformation", "Workflow", "SourceSystem", "LineagePath"):
+        if t in ("Table", "View", "Transformation", "Workflow", "IngestionJob", "SourceSystem", "LineagePath"):
             if len(blob.strip()) >= 40 or "```" in (body or "") or fm.get("uri") or fm.get("source"):
                 has_source_cite += 1
 
     table_count = len(tables)
-    graph = build_graph(bundle)
+    graph = build_graph(
+        bundle,
+        types=owned,
+        prefixes=prefixes,
+        tags=tags,
+        since=since,
+    )
     edge_count = sum(len(v) for v in graph.values())
-    d = doctor(bundle)
+    d = doctor(
+        bundle,
+        types=owned,
+        prefixes=prefixes,
+        tags=tags,
+        since=since,
+        include_all=include_all,
+    )
 
     layer_score = min(1.0, len(layers_present & {"bronze", "silver", "gold"}) / 3.0)
     struct = 0.35 * (1.0 if table_count > 0 else 0.0)
@@ -169,7 +201,7 @@ def grade_bundle(bundle: Path) -> dict:
     for path, fm, body in concepts:
         if fm.get("type") != "BusinessObject":
             continue
-        desc = (fm.get("description") or body or "").strip().lower()
+        desc = (as_text(fm.get("description")) or body or "").strip().lower()
         if len(desc) < 24 or desc.startswith("data about") or desc in ("todo", "tbd", "n/a"):
             vacuous += 1
     if bos:
@@ -179,7 +211,7 @@ def grade_bundle(bundle: Path) -> dict:
         1
         for _, fm, _ in concepts
         if fm.get("type")
-        in ("Table", "View", "Transformation", "Workflow", "SourceSystem", "LineagePath", "Query")
+        in ("Table", "View", "Transformation", "Workflow", "IngestionJob", "SourceSystem", "LineagePath", "Query")
     )
     cite_ratio = (has_source_cite / eligible) if eligible else 0.5
     evidence_traceability = _clamp(
@@ -271,6 +303,14 @@ def grade_bundle(bundle: Path) -> dict:
             "validation_ok": d["validation_ok"],
             "index_built": d["index_built"],
         },
+        "parse_warnings": parse_warnings[:20],
+        "scope": {
+            "owned_types_only": not include_all,
+            "prefixes": prefixes or [],
+            "tags": tags or [],
+            "since": since or "",
+            "concept_count": len(concepts),
+        },
         "note": (
             "Automated baseline only. lineage_integrity and definition quality "
             "require lineage-skeptic / business-skeptic / re-adversary-judge."
@@ -321,13 +361,33 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--json", action="store_true")
     parser.add_argument("--write", action="store_true", help="Write judgment under bundle/agents/")
     parser.add_argument("--author", default="")
+    parser.add_argument(
+        "--all",
+        action="store_true",
+        help="Grade every markdown concept (mixed SAC+PKC+DEKC). Default: DEKC nouns only (#39).",
+    )
+    parser.add_argument(
+        "--prefix",
+        default="",
+        help="Comma-separated path prefixes, e.g. semantic,tables/gold-",
+    )
+    parser.add_argument("--tag", default="", help="Only concepts carrying this tag (repeat via comma)")
+    parser.add_argument("--since", default="", help="ISO timestamp lower bound on frontmatter timestamp")
     args = parser.parse_args(argv)
     from dekc_common import resolve_author
     if getattr(args, 'write', False):
         resolve_author(args.author)
     repo = Path(args.repo).resolve()
     bundle = resolve_knowledge_root(repo, args.bundle)
-    report = grade_bundle(bundle)
+    prefixes = [p.strip() for p in args.prefix.split(",") if p.strip()]
+    tags = [t.strip() for t in args.tag.split(",") if t.strip()]
+    report = grade_bundle(
+        bundle,
+        prefixes=prefixes or None,
+        tags=tags or None,
+        since=args.since or None,
+        include_all=args.all,
+    )
 
     if args.write:
         rel = write_judgment(bundle, report)

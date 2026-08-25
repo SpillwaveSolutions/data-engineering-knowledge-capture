@@ -575,6 +575,7 @@ class TestRequiredIdentity(unittest.TestCase):
                     "knowledge",
                     "--author",
                     "claude-code/lumenfield-detector",
+                    "--write-event",
                     "table",
                     "--name",
                     "orders",

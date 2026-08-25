@@ -2,6 +2,34 @@
 
 ## Unreleased
 
+## 0.4.2 — 2026-08-25
+
+Fabric reverse-engineering walk fixes ([#44](https://github.com/SpillwaveSolutions/data-engineering-knowledge-capture/issues/44)).
+
+### Fixed
+
+- **#26** YAML `description: >` / `|` is a block scalar, not a nested map. `_patch` no longer eats `timestamp` / `rel` / `status`.
+- **#27** `dekc_grade.py` coerces non-string descriptions instead of TypeError.
+- **#28** Schema `contains` merges; last table no longer wins.
+- **#29** `slugify` keeps a `pipe` token; `--slug` / `--fabric-id`; colliding titles suffix `-2`.
+- **#30** Generated captures default `verified: false` unless `--verified` or SQL/columns.
+- **#31** `--source` without SQL/evidence is `related_to`, not `sourced_from`.
+- **#32** LineagePath accepts absolute paths; BI hops use `queries`; no automatic `transforms_to`.
+- **#33** IngestionJob layer `writes_to` only with `--lands-as`; `--refreshes` for semantic refresh.
+- **#34** DataLake mermaid lists only the layers passed.
+- **#35** `workflow` subcommand errors and points at `ingestion` / `transformation`.
+- **#36** Vacuous SemanticModel body sentence removed.
+- **#37** WriteEvents opt-in (`DEKC_WRITE_EVENTS=1` / `--write-event`); gitignore fragment.
+- **#40** `build_graph` reads PKC `rel:` maps as well as `links[]`.
+- **#42** `vw*` / `x_vw*` / `CREATE VIEW` capture as View.
+- **#43** One `log.md` line per CLI invocation.
+
+### Added
+
+- **#38** `dekc_walk.py --fabric-items` / `--pbi-bindings` / `--inventory` (filesystem walk remains).
+- **#39** `dekc_grade.py` / `dekc_doctor.py` default to the 29 DEKC nouns; `--prefix` / `--tag` / `--since` / `--all`.
+- **#41** `--fabric-id` / `--workspace` / `--dataset-id` / `--fabric-type` on capture CLIs.
+
 ## 0.4.1 — 2026-08-24
 
 - Noun-ownership migration guide:

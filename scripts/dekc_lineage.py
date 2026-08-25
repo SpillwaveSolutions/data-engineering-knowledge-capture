@@ -14,6 +14,7 @@ from typing import Any
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from dekc_capture import capture_lineage_path  # noqa: E402
 from dekc_common import (  # noqa: E402
+    iter_typed_edges,
     list_concepts,
     parse_frontmatter,
     resolve_knowledge_root,
@@ -55,44 +56,56 @@ def extract_edges_from_sql(sql: str) -> list[tuple[str, str]]:
 # incomplete with no indication anything was dropped.
 FORWARD_FLOW = (
     "feeds", "transforms_to", "writes_to", "promotes_to",
-    "lands_as", "lands_into",
+    "lands_as", "lands_into", "refreshes",
 )
 # Relations that mean the opposite: the TARGET feeds the source.
 REVERSE_FLOW = (
     "reads_from", "queries", "sourced_from", "derived_from",
     "visualizes", "consumes_stream",
+    "ingested_by", "ingests_from",
 )
 
-def build_graph(bundle: Path) -> dict[str, list[str]]:
-    """Adjacency from typed feeds/transforms_to/reads_from/writes_to/queries edges."""
+def build_graph(
+    bundle: Path,
+    *,
+    types: set[str] | frozenset[str] | None = None,
+    prefixes: list[str] | None = None,
+    tags: list[str] | None = None,
+    since: str | None = None,
+) -> dict[str, list[str]]:
+    """Adjacency from typed flow edges in `links[]` and PKC `rel:` maps (#40)."""
     adj: dict[str, list[str]] = defaultdict(list)
-    for path, fm, body in list_concepts(bundle):
+    for path, fm, body in list_concepts(bundle, types=types, prefixes=prefixes, tags=tags, since=since):
         rel = "/" + path.relative_to(bundle).as_posix()
-        for link in fm.get("links") or []:
-            if not isinstance(link, dict):
-                continue
-            r = link.get("rel") or ""
-            tgt = link.get("target") or ""
+        for tgt, r in iter_typed_edges(fm):
             if not tgt:
                 continue
             if r in FORWARD_FLOW:
                 adj[rel].append(tgt)
             elif r in REVERSE_FLOW:
-                # reverse: target feeds source
                 adj[tgt].append(rel)
         # also parse SQL blocks for edges
         if "```sql" in body.lower() or "```sql" in body:
             m = re.search(r"```sql\n(.*?)```", body, re.DOTALL | re.IGNORECASE)
             if m:
-                for up, down in extract_edges_from_sql(m.group(1)):
-                    # try resolve to known tables
+                sql = m.group(1)
+                edges = extract_edges_from_sql(sql)
+                if not edges and _is_ddl_only(sql):
+                    # CREATE TABLE with no FROM is not "no lineage" — it is DDL-only (#38).
+                    continue
+                for up, down in edges:
                     up_ref = _resolve_name(bundle, up)
                     down_ref = _resolve_name(bundle, down)
                     if up_ref and down_ref:
                         adj[up_ref].append(down_ref)
-    # dedupe
     return {k: list(dict.fromkeys(v)) for k, v in adj.items()}
 
+
+def _is_ddl_only(sql: str) -> bool:
+    low = sql.lower()
+    has_write = bool(SQL_TARGET_RE.search(sql))
+    has_from = bool(SQL_FROM_RE.search(sql))
+    return has_write and not has_from and "create" in low
 
 def _resolve_name(bundle: Path, name: str) -> str | None:
     slug_bits = name.lower().replace("_", "-")

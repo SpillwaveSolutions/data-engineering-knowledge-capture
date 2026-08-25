@@ -140,6 +140,7 @@ DEFAULT_RELATIONS = (
     "layered_as",
     "computes",
     "aggregates",
+    "refreshes",
 )
 
 LAYER_ORDER = ("raw", "bronze", "silver", "gold", "platinum")
@@ -175,13 +176,163 @@ def utc_now() -> str:
 
 
 def slugify(text: str, max_len: int = 80) -> str:
+    """Stable filename slug.
+
+    `|` is kept as a `pipe` token so ``Operations | Executive`` and
+    ``Operations  Executive`` (two spaces) do not collide (#29).
+    """
     text = text.strip().lower().replace("_", "-")
+    text = text.replace("|", "-pipe-")
     text = re.sub(r"[^\w\s.-]", "", text, flags=re.UNICODE)
     text = re.sub(r"[.\s_]+", "-", text)
     text = re.sub(r"-+", "-", text).strip("-")
     if not text:
         text = "untitled"
     return text[:max_len].rstrip("-")
+
+
+DEKC_OWNED_TYPES = frozenset(
+    {
+        "BusinessObject",
+        "Column",
+        "DQRule",
+        "Dashboard",
+        "DataCatalog",
+        "DataContract",
+        "DataDomain",
+        "DataLake",
+        "DataMart",
+        "DataProduct",
+        "Dataset",
+        "DaxArtifact",
+        "DesignPattern",
+        "GlossaryTerm",
+        "IngestionJob",
+        "Layer",
+        "LineagePath",
+        "Metric",
+        "Query",
+        "Report",
+        "Schema",
+        "SemanticModel",
+        "SourceSystem",
+        "SqlArtifact",
+        "StorageLocation",
+        "Stream",
+        "Table",
+        "Transformation",
+        "View",
+    }
+)
+
+VIEW_NAME_RE = re.compile(r"(?i)^(x[_-]?)?vw[_-]?")
+
+
+def looks_like_view(name: str, sql: str = "", kind: str | None = None) -> bool:
+    """Warehouse gold `vw*` / `x_vw*` and CREATE VIEW are Views, not Tables (#42)."""
+    k = (kind or "auto").strip().lower()
+    if k == "view":
+        return True
+    if k == "table":
+        return False
+    if sql and re.search(r"(?i)create\s+(or\s+replace\s+)?view\b", sql):
+        return True
+    return bool(VIEW_NAME_RE.search((name or "").strip()))
+
+
+def capture_verified(*, verified: bool | None, sql: str = "", columns: Any = None, evidence: bool = False) -> bool:
+    """Existence-only captures default unverified. SQL/columns/evidence auto-verify (#30)."""
+    if verified is not None:
+        return bool(verified)
+    return bool(sql) or bool(columns) or evidence
+
+
+def capture_truth_state(verified: bool, truth_state: str = "") -> str:
+    if truth_state:
+        return truth_state
+    return "current" if verified else "snapshot"
+
+
+def attach_identity(fm: dict[str, Any], **fields: Any) -> dict[str, Any]:
+    """Copy optional Fabric / Power BI identity keys when non-empty (#41)."""
+    mapping = {
+        "fabric_item_id": ("fabric_item_id", "fabric_id", "id"),
+        "fabric_workspace": ("fabric_workspace", "workspace"),
+        "fabric_workspace_id": ("fabric_workspace_id", "workspace_id"),
+        "pbi_dataset_id": ("pbi_dataset_id", "dataset_id"),
+        "datasources_status": ("datasources_status",),
+        "fabric_type": ("fabric_type",),
+    }
+    for dest, keys in mapping.items():
+        for k in keys:
+            val = fields.get(k)
+            if val not in (None, ""):
+                fm[dest] = val
+                break
+    return fm
+
+
+def slug_for_capture(
+    name: str,
+    *,
+    slug: str = "",
+    fabric_item_id: str = "",
+    prefix: str = "",
+    max_len: int = 80,
+) -> str:
+    if slug:
+        return slugify(slug, max_len=max_len)
+    base = slugify(f"{prefix}-{name}" if prefix else name, max_len=max_len if not fabric_item_id else max_len - 9)
+    if fabric_item_id:
+        short = re.sub(r"[^a-fA-F0-9]", "", fabric_item_id)[:8].lower()
+        if short:
+            return slugify(f"{base}-{short}", max_len=max_len)
+    return base
+
+
+def write_events_enabled(explicit: bool | None = None) -> bool:
+    """WriteEvents are opt-in. Default off so bulk capture does not flood git (#37)."""
+    if explicit is not None:
+        return bool(explicit)
+    val = (os.environ.get("DEKC_WRITE_EVENTS") or "0").strip().lower()
+    return val in ("1", "true", "yes", "on")
+
+
+def as_text(value: Any) -> str:
+    """Coerce frontmatter fields to str so mixed-bundle dicts cannot crash graders (#27)."""
+    if value is None:
+        return ""
+    if isinstance(value, str):
+        return value
+    if isinstance(value, (dict, list)):
+        return ""
+    return str(value)
+
+
+def iter_typed_edges(fm: dict[str, Any]) -> list[tuple[str, str]]:
+    """Yield (target, rel) from OKF `links[]` and PKC `rel:` maps (#40)."""
+    out: list[tuple[str, str]] = []
+    for link in fm.get("links") or []:
+        if isinstance(link, dict):
+            tgt = link.get("target") or ""
+            if tgt:
+                out.append((tgt, link.get("rel") or "related_to"))
+        elif isinstance(link, str) and link:
+            out.append((link, "related_to"))
+    rel_map = fm.get("rel")
+    if isinstance(rel_map, dict):
+        for rel, targets in rel_map.items():
+            if isinstance(targets, str):
+                targets = [targets]
+            if not isinstance(targets, list):
+                continue
+            for t in targets:
+                if isinstance(t, str) and t:
+                    tgt = t if t.startswith("/") else "/" + t.lstrip("/")
+                    out.append((tgt, rel))
+                elif isinstance(t, dict) and t.get("target"):
+                    out.append((t["target"], rel))
+    return out
 
 
 def scrub_text(text: str, *, pii: bool = True, secrets: bool = True) -> tuple[str, list[str]]:
@@ -206,6 +357,67 @@ def scrub_text(text: str, *, pii: bool = True, secrets: bool = True) -> tuple[st
     return out, labels
 
 
+def _fold_block(lines: list[str]) -> str:
+    """YAML `>` folding: newlines → spaces, blank lines → paragraph breaks."""
+    paragraphs: list[str] = []
+    para: list[str] = []
+    for line in lines:
+        if line == "":
+            if para:
+                paragraphs.append(" ".join(para))
+                para = []
+            # keep paragraph break; consecutive blanks collapse later
+            if paragraphs and paragraphs[-1] != "":
+                paragraphs.append("")
+        else:
+            para.append(line.rstrip())
+    if para:
+        paragraphs.append(" ".join(para))
+    while paragraphs and paragraphs[-1] == "":
+        paragraphs.pop()
+    return "\n\n".join(p for p in paragraphs if p != "" or True).replace("\n\n\n", "\n\n").strip()
+
+
+def _read_block_scalar(
+    lines: list[str], start: int, parent_indent: int, *, folded: bool
+) -> tuple[str, int]:
+    """Collect a `|` / `>` block. Returns (value, next_index)."""
+    i = start
+    collected: list[str] = []
+    content_indent: int | None = None
+    while i < len(lines):
+        raw = lines[i]
+        if not raw.strip():
+            if content_indent is None:
+                i += 1
+                continue
+            collected.append("")
+            i += 1
+            continue
+        indent = len(raw) - len(raw.lstrip(" "))
+        if indent <= parent_indent:
+            break
+        if content_indent is None:
+            content_indent = indent
+        collected.append(raw[content_indent:] if len(raw) >= content_indent else raw.lstrip())
+        i += 1
+    while collected and collected[-1] == "":
+        collected.pop()
+    if folded:
+        return _fold_block(collected), i
+    return "\n".join(collected), i
+
+
+def _is_block_scalar(v: str) -> str | None:
+    """Return 'folded' / 'literal' / None. Accepts `>`, `|`, `>-`, `|+`, etc."""
+    if not v:
+        return None
+    m = re.match(r"^([|>])[+-]?\d*$", v)
+    if not m:
+        return None
+    return "folded" if m.group(1) == ">" else "literal"
+
+
 def _parse_simple_yaml(text: str) -> dict[str, Any]:
     """Minimal YAML subset parser (maps, lists, scalars) — no PyYAML required.
 
@@ -214,34 +426,39 @@ def _parse_simple_yaml(text: str) -> dict[str, Any]:
         links:
         - target: /tables/foo.md
           rel: feeds
+
+    And PKC folded/literal scalars (#26)::
+
+        description: >
+          Graph mailbox collection lands outlook_messages.
+        rel:
+          related_to:
+            - /tables/outlook-messages.md
     """
+    raw_lines = text.splitlines()
     root: dict[str, Any] = {}
-    # stack entries: (indent, container)
     stack: list[tuple[int, Any]] = [(-1, root)]
     pending_key: str | None = None
     pending_indent = -1
+    i = 0
+    n = len(raw_lines)
 
-    def pop_to(indent: int) -> None:
-        while len(stack) > 1 and stack[-1][0] > indent:
-            stack.pop()
-
-    for raw in text.splitlines():
+    while i < n:
+        raw = raw_lines[i]
         if not raw.strip() or raw.lstrip().startswith("#"):
+            i += 1
             continue
         indent = len(raw) - len(raw.lstrip(" "))
         line = raw.strip()
 
         if line.startswith("- "):
             item = line[2:].strip()
-            # Close nested maps until a list or the map that owns pending_key
             while len(stack) > 1 and isinstance(stack[-1][1], dict) and stack[-1][0] >= indent:
-                # keep root
                 if stack[-1][0] < 0:
                     break
                 stack.pop()
             parent = stack[-1][1]
 
-            # Begin list under bare key: (pending)
             if pending_key is not None and indent >= pending_indent:
                 owner = None
                 for _ind, node in reversed(stack):
@@ -257,14 +474,12 @@ def _parse_simple_yaml(text: str) -> dict[str, Any]:
                     else:
                         lst = []
                         owner[pending_key] = lst
-                    # drop empty placeholder dict if still on stack
                     while len(stack) > 1 and stack[-1][1] is existing:
                         stack.pop()
                     stack.append((indent, lst))
                     parent = lst
                     pending_key = None
 
-            # Empty dict placeholder sitting as current parent (value of bare key)
             if isinstance(parent, dict) and len(parent) == 0 and len(stack) >= 2:
                 grand = stack[-2][1]
                 empty = parent
@@ -280,33 +495,50 @@ def _parse_simple_yaml(text: str) -> dict[str, Any]:
                             break
 
             if not isinstance(parent, list):
+                i += 1
                 continue
 
             if ":" in item and not item.startswith("{"):
                 k, _, v = item.partition(":")
                 k, v = k.strip(), v.strip()
-                obj: dict[str, Any] = {k: _scalar(v) if v and v not in ("|", ">") else None}
-                if v in ("|", ">"):
-                    obj[k] = ""
+                style = _is_block_scalar(v)
+                obj: dict[str, Any]
+                if style:
+                    block, i = _read_block_scalar(
+                        raw_lines, i + 1, indent, folded=style == "folded"
+                    )
+                    obj = {k: block}
+                    parent.append(obj)
+                    stack.append((indent, obj))
+                    continue
+                obj = {k: _scalar(v) if v else None}
                 parent.append(obj)
                 stack.append((indent, obj))
             else:
                 parent.append(_scalar(item))
+            i += 1
             continue
 
-        # key: value line
         if ":" not in line:
+            i += 1
             continue
         k, _, v = line.partition(":")
         k, v = k.strip(), v.strip()
 
         parent = stack[-1][1]
 
-        # Field of current list-item object (must be MORE indented than `-`)
         if isinstance(parent, dict) and len(stack) >= 2 and isinstance(stack[-2][1], list):
             item_indent = stack[-1][0]
             if indent > item_indent:
-                if v == "" or v in ("|", ">"):
+                style = _is_block_scalar(v)
+                if style:
+                    block, i = _read_block_scalar(
+                        raw_lines, i + 1, indent, folded=style == "folded"
+                    )
+                    parent[k] = block
+                    pending_key = None
+                    continue
+                if v == "":
                     child: dict[str, Any] = {}
                     parent[k] = child
                     stack.append((indent, child))
@@ -320,9 +552,9 @@ def _parse_simple_yaml(text: str) -> dict[str, Any]:
                 else:
                     parent[k] = _scalar(v)
                     pending_key = None
+                i += 1
                 continue
 
-        # Close list-item dicts and list containers when dedenting to sibling keys
         while len(stack) > 1:
             top_ind, top = stack[-1]
             if isinstance(top, dict) and len(stack) >= 2 and isinstance(stack[-2][1], list):
@@ -339,12 +571,22 @@ def _parse_simple_yaml(text: str) -> dict[str, Any]:
         parent = stack[-1][1]
 
         if isinstance(parent, list):
+            i += 1
             continue
 
         if not isinstance(parent, dict):
+            i += 1
             continue
 
-        if v == "" or v in ("|", ">"):
+        style = _is_block_scalar(v)
+        if style:
+            block, i = _read_block_scalar(
+                raw_lines, i + 1, indent, folded=style == "folded"
+            )
+            parent[k] = block
+            pending_key = None
+            continue
+        if v == "":
             child = {}
             parent[k] = child
             stack.append((indent, child))
@@ -358,6 +600,7 @@ def _parse_simple_yaml(text: str) -> dict[str, Any]:
         else:
             parent[k] = _scalar(v)
             pending_key = None
+        i += 1
     return root
 
 
@@ -464,9 +707,59 @@ def concept_ref(target: str, default_catalog: str = "tables") -> str:
     return f"/{default_catalog}/{slugify(t)}.md"
 
 
+def resolve_concept_ref(
+    bundle: Path | None,
+    target: str,
+    default_catalog: str = "tables",
+) -> str:
+    """Resolve a name or path. Absolute paths win; else search catalogs (#32, #41)."""
+    t = target.strip()
+    if t.startswith("/") or ("/" in t and t.endswith(".md")):
+        return concept_ref(t, default_catalog)
+    if bundle is None:
+        return concept_ref(t, default_catalog)
+    slug = slugify(t)
+    catalogs = [
+        default_catalog,
+        "tables",
+        "views",
+        "lakes",
+        "semantic",
+        "reports",
+        "dashboards",
+        "sources",
+        "ingestion",
+        "metrics",
+        "layers",
+    ]
+    seen: set[str] = set()
+    for cat in catalogs:
+        if cat in seen:
+            continue
+        seen.add(cat)
+        d = bundle / cat
+        if not d.is_dir():
+            continue
+        exact = d / f"{slug}.md"
+        if exact.is_file():
+            return f"/{cat}/{exact.name}"
+        for p in d.glob("*.md"):
+            if p.name == "index.md":
+                continue
+            if p.stem == slug or p.stem.endswith("-" + slug):
+                return f"/{cat}/{p.name}"
+    return concept_ref(t, default_catalog)
+
+
 def dump_frontmatter(fm: dict[str, Any]) -> str:
+    # Fail closed on corrupted description maps (#26): never write a nested
+    # description back out and swallow timestamp/rel/status.
+    safe = dict(fm)
+    desc = safe.get("description")
+    if desc is not None and not isinstance(desc, str):
+        safe["description"] = as_text(desc)
     lines = ["---"]
-    for key, value in fm.items():
+    for key, value in safe.items():
         lines.append(_yaml_line(key, value, 0))
     lines.append("---")
     return "\n".join(lines) + "\n"
@@ -545,6 +838,33 @@ def parse_frontmatter(text: str) -> tuple[dict[str, Any], str]:
     fm = _parse_simple_yaml(m.group(1))
     body = text[m.end() :]
     return fm, body
+
+
+def same_identity(old_fm: dict[str, Any], new_fm: dict[str, Any]) -> bool:
+    old_id = old_fm.get("fabric_item_id") or ""
+    new_id = new_fm.get("fabric_item_id") or ""
+    if old_id and new_id:
+        return old_id == new_id
+    return (old_fm.get("title") or "") == (new_fm.get("title") or "")
+
+
+def unique_rel_path(bundle: Path, rel_path: str, frontmatter: dict[str, Any]) -> str:
+    """If dest exists with a different title / fabric_item_id, suffix -2, -3 (#29)."""
+    rel_path = rel_path.lstrip("/")
+    path = Path(rel_path)
+    stem, suffix, parent = path.stem, path.suffix, path.parent
+    candidate = rel_path
+    n = 2
+    while n <= 50:
+        dest = bundle / candidate
+        if not dest.is_file():
+            return candidate
+        old_fm, _ = parse_frontmatter(dest.read_text(encoding="utf-8"))
+        if same_identity(old_fm, frontmatter):
+            return candidate
+        candidate = str(parent / f"{stem}-{n}{suffix}")
+        n += 1
+    return candidate
 
 
 def write_concept(
@@ -648,18 +968,21 @@ def write_knowledge(
     author: str | None = None,
     host: str | None = None,
     force: bool = False,
-    emit_event: bool = True,
+    emit_event: bool | None = None,
 ) -> tuple[Path, str]:
     """Stamp author, write via write_concept, emit WriteEvent on created/updated.
 
     write_concept stays pure. Callers that own a knowledge write go through here.
+    WriteEvents are opt-in (`DEKC_WRITE_EVENTS=1` or emit_event=True) so a 67-item
+    Fabric capture does not mint 70 gitignored-or-not files (#37).
     """
     claimed = (author or "").strip() or _AUTHOR.get()
     if not claimed:
         claimed = resolve_author(author)
     fm = {**frontmatter, "author": claimed}
+    rel_path = unique_rel_path(bundle, rel_path, fm)
     path, action = write_concept(bundle, rel_path, fm, body, force=force)
-    if emit_event and action in ("created", "updated"):
+    if write_events_enabled(emit_event) and action in ("created", "updated"):
         emit_write_event(
             bundle,
             author=claimed,
@@ -843,16 +1166,26 @@ See [log.md](/log.md).
         append_log(bundle, "Bundle created for Data Engineering Knowledge Capture")
 
 
-def list_concepts(bundle: Path) -> list[tuple[Path, dict[str, Any], str]]:
+def list_concepts(
+    bundle: Path,
+    *,
+    types: set[str] | frozenset[str] | None = None,
+    prefixes: list[str] | None = None,
+    tags: list[str] | None = None,
+    since: str | None = None,
+) -> list[tuple[Path, dict[str, Any], str]]:
     out: list[tuple[Path, dict[str, Any], str]] = []
+    prefix_list = [p.lstrip("/") for p in (prefixes or []) if p]
+    tag_set = {t.lower() for t in (tags or []) if t}
     for path in sorted(bundle.rglob("*.md")):
         if path.name in ("log.md",) or path.name.startswith("."):
             continue
         rel = path.relative_to(bundle).as_posix()
         if rel == "index.md":
             continue
-        # skip .index folder
         if ".index" in path.parts:
+            continue
+        if prefix_list and not any(rel.startswith(p) for p in prefix_list):
             continue
         text = path.read_text(encoding="utf-8")
         fm, body = parse_frontmatter(text)
@@ -860,6 +1193,17 @@ def list_concepts(bundle: Path) -> list[tuple[Path, dict[str, Any], str]]:
             continue
         if fm.get("type") == "Catalog":
             continue
+        t = fm.get("type") or ""
+        if types is not None and t not in types:
+            continue
+        if tag_set:
+            fm_tags = {str(x).lower() for x in (fm.get("tags") or [])}
+            if not (fm_tags & tag_set):
+                continue
+        if since:
+            ts = str(fm.get("timestamp") or "")
+            if ts < since:
+                continue
         out.append((path, fm, body))
     return out
 

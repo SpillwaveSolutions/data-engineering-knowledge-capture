@@ -14,7 +14,7 @@ Markdown body links remain universal. Frontmatter `links[].rel` enriches them fo
 | `promotes_to` | Lower layer asset → Higher | Medallion promotion |
 | `reads_from` | Query/View/Xform → Table | Read dependency |
 | `writes_to` | Xform/Workflow → Table | Write target |
-| `queries` | Query → Table | Query references |
+| `queries` | Query/Report/SemanticModel → Table | Query references; BI binds use this, not `feeds` |
 | `defines` | Schema → Table / Column → Table | Structural |
 | `contains` | Parent → Child | Ownership of members |
 
@@ -64,3 +64,5 @@ Markdown body links remain universal. Frontmatter `links[].rel` enriches them fo
 | `lands_into` / `lands_as` | IngestionJob → Table / Storage | Landing target |
 | `ingested_by` | Source/Stream/Table → IngestionJob | Inverse |
 | `consumes_stream` | IngestionJob → Stream | Streaming input |
+| `refreshes` | IngestionJob → SemanticModel | Gold-to-semantic refresh (not a Layer writer) |
+
