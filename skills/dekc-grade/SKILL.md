@@ -31,7 +31,7 @@ Dict-valued `description` fields (bad YAML / mixed bundles) are coerced; grade d
 1. Spawn **lineage-skeptic**, **business-skeptic**, **stream-job-skeptic**, **coverage-skeptic**
 2. Aggregate with **re-adversary-judge** against `evaluation/reverse-engineering-rubric.md` (threshold 0.75)
 3. On fail → orchestrator revises (capture evidence or **retract** claims) → re-grade
-4. On pass → `dekc_index.py build`
+4. On pass → `dekc_doctor.py` (search/pack refresh the SQLite index themselves)
 
 Orchestrators: **data-lake-walker**, **reverse-engineering-orchestrator**.
 

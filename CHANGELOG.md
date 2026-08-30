@@ -2,7 +2,49 @@
 
 ## Unreleased
 
+## 0.5.0 — 2026-08-30
+
+Retrieval ladder: Git + Markdown stays source of truth. Accelerators are disposable.
+Replaces the JSON `knowledge/.index/` inverted index (which was committed by accident).
+
+### Added
+
+- **ripgrep accelerator** for search and pack. `dekc_search.py` uses `rg -l` as a
+  candidate prefilter when `rg` is on PATH (or `DEKC_RG_PATH` / `PKC_RG_PATH` /
+  `OKF_RG_PATH`). Ranking stays in Python, so scores match a full scan.
+  `--no-rg` forces the linear walk. Missing rg is not an error. Never installed
+  from a hook.
+- **rg-backed reverse index** in `dekc_pack.py`. Inbound discovery is
+  `rg -lF` of the concept path; the current file is always parsed for outbound
+  typed-flow + SQL lineage (the file almost never contains its own path).
+- `dekc_doctor.py` reports a **toolchain** section (rg found/missing, FTS5, index).
+- **SQLite/FTS5 incremental index.** `scripts/dekc_index.py` writes
+  `knowledge/.dekc/index.sqlite` (gitignored). Search and pack self-heal via
+  mtime+size on every call. LIKE on a stored haystack is the default candidate
+  prefilter so Python scores stay identical to a scan. `--engine fts` is the
+  FTS5 MATCH opt-in. `--no-index` / `DEKC_NO_INDEX=1` fall through to rg then
+  scan. `/dekc-index` skill for status/refresh/drop. `build` remains an alias
+  for `refresh --force` (CI / existing skills).
+- SQL lineage edges store `origin` (the file that authored them) so incremental
+  delete does not leak table-to-table edges after the source file vanishes.
+- Retrieval ladder locked in [`docs/designs/retrieval-ladder.md`](docs/designs/retrieval-ladder.md).
+
+### Changed
+
+- Host manifests (`.opencode/plugin/dekc.json`, `public/data/catalog.json`)
+  lockstep with root `plugin.json` **0.5.0**. They were still labeled 0.4.2.
+
+### Notes
+
+- Pack identity: lineage is undirected for every visited node; extra non-lineage
+  `links[]` still attach to the focus only. Graphs match a scan unless
+  `--engine fts`.
+- `dekc_pack.py --mermaid` still calls `build_graph` (full scan). Accepted leftover.
+- Do not ignore the whole `.dekc/` directory — `.dekc/config.example.yml` is
+  committed. Gitignore only `**/.dekc/index.sqlite*`.
+
 ## 0.4.3 — 2026-08-30
+
 
 - `dekc_doctor.py` reports toolchain (ripgrep / SQLite FTS5). Search already
   goes through `knowledge/.index`; rg is optional, not a second index.

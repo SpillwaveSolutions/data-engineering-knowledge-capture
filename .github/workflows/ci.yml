@@ -17,23 +17,12 @@ jobs:
           python-version: "3.12"
 
       - name: Unit tests
-        run: python3 tests/test_dekc.py && python3 tests/test_isolation.py
+        run: python3 tests/test_dekc.py && python3 tests/test_retrieval_ladder.py && python3 tests/test_isolation.py
 
+      # Glob, not a list. The hand-maintained list drifted whenever a new
+      # dekc_*.py landed. PKC 0.9.0 made the same change.
       - name: Compile scripts
-        run: |
-          python3 -m py_compile \
-            scripts/dekc_common.py \
-            scripts/dekc_capture.py \
-            scripts/dekc_walk.py \
-            scripts/dekc_lineage.py \
-            scripts/dekc_business.py \
-            scripts/dekc_index.py \
-            scripts/dekc_validate.py \
-            scripts/dekc_pack.py \
-            scripts/dekc_search.py \
-            scripts/dekc_doctor.py \
-            scripts/dekc_link.py \
-            scripts/brain_session.py
+        run: python3 -m py_compile scripts/dekc_*.py scripts/brain_session.py
 
       - name: Validate + doctor sample-knowledge
         run: |
@@ -43,5 +32,7 @@ jobs:
       - name: Index + search
         run: |
           python3 scripts/dekc_index.py --repo . --bundle sample-knowledge build
+          python3 scripts/dekc_index.py status --repo . --bundle sample-knowledge --json | \
+            python3 -c "import json,sys; d=json.load(sys.stdin); assert d['fts5'] is True; assert d['nodes']>=1, d"
           python3 scripts/dekc_search.py revenue --repo . --bundle sample-knowledge --json | \
-            python3 -c "import json,sys; d=json.load(sys.stdin); assert d['count']>=1, d"
+            python3 -c "import json,sys; d=json.load(sys.stdin); assert d['count']>=1, d; assert d['engine'] in ('index','rg','scan')"

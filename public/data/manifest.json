@@ -4,11 +4,8 @@
   "token_count": 211,
   "edge_count": 4,
   "bundle": "/workspace/sample-knowledge",
-  "engine": "dekc-local-bow-v1",
+  "engine": "dekc-sqlite-fts5-v1",
   "files": [
-    ".index/inventory.json",
-    ".index/search.json",
-    ".index/graph.json",
-    ".index/embeddings.jsonl"
+    ".dekc/index.sqlite"
   ]
 }

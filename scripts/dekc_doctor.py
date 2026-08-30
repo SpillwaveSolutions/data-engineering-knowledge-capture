@@ -10,45 +10,17 @@ from collections import Counter
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from dekc_common import DEKC_OWNED_TYPES, list_concepts, resolve_knowledge_root  # noqa: E402
+from dekc_common import DEKC_OWNED_TYPES, list_concepts, resolve_knowledge_root, toolchain_report  # noqa: E402
 from dekc_validate import validate_bundle  # noqa: E402
 from dekc_lineage import build_graph  # noqa: E402
+from dekc_index import status as index_status  # noqa: E402
 
 
-def _toolchain() -> dict:
-    import os
-    import shutil
-    import sys
-
-    rg = None
-    for var in ("DEKC_RG_PATH", "PKC_RG_PATH", "OKF_RG_PATH"):
-        override = (os.environ.get(var) or "").strip()
-        if override and Path(override).is_file():
-            rg = override
-            break
-        found = shutil.which(override) if override else None
-        if found:
-            rg = found
-            break
-    if rg is None:
-        rg = shutil.which("rg")
-    fts5 = False
-    sqlite_version = None
-    try:
-        import sqlite3
-
-        sqlite_version = sqlite3.sqlite_version
-        con = sqlite3.connect(":memory:")
-        fts5 = any("FTS5" in row[0].upper() for row in con.execute("pragma compile_options"))
-        con.close()
-    except Exception:
-        pass
-    return {
-        "python": sys.version.split()[0],
-        "rg": {"found": bool(rg), "path": rg},
-        "sqlite": {"version": sqlite_version, "fts5": fts5},
-        "index": "dekc already builds knowledge/.index (inventory + inverted tokens)",
-    }
+def _toolchain(bundle: Path) -> dict:
+    report = toolchain_report()
+    idx = index_status(bundle)
+    report["index"] = idx
+    return report
 
 
 def doctor(
@@ -79,7 +51,9 @@ def doctor(
     gloss = types_c.get("GlossaryTerm", 0)
     tables = types_c.get("Table", 0) + types_c.get("View", 0)
     coverage = round(bo_count / tables, 2) if tables else 0.0
-    index_ok = (bundle / ".index" / "manifest.json").is_file()
+    toolchain = _toolchain(bundle)
+    idx = toolchain.get("index") or {}
+    index_ok = bool(idx.get("present"))
 
     return {
         "bundle": str(bundle),
@@ -92,10 +66,11 @@ def doctor(
         "business_objects": bo_count,
         "glossary_terms": gloss,
         "index_built": index_ok,
+        "index": idx,
         "validation_ok": validation["ok"],
         "errors": validation["errors"][:10],
         "warnings": validation["warnings"][:10],
-        "toolchain": _toolchain(),
+        "toolchain": toolchain,
     }
 
 
@@ -131,10 +106,12 @@ def main(argv: list[str] | None = None) -> int:
         print(f"  edges:        {report['edge_count']}")
         print(f"  tables→BO:    {report['business_coverage']} ({report['business_objects']} objects)")
         print(f"  glossary:     {report['glossary_terms']}")
-        print(f"  index:        {'yes' if report['index_built'] else 'NO — run dekc_index.py build'}")
+        print(f"  index:        {'yes · ' + str((report.get('index') or {}).get('path')) if report['index_built'] else 'NO — next search/pack will build knowledge/.dekc/index.sqlite'}")
         print(f"  validation:   {'OK' if report['validation_ok'] else 'FAILED'}")
         rg = (report.get("toolchain") or {}).get("rg") or {}
-        print(f"  rg:           {'found ' + str(rg.get('path')) if rg.get('found') else 'missing (index is the search path; rg is optional)'}")
+        sqlite = (report.get("toolchain") or {}).get("sqlite") or {}
+        print(f"  rg:           {'found ' + str(rg.get('path')) if rg.get('found') else 'missing (optional; install ripgrep or pass --no-rg)'}")
+        print(f"  sqlite FTS5:  {'yes' if sqlite.get('fts5') else 'no'}")
         print("  types:")
         for t, n in sorted(report["types"].items(), key=lambda kv: -kv[1]):
             print(f"    {t:20} {n}")

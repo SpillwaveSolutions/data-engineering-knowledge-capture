@@ -25,7 +25,7 @@ from dekc_common import (  # noqa: E402
     utc_now,
     write_knowledge,
 )
-from dekc_index import build_index, search_index  # noqa: E402
+from dekc_index import refresh, search_index  # noqa: E402
 from dekc_lineage import build_graph, mermaid  # noqa: E402
 from dekc_pack import pack as graph_pack  # noqa: E402
 
@@ -165,8 +165,7 @@ def load_registry_intents() -> dict:
 
 
 def ensure_index(bundle: Path) -> None:
-    if not (bundle / ".index" / "search.json").is_file():
-        build_index(bundle)
+    refresh(bundle)
 
 
 def tokenize(q: str) -> list[str]:

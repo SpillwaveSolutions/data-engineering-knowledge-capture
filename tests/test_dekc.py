@@ -480,6 +480,7 @@ class TestVersionConsistency(unittest.TestCase):
     three others but left 8 more manifests stale (issue #8 / PR #12)."""
 
     MANIFESTS = [
+        ("plugin.json", ("version",)),
         ("package.json", ("version",)),
         ("marketplace.json", ("plugins", 0, "version")),
         (".cursor-plugin/plugin.json", ("version",)),

@@ -14,7 +14,7 @@ DEKC extends **PKC** and **OKF**. Multi-agent loops follow **AGER** ([okf-agent-
 3. Scrub secrets/PII before writing concepts.
 4. Progressive disclosure: 2-hop packs (~20 nodes).
 5. **No success claim without re-adversary-judge pass** (or explicit user waiver).
-6. After accepted walks: `dekc_index.py build`.
+6. After accepted walks: `dekc_doctor.py`. Search/pack refresh the SQLite index themselves; `dekc_index.py build` is optional (`refresh --force`).
 
 ## Producer subagents (Workers)
 

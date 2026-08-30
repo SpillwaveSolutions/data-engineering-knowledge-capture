@@ -16,6 +16,8 @@ import json
 import os
 import re
 import secrets
+import shutil
+import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -1166,6 +1168,159 @@ See [log.md](/log.md).
         append_log(bundle, "Bundle created for Data Engineering Knowledge Capture")
 
 
+# ── ripgrep accelerator (optional; never a dependency) ──────────────────
+
+RG_ENV_VARS = ("DEKC_RG_PATH", "PKC_RG_PATH", "OKF_RG_PATH", "SECOND_BRAIN_RG_PATH")
+
+RG_INSTALL_HINTS = {
+    "darwin": ["brew install ripgrep"],
+    "linux": [
+        "sudo apt-get install -y ripgrep",
+        "sudo dnf install -y ripgrep",
+        "cargo install ripgrep",
+    ],
+    "win32": ["winget install BurntSushi.ripgrep.MSVC"],
+}
+
+RG_DEFAULT_GLOBS = ["*.md", "!**/packs/**"]
+
+
+def find_rg(*, env_vars: tuple[str, ...] = RG_ENV_VARS) -> str | None:
+    """Return an rg binary path, or None. Override with DEKC_RG_PATH / OKF_RG_PATH."""
+    for var in env_vars:
+        override = (os.environ.get(var) or "").strip()
+        if not override:
+            continue
+        p = Path(override)
+        if p.is_file() and os.access(p, os.X_OK):
+            return str(p.resolve())
+        found = shutil.which(override)
+        if found:
+            return found
+    return shutil.which("rg")
+
+
+def rg_install_hints() -> list[str]:
+    if sys.platform == "darwin":
+        return list(RG_INSTALL_HINTS["darwin"])
+    if sys.platform.startswith("linux"):
+        return list(RG_INSTALL_HINTS["linux"])
+    if sys.platform == "win32":
+        return list(RG_INSTALL_HINTS["win32"])
+    return ["cargo install ripgrep"]
+
+
+def toolchain_report() -> dict[str, Any]:
+    """Doctor payload: python, rg, sqlite FTS5. Zero pip deps."""
+    rg = find_rg()
+    fts5 = False
+    sqlite_version = None
+    try:
+        import sqlite3
+
+        sqlite_version = sqlite3.sqlite_version
+        con = sqlite3.connect(":memory:")
+        opts = [row[0] for row in con.execute("pragma compile_options")]
+        fts5 = any("FTS5" in opt.upper() for opt in opts)
+        con.close()
+    except Exception:
+        pass
+    return {
+        "python": sys.version.split()[0],
+        "rg": {
+            "found": bool(rg),
+            "path": rg,
+            "hints": rg_install_hints(),
+        },
+        "sqlite": {"version": sqlite_version, "fts5": fts5},
+    }
+
+
+def is_concept_path(bundle: Path, path: Path) -> bool:
+    """Same skip rules as iter_concept_paths: not index.md, log.md, packs/, or cache dirs."""
+    if path.suffix.lower() not in {".md", ".markdown"}:
+        return False
+    if path.name in {"index.md", "log.md"}:
+        return False
+    try:
+        parts = path.resolve().relative_to(bundle.resolve()).parts
+    except ValueError:
+        return False
+    if any(part in {".index", ".dekc", ".pkc", "packs"} for part in parts):
+        return False
+    return True
+
+
+def iter_concept_paths(bundle: Path) -> list[Path]:
+    """Markdown concept files. Skips catalogs (index.md), logs, packs, disposable caches."""
+    files: list[Path] = []
+    skip_names = {"index.md", "log.md"}
+    skip_dirs = {".index", ".dekc", ".pkc", "packs"}
+    for p in sorted(bundle.rglob("*.md")):
+        if p.name in skip_names or p.name.startswith("."):
+            continue
+        if any(part in skip_dirs for part in p.parts):
+            continue
+        files.append(p)
+    return files
+
+
+def rg_list_files(
+    root: Path,
+    patterns: list[str],
+    *,
+    fixed_string: bool = False,
+    ignore_case: bool = True,
+    globs: list[str] | None = None,
+    timeout: float = 30.0,
+) -> list[Path] | None:
+    """AND-intersect `rg -l` results.
+
+    Returns None when rg is missing or the process fails (caller must full-scan).
+    Returns [] when rg ran and matched nothing — that is a real empty hit set,
+    not a fallback.
+    """
+    rg = find_rg()
+    if not rg:
+        return None
+    terms = [p for p in patterns if p]
+    if not terms:
+        return None
+    root = root.resolve()
+    use_globs = list(RG_DEFAULT_GLOBS if globs is None else globs)
+    matched: set[Path] | None = None
+    for pat in terms:
+        cmd = [rg, "-l", "--no-messages", "--color", "never"]
+        if ignore_case:
+            cmd.append("-i")
+        if fixed_string:
+            cmd.append("-F")
+        for g in use_globs:
+            cmd.extend(["--glob", g])
+        cmd.extend(["--", pat, str(root)])
+        try:
+            proc = subprocess.run(
+                cmd, capture_output=True, text=True, timeout=timeout, check=False
+            )
+        except (OSError, subprocess.TimeoutExpired):
+            return None
+        # 0 = hits, 1 = no matches, anything else = rg error → fall back
+        if proc.returncode not in (0, 1):
+            return None
+        files: set[Path] = set()
+        for line in proc.stdout.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            p = Path(line)
+            p = p.resolve() if p.is_absolute() else (root / p).resolve()
+            files.add(p)
+        matched = files if matched is None else (matched & files)
+        if not matched:
+            return []
+    return sorted(matched or [])
+
+
 def list_concepts(
     bundle: Path,
     *,
@@ -1183,7 +1338,7 @@ def list_concepts(
         rel = path.relative_to(bundle).as_posix()
         if rel == "index.md":
             continue
-        if ".index" in path.parts:
+        if any(part in {".index", ".dekc", ".pkc"} for part in path.parts):
             continue
         if prefix_list and not any(rel.startswith(p) for p in prefix_list):
             continue

@@ -40,7 +40,7 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/dekc_brain.py" "gold order_daily" \
 1. **Retrieve** with `dekc_brain.py` (intent + query) → checklist + ranked concepts + 2-hop pack  
 2. **Design** using only evidence from the pack (do not invent lineage)  
 3. **Capture** new assets with `dekc_capture.py` matching `schemas/okf-concepts/`  
-4. **Index** `dekc_index.py build`  
+4. **Index** is optional — search/pack refresh `knowledge/.dekc/index.sqlite` themselves. `dekc_index.py build` is `refresh --force`.  
 5. Optional **grade** if reverse-engineering
 
 See `schemas/README.md` and `docs/user_guide/user-guide.md`.

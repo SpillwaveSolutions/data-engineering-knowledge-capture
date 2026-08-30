@@ -34,3 +34,12 @@ src/routeTree.gen.ts
 # Isolation session bookkeeping
 .brain-sessions/
 .brain-worktrees/
+
+# Disposable retrieval index (docs/designs/retrieval-ladder.md). Git + Markdown
+# stay source of truth; deleting these files is always valid recovery.
+# Do not ignore the whole `.dekc/` directory — repo-level `.dekc/config.yml` lives there.
+**/.dekc/index.sqlite
+**/.dekc/index.sqlite-journal
+**/.dekc/index.sqlite-wal
+**/.dekc/index.sqlite-shm
+

@@ -1,6 +1,6 @@
 ---
 name: dekc-index
-description: Rebuild the local second-brain index (inventory, inverted search, graph, embeddings).
+description: Refresh, inspect, or drop the disposable SQLite/FTS5 knowledge index.
 ---
 
 Run the **dekc-index** skill.

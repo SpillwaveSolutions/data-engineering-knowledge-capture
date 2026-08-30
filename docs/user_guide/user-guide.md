@@ -10,7 +10,7 @@ truth_state: current
 
 **Data Engineering Knowledge Capture** turns data platforms into a durable, Git-native [OKF](https://github.com/SpillwaveSolutions/okf-plugin) knowledge graph, with multi-agent walk loops designed using [AGER](https://github.com/SpillwaveSolutions/okf-agent-graph) (OKF Agent Graph Engineering Runtime).
 
-Plugin release **0.4.0**. Storage format is OKF **0.2**. Agent loops follow AGER **0.3** roles (orchestrator / worker / judge / synthesizer) even when you run DEKC skills without a separate AGER bundle.
+Plugin release **0.5.0**. Storage format is OKF **0.2**. Agent loops follow AGER **0.3** roles (orchestrator / worker / judge / synthesizer) even when you run DEKC skills without a separate AGER bundle. Search and pack use a disposable [retrieval ladder](../designs/retrieval-ladder.md) (SQLite index → ripgrep → scan); Git + Markdown stays source of truth.
 
 Existing second brains: [noun-ownership migration](./noun-ownership-migration.md) (`Workflow` jobs → `IngestionJob`; diagrams stay SAC).
 
@@ -193,8 +193,11 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/dekc_business.py" --repo . --bundle knowl
 
 ### 4. Index the second brain
 
+Git + Markdown is the source of truth. Search and pack refresh a disposable
+SQLite index themselves (mtime+size). You do not need to run this first.
+
 ```bash
-python3 "${CLAUDE_PLUGIN_ROOT}/scripts/dekc_index.py" --repo . --bundle knowledge build
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/dekc_index.py" status --repo . --bundle knowledge
 python3 "${CLAUDE_PLUGIN_ROOT}/scripts/dekc_search.py" "GMV" --repo . --bundle knowledge
 python3 "${CLAUDE_PLUGIN_ROOT}/scripts/dekc_doctor.py" --repo . --bundle knowledge
 ```
@@ -202,14 +205,12 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/dekc_doctor.py" --repo . --bundle knowled
 Index layout:
 
 ```text
-knowledge/.index/
-  inventory.json      # all concepts
-  search.json         # inverted tokens
-  graph.json          # lineage adjacency
-  embeddings.jsonl    # local bag-of-tokens vectors
-  manifest.json
+knowledge/.dekc/index.sqlite   # gitignored; delete anytime
 ```
 
+`build` is an alias for `refresh --force`. `--no-index` / `DEKC_NO_INDEX=1`
+fall through to ripgrep then a full scan. `--engine fts` opts into FTS5 MATCH
+(not score-identical). See [retrieval ladder](../designs/retrieval-ladder.md).
 ### 5. Progressive disclosure packs
 
 When an agent works on one table:
@@ -417,7 +418,7 @@ Explorer UI (this repo): `npm run dev` → open the live preview catalog tabs.
 | `dekc_capture.py <subcommand>` | source/table/view/query/lineage/… |
 | `dekc_lineage.py` | graph / upstream / mermaid / materialize |
 | `dekc_business.py` | promote / promote-layer |
-| `dekc_index.py` | build / search |
+| `dekc_index.py` | status / refresh / drop / build |
 | `dekc_pack.py` | context packs |
 | `dekc_search.py` | full-text + index |
 | `dekc_validate.py` / `dekc_doctor.py` | quality |

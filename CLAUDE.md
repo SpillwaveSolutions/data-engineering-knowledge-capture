@@ -12,14 +12,16 @@ Depends on **PKC** + **OKF**. Dual/quad host: Claude, Grok, Codex, OpenCode — 
 
 ```bash
 python3 tests/test_dekc.py
+python3 tests/test_retrieval_ladder.py
 python3 scripts/dekc_validate.py --bundle sample-knowledge
 python3 scripts/dekc_doctor.py --bundle sample-knowledge
+npm run test
 npm run dev          # explorer on :8080
 npm run typecheck
 npm run build
 ```
 
-Add new `scripts/dekc_*.py` to `package.json` typecheck/test lists and CI.
+Add new `scripts/dekc_*.py` is covered the moment it lands: `npm run py:compile` and CI both `py_compile scripts/dekc_*.py`.
 
 ## Layout
 
@@ -34,6 +36,7 @@ Add new `scripts/dekc_*.py` to `package.json` typecheck/test lists and CI.
 - Absolute in-bundle links; typed `links[].rel` for lineage/business edges
 - Never invent edges; prefer scripts over freehand Markdown when possible
 - Reverse engineering: orchestrators + adversarial skeptics/rubrics (`dekc_grade.py`, re-adversary-judge); no success without pass
+- Retrieval: Git + Markdown is truth. `knowledge/.dekc/index.sqlite` is a disposable SQLite/FTS5 accelerator (gitignored, mtime+size self-heal). Ripgrep is optional (`DEKC_RG_PATH`). Search and pack must keep working when rg or FTS5 is absent. Never install packages from a hook. See `docs/designs/retrieval-ladder.md`. Do not resurrect JSON `.index/`.
 
 ## Docs
 
