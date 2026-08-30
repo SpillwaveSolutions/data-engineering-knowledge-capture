@@ -1,0 +1,45 @@
+name: cut-v0.5.0
+on:
+  workflow_dispatch:
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: 4926577c75b8cb37125630bcad667e2a789f03f9
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create v0.5.0 \
+            --repo SpillwaveSolutions/data-engineering-knowledge-capture \
+            --target 4926577c75b8cb37125630bcad667e2a789f03f9 \
+            --title "v0.5.0 — retrieval ladder (SQLite FTS5 + ripgrep)" \
+            --notes-file - <<'EOF'
+          Retrieval ladder: Git + Markdown stays source of truth. Accelerators are disposable.
+          Replaces the JSON `knowledge/.index/` inverted index (which was committed by accident).
+
+          Merge: https://github.com/SpillwaveSolutions/data-engineering-knowledge-capture/pull/49
+
+          ### Added
+
+          - ripgrep accelerator for search and pack (`rg -l` / `rg -lF`). Ranking stays in Python.
+          - SQLite/FTS5 incremental index at `knowledge/.dekc/index.sqlite` (gitignored).
+          - Doctor toolchain section (rg / FTS5 / index).
+          - SQL lineage edges store `origin` so incremental delete does not leak edges.
+          - Design: docs/designs/retrieval-ladder.md
+
+          ### Changed
+
+          - Host manifests lockstep at 0.5.0.
+
+          ### Notes
+
+          - Default engine is LIKE + Python scores (scan-identical). `--engine fts` is opt-in.
+          - `dekc_pack.py --mermaid` still calls `build_graph` (full scan).
+          - Gitignore only `**/.dekc/index.sqlite*` — do not ignore the whole `.dekc/` dir.
+          EOF
