@@ -21,6 +21,7 @@ One plugin tree, multiple hosts. Do not diverge packaging without updating [PORT
 ## Docs
 
 - [User guide](./docs/user_guide/user-guide.md) — install, walks, streams/jobs, multi-cloud recipes
+- [Retrieval ladder](./docs/designs/retrieval-ladder.md) — SQLite index → rg → scan; Git stays truth
 - [Design doc](./docs/designs/current_design_doc.md) — AGER agent loops, adversarial rubrics, Azure Fabric / AWS / GCP
 - [Typed edges](./docs/typed-edges.md)
 - [PORTS](./PORTS.md)
@@ -64,11 +65,12 @@ Plugin root: `${CLAUDE_PLUGIN_ROOT}`.
 2. Prefer deterministic scripts; agents extract structure from free text / SQL.
 3. Idempotent writes; never invent lineage edges.
 4. Direction matters: bronze → silver → gold; business objects `derived_from` tables.
-5. After walks: grade (`dekc_grade.py` + adversarial judges) then `dekc_index.py build` + `dekc_doctor.py`.
+5. After walks: grade (`dekc_grade.py` + adversarial judges) then `dekc_doctor.py`. Search/pack refresh `knowledge/.dekc/index.sqlite` themselves; `dekc_index.py build` is optional (`refresh --force`).
 6. Progressive disclosure: 2-hop packs (~20 nodes).
 7. Scrub secrets/PII on capture.
 8. **No RE success without re-adversary-judge pass** (threshold 0.75) unless user waives.
 9. On fail: capture missing evidence or **retract** unproven claims — never invent to raise scores.
+10. Never install ripgrep (or any package) from a hook. rg is optional. `DEKC_NO_INDEX=1` / `--no-index` fall through to rg then scan.
 
 ## Orchestrators
 

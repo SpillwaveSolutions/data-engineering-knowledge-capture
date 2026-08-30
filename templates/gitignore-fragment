@@ -4,6 +4,15 @@
 # for every bundle rather than one hardcoded name.
 **/.index/
 
+# Disposable SQLite/FTS5 retrieval index (DEKC 0.5.0). Git + Markdown stays
+# source of truth; deleting the sqlite file is always valid recovery.
+# Do not ignore the whole `.dekc/` directory — config.yml lives there.
+**/.dekc/index.sqlite
+**/.dekc/index.sqlite-journal
+**/.dekc/index.sqlite-wal
+**/.dekc/index.sqlite-shm
+
+
 # Per-object WriteEvents — opt in with DEKC_WRITE_EVENTS=1 or --write-event.
 # Keep the catalog index if you generate one; ignore the timestamp flood (#37).
 **/write-events/*

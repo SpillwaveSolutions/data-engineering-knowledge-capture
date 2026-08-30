@@ -17,14 +17,20 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from dekc_common import (  # noqa: E402
     append_log,
+    find_rg,
+    is_concept_path,
+    iter_typed_edges,
     list_concepts,
+    parse_frontmatter,
     path_for_type,
     refresh_catalog_index,
     resolve_knowledge_root,
+    rg_list_files,
     utc_now,
     write_knowledge,
 )
-from dekc_lineage import build_graph, mermaid  # noqa: E402
+from dekc_lineage import FORWARD_FLOW, REVERSE_FLOW, build_graph, mermaid  # noqa: E402
+from dekc_index import LINEAGE_RELS, open_graph  # noqa: E402
 
 DEFAULT_WINDOW_TOKENS = 128_000
 PACK_BUDGET_DENOMINATOR = 4
@@ -77,12 +83,158 @@ def load_map(bundle: Path) -> dict[str, tuple[dict, str]]:
     return out
 
 
+def _parse_rel(bundle: Path, rel: str) -> tuple[dict, str]:
+    fp = bundle / rel.lstrip("/")
+    if not fp.is_file():
+        return {}, ""
+    try:
+        return parse_frontmatter(fp.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError):
+        return {}, ""
+
+
+def _lineage_neighbors_from_file(bundle: Path, rel: str, fm: dict, body: str) -> list[str]:
+    """Undirected lineage neighbors authored on this file (typed edges + SQL)."""
+    from dekc_index import extract_dekc_edges
+
+    out: list[str] = []
+    seen: set[str] = set()
+    for src, dst, r, _label in extract_dekc_edges(bundle, rel, fm, body):
+        if r not in LINEAGE_RELS and r not in FORWARD_FLOW and r not in REVERSE_FLOW:
+            continue
+        other = dst if src == rel else src
+        if other == rel or other in seen:
+            continue
+        seen.add(other)
+        out.append(other)
+    return out
+
+
+def _inbound_via_rg(bundle: Path, target: str) -> list[str] | None:
+    """Undirected lineage neighbors via rg.
+
+    rg only finds files that *mention* `target`. The target file itself almost
+    never contains its own path (SQL lineage lives in a fenced block of table
+    names), so we always parse it. None = rg missing/failed → fall back.
+    """
+    needles = [target]
+    if target.startswith("/"):
+        needles.append(target.lstrip("/"))
+    hits = rg_list_files(bundle, needles[:1], fixed_string=True, ignore_case=False)
+    if hits is None:
+        return None
+    neighbors: list[str] = []
+    seen: set[str] = set()
+
+    def _consider(src: str, nxt: str) -> None:
+        if nxt == target and src != target and src not in seen:
+            seen.add(src)
+            neighbors.append(src)
+        elif src == target and nxt != target and nxt not in seen:
+            seen.add(nxt)
+            neighbors.append(nxt)
+
+    target_path = bundle / target.lstrip("/")
+    files: list[Path] = []
+    seen_paths: set[Path] = set()
+    if target_path.is_file():
+        files.append(target_path.resolve())
+        seen_paths.add(target_path.resolve())
+    for path in hits:
+        try:
+            resolved = path.resolve()
+        except OSError:
+            continue
+        if resolved in seen_paths:
+            continue
+        seen_paths.add(resolved)
+        files.append(path)
+
+    for path in files:
+        if not is_concept_path(bundle, path) and path.resolve() != target_path.resolve():
+            continue
+        try:
+            src = "/" + path.relative_to(bundle).as_posix()
+        except ValueError:
+            continue
+        fm, body = _parse_rel(bundle, src)
+        for nxt in _lineage_neighbors_from_file(bundle, src, fm, body):
+            _consider(src, nxt)
+    return neighbors
+
+
+class ReverseIndex:
+    """Lineage neighbors: SQLite index → rg → full scan."""
+
+    def __init__(
+        self,
+        bundle: Path,
+        *,
+        use_rg: bool | None = None,
+        use_index: bool | None = None,
+    ):
+        self.bundle = bundle
+        self._full: dict[str, list[str]] | None = None
+        self._memo: dict[str, list[str]] = {}
+        self._graph = None
+        if use_index is False:
+            self._index = False
+        else:
+            self._graph = open_graph(bundle)
+            self._index = self._graph is not None
+            if use_index is True and not self._index:
+                self._index = False
+        if use_rg is False:
+            self._rg = False
+        else:
+            self._rg = bool(find_rg())
+
+    @property
+    def engine(self) -> str:
+        if self._index:
+            return "index"
+        return "rg" if self._rg else "scan"
+
+    def close(self) -> None:
+        if self._graph is not None:
+            self._graph.close()
+            self._graph = None
+
+    def get(self, target: str) -> list[str]:
+        if target in self._memo:
+            return self._memo[target]
+        if self._index and self._graph is not None:
+            found = self._graph.neighbors(target, lineage_only=True)
+            self._memo[target] = found
+            return found
+        if self._rg:
+            found = _inbound_via_rg(self.bundle, target)
+            if found is not None:
+                self._memo[target] = found
+                return found
+            self._rg = False
+        if self._full is None:
+            graph = build_graph(self.bundle)
+            undirected: dict[str, list[str]] = {}
+            for s, tgts in graph.items():
+                undirected.setdefault(s, [])
+                for t in tgts:
+                    undirected.setdefault(s, []).append(t)
+                    undirected.setdefault(t, []).append(s)
+            self._full = {k: list(dict.fromkeys(v)) for k, v in undirected.items()}
+        edges = self._full.get(target, [])
+        self._memo[target] = edges
+        return edges
+
+
 def pack(
     bundle: Path,
     focus: str,
     *,
     hops: int = 2,
     max_nodes: int = 20,
+    use_rg: bool | None = None,
+    use_index: bool | None = None,
 ) -> dict:
     if not focus.startswith("/"):
         candidate = focus if focus.endswith(".md") else focus + ".md"
@@ -96,64 +248,83 @@ def pack(
             else:
                 focus = "/" + candidate.lstrip("/")
 
-    graph = build_graph(bundle)
-    concepts = load_map(bundle)
-    undirected: dict[str, list[str]] = {}
-    for s, tgts in graph.items():
-        undirected.setdefault(s, [])
-        for t in tgts:
-            undirected.setdefault(s, []).append(t)
-            undirected.setdefault(t, []).append(s)
-    if focus in concepts:
-        for link in concepts[focus][0].get("links") or []:
-            if isinstance(link, dict) and link.get("target"):
-                undirected.setdefault(focus, []).append(link["target"])
-                undirected.setdefault(link["target"], []).append(focus)
+    inbound = ReverseIndex(bundle, use_rg=use_rg, use_index=use_index)
+    try:
+        focus_fm, focus_body = _parse_rel(bundle, focus)
+        extra: list[str] = []
+        for tgt, _rel in iter_typed_edges(focus_fm):
+            if tgt and tgt != focus:
+                extra.append(tgt if tgt.startswith("/") else "/" + tgt.lstrip("/"))
 
-    seen = {focus}
-    order = [focus]
-    q = deque([(focus, 0)])
-    while q and len(order) < max_nodes:
-        node, d = q.popleft()
-        if d >= hops:
-            continue
-        for nxt in undirected.get(node, []):
-            if nxt not in seen:
-                seen.add(nxt)
-                order.append(nxt)
-                q.append((nxt, d + 1))
-                if len(order) >= max_nodes:
-                    break
+        seen = {focus}
+        order = [focus]
+        q = deque([(focus, 0)])
+        while q and len(order) < max_nodes:
+            node, d = q.popleft()
+            if d >= hops:
+                continue
+            # Outbound lineage is authored on this file (typed flow + SQL) and
+            # is invisible to `rg -lF <path>` because the file rarely mentions
+            # its own path. Union with inbound (index / rg / scan).
+            fm, body = _parse_rel(bundle, node)
+            outbound = _lineage_neighbors_from_file(bundle, node, fm, body)
+            neighbors = list(dict.fromkeys(list(outbound) + list(inbound.get(node))))
+            if node == focus:
+                neighbors.extend(extra)
+            for nxt in neighbors:
+                if nxt not in seen:
+                    seen.add(nxt)
+                    order.append(nxt)
+                    q.append((nxt, d + 1))
+                    if len(order) >= max_nodes:
+                        break
 
-    nodes = []
-    for rel in order:
-        fm, body = concepts.get(rel, ({}, ""))
-        title = fm.get("title") or Path(rel).stem
-        typ = fm.get("type") or "?"
-        layer = fm.get("layer")
-        is_root = rel == focus
-        nodes.append(
-            {
-                "path": rel,
-                "title": title,
-                "type": typ,
-                "layer": layer,
-                "description": fm.get("description") or "",
-                "body": body if is_root else "",
-            }
-        )
+        nodes = []
+        for rel in order:
+            if inbound.engine == "index" and inbound._graph is not None:
+                row = inbound._graph.node(rel)
+                if row is not None:
+                    fm = row.frontmatter()
+                    body = row.body
+                    title = row.title or Path(rel).stem
+                    typ = row.type
+                    layer = row.layer or fm.get("layer")
+                else:
+                    fm, body = _parse_rel(bundle, rel)
+                    title = fm.get("title") or Path(rel).stem
+                    typ = fm.get("type") or "?"
+                    layer = fm.get("layer")
+            else:
+                fm, body = _parse_rel(bundle, rel)
+                title = fm.get("title") or Path(rel).stem
+                typ = fm.get("type") or "?"
+                layer = fm.get("layer")
+            is_root = rel == focus
+            nodes.append(
+                {
+                    "path": rel,
+                    "title": title,
+                    "type": typ,
+                    "layer": layer,
+                    "description": (fm.get("description") if isinstance(fm, dict) else "") or "",
+                    "body": body if is_root else "",
+                }
+            )
 
-    return {
-        "focus": focus,
-        "hops": hops,
-        "max_nodes": max_nodes,
-        "node_count": len(nodes),
-        "nodes": nodes,
-        "excluded_note": (
-            "Nodes beyond hops/max_nodes omitted for progressive disclosure. "
-            "Node clip is not a token budget."
-        ),
-    }
+        return {
+            "focus": focus,
+            "hops": hops,
+            "max_nodes": max_nodes,
+            "node_count": len(nodes),
+            "nodes": nodes,
+            "reverse_index": inbound.engine,
+            "excluded_note": (
+                "Nodes beyond hops/max_nodes omitted for progressive disclosure. "
+                "Node clip is not a token budget."
+            ),
+        }
+    finally:
+        inbound.close()
 
 
 def render_markdown(
@@ -234,6 +405,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--mermaid", action="store_true")
     parser.add_argument("--write", action="store_true", help="Write pack under packs/")
     parser.add_argument("--author", default="")
+    parser.add_argument("--rg", action="store_true", help="Use ripgrep for inbound discovery")
+    parser.add_argument("--no-rg", action="store_true", help="Disable ripgrep")
+    parser.add_argument("--no-index", action="store_true", help="Disable the SQLite index")
     args = parser.parse_args(argv)
     from dekc_common import resolve_author
 
@@ -245,7 +419,16 @@ def main(argv: list[str] | None = None) -> int:
         args.max_nodes = 8
 
     bundle = resolve_knowledge_root(Path(args.repo).resolve(), args.bundle)
-    result = pack(bundle, args.focus, hops=args.hops, max_nodes=args.max_nodes)
+    use_index: bool | None = False if args.no_index else None
+    use_rg: bool | None = False if args.no_rg else (True if args.rg else None)
+    result = pack(
+        bundle,
+        args.focus,
+        hops=args.hops,
+        max_nodes=args.max_nodes,
+        use_rg=use_rg,
+        use_index=use_index,
+    )
 
     try:
         if args.mermaid:

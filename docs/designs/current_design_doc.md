@@ -21,7 +21,9 @@ Related systems:
 | PKC | Project reasoning capture | [project-knowledge-capture](https://github.com/SpillwaveSolutions/project-knowledge-capture) |
 | DEKC | Data-domain catalogs + walk scripts + agents | this repo |
 
-AGER spec version referenced: **0.3.0** ([AGER_SPEC](https://github.com/SpillwaveSolutions/okf-agent-graph/blob/main/docs/AGER_SPEC.md)). DEKC plugin **0.2.0**.
+AGER spec version referenced: **0.3.0** ([AGER_SPEC](https://github.com/SpillwaveSolutions/okf-agent-graph/blob/main/docs/AGER_SPEC.md)). DEKC plugin **0.5.0**.
+
+**v0.5.0 retrieval:** search/pack use a disposable ladder (SQLite FTS5 index → ripgrep → scan). Git + Markdown is still the source of truth. See [`docs/designs/retrieval-ladder.md`](retrieval-ladder.md) — the `.index/` JSON layout later in this snapshot is historical (0.4.x) and is not how 0.5.0 retrieves.
 
 ---
 

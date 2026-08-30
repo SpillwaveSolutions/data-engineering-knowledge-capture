@@ -8,7 +8,7 @@ DEKC **extends [Project Knowledge Capture (PKC)](https://github.com/SpillwaveSol
 |---|---|
 | **Plugin name** | `data-engineering-knowledge-capture` |
 | **Repo** | [SpillwaveSolutions/data-engineering-knowledge-capture](https://github.com/SpillwaveSolutions/data-engineering-knowledge-capture) |
-| **Version** | 0.4.3 |
+| **Version** | 0.5.0 |
 | **License** | MIT |
 | **Hosts** | Claude Code · Grok Build · Codex · OpenCode · Agent Plugins 1.0 · Grok Bot · LangChain Deep Agents |
 
@@ -16,6 +16,7 @@ DEKC **extends [Project Knowledge Capture (PKC)](https://github.com/SpillwaveSol
 
 | Doc | Audience |
 |-----|----------|
+| **[Retrieval ladder](./docs/designs/retrieval-ladder.md)** | Search/pack: SQLite index → rg → scan. Git stays truth. |
 | **[Noun-ownership migration](./docs/user_guide/noun-ownership-migration.md)** | Existing brains: `Workflow` → `IngestionJob`; mixed AGER/SAC types |
 | **[User guide](./docs/user_guide/user-guide.md)** | Install, walk a lake, promote business objects, multi-cloud recipes |
 | **[Design doc](./docs/designs/current_design_doc.md)** | Agent graph loops (AGER), Azure Fabric / AWS / GCP reverse engineering, streams & jobs |
@@ -81,7 +82,8 @@ Standard concept schemas: [`schemas/okf-concepts/`](./schemas/okf-concepts/) (Ta
 ```bash
 python3 scripts/dekc_schemas.py list
 python3 scripts/dekc_schemas.py validate --bundle sample-knowledge
-python3 scripts/dekc_index.py --bundle sample-knowledge build   # refresh search index
+python3 scripts/dekc_index.py status --bundle sample-knowledge
+python3 scripts/dekc_index.py refresh --bundle sample-knowledge   # self-heals; search/pack also refresh
 ```
 
 
@@ -200,8 +202,8 @@ python3 scripts/dekc_walk.py path/to/lake --repo . --bundle knowledge
 python3 scripts/dekc_lineage.py --repo . --bundle knowledge materialize
 python3 scripts/dekc_business.py --repo . --bundle knowledge promote-layer --layer gold
 
-# Index second brain + health
-python3 scripts/dekc_index.py --repo . --bundle knowledge build
+# Index second brain + health (search/pack refresh the index themselves)
+python3 scripts/dekc_index.py status --repo . --bundle knowledge
 python3 scripts/dekc_doctor.py --repo . --bundle knowledge
 python3 scripts/dekc_search.py "revenue" --repo . --bundle knowledge
 ```
@@ -252,31 +254,41 @@ python3 scripts/dekc_doctor.py --bundle sample-knowledge
 
 ## Second-brain index
 
-> **Do not commit the index.** It is fully derived and rebuilds in seconds;
-> `search.json` alone runs to megabytes and would churn every diff. Add this to
-> your `.gitignore` (a copy ships at `templates/gitignore-fragment`):
+Git + Markdown is the source of truth. Search and pack use a disposable ladder
+(SQLite FTS5 index → ripgrep → full scan). Deleting the accelerators is always
+valid recovery. See [retrieval ladder](./docs/designs/retrieval-ladder.md).
+
+> **Do not commit the index.** Add this to your `.gitignore` (a copy ships at
+> `templates/gitignore-fragment`):
 >
 > ```gitignore
 > **/.index/
+> **/.dekc/index.sqlite
+> **/.dekc/index.sqlite-journal
+> **/.dekc/index.sqlite-wal
+> **/.dekc/index.sqlite-shm
 > ```
 >
-> `**/.index/` rather than `*/.index/`, so it holds at any nesting depth and for
-> every bundle rather than one hardcoded name. A repo with two bundles is where
-> the narrower pattern shows: ignoring `knowledge/.index/` leaves the second
-> bundle's index sitting in `git status`.
+> Do not ignore the whole `.dekc/` directory — repo-level config lives there.
+> `**/.index/` still ignores the old JSON inverted index from 0.4.x so it
+> cannot be re-committed.
 
-
-`dekc_index.py build` writes:
+`dekc_index.py` writes:
 
 ```text
-<bundle>/.index/
-  inventory.json
-  search.json
-  graph.json
-  embeddings.jsonl   # local bag-of-tokens (no API key)
-  manifest.json
+<bundle>/.dekc/index.sqlite   # incremental, mtime+size self-heal
 ```
 
+```bash
+python3 scripts/dekc_index.py status --bundle knowledge
+python3 scripts/dekc_index.py refresh --bundle knowledge
+python3 scripts/dekc_index.py drop --bundle knowledge
+```
+
+Search, pack, and doctor refresh the index themselves. `build` is an alias
+for `refresh --force`. Ranking stays in Python so scores match a full scan
+unless you pass `--engine fts`. `DEKC_NO_INDEX=1` / `--no-index` fall through
+to rg then scan. Missing `rg` is not an error.
 ## Config
 
 See [`.dekc/config.example.yml`](./.dekc/config.example.yml).

@@ -1,6 +1,6 @@
 ---
 name: dekc-search
-description: Search the indexed DEKC second brain.
+description: Full-text search over the DEKC knowledge bundle (AND terms, type filters).
 ---
 
 Run the **dekc-search** skill.

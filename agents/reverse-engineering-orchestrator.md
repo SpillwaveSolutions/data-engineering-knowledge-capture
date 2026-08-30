@@ -67,8 +67,8 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/dekc_lineage.py" --repo . --bundle knowle
 python3 "${CLAUDE_PLUGIN_ROOT}/scripts/dekc_business.py" --repo . --bundle knowledge promote-layer --layer gold
 python3 "${CLAUDE_PLUGIN_ROOT}/scripts/dekc_grade.py" --repo . --bundle knowledge --json
 python3 "${CLAUDE_PLUGIN_ROOT}/scripts/dekc_grade.py" --repo . --bundle knowledge --prefix semantic,tables/gold-,reports,dashboards
-python3 "${CLAUDE_PLUGIN_ROOT}/scripts/dekc_index.py" --repo . --bundle knowledge build
 python3 "${CLAUDE_PLUGIN_ROOT}/scripts/dekc_doctor.py" --repo . --bundle knowledge
+# optional: python3 "${CLAUDE_PLUGIN_ROOT}/scripts/dekc_index.py" refresh --force --repo . --bundle knowledge
 ```
 
 Write judgments under `knowledge/agents/judgment-<run>.md` (or `agents/` if colocated) with scores, failed criteria, and required revisions.
