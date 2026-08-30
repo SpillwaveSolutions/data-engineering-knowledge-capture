@@ -15,6 +15,42 @@ from dekc_validate import validate_bundle  # noqa: E402
 from dekc_lineage import build_graph  # noqa: E402
 
 
+def _toolchain() -> dict:
+    import os
+    import shutil
+    import sys
+
+    rg = None
+    for var in ("DEKC_RG_PATH", "PKC_RG_PATH", "OKF_RG_PATH"):
+        override = (os.environ.get(var) or "").strip()
+        if override and Path(override).is_file():
+            rg = override
+            break
+        found = shutil.which(override) if override else None
+        if found:
+            rg = found
+            break
+    if rg is None:
+        rg = shutil.which("rg")
+    fts5 = False
+    sqlite_version = None
+    try:
+        import sqlite3
+
+        sqlite_version = sqlite3.sqlite_version
+        con = sqlite3.connect(":memory:")
+        fts5 = any("FTS5" in row[0].upper() for row in con.execute("pragma compile_options"))
+        con.close()
+    except Exception:
+        pass
+    return {
+        "python": sys.version.split()[0],
+        "rg": {"found": bool(rg), "path": rg},
+        "sqlite": {"version": sqlite_version, "fts5": fts5},
+        "index": "dekc already builds knowledge/.index (inventory + inverted tokens)",
+    }
+
+
 def doctor(
     bundle: Path,
     *,
@@ -59,6 +95,7 @@ def doctor(
         "validation_ok": validation["ok"],
         "errors": validation["errors"][:10],
         "warnings": validation["warnings"][:10],
+        "toolchain": _toolchain(),
     }
 
 
@@ -96,6 +133,8 @@ def main(argv: list[str] | None = None) -> int:
         print(f"  glossary:     {report['glossary_terms']}")
         print(f"  index:        {'yes' if report['index_built'] else 'NO — run dekc_index.py build'}")
         print(f"  validation:   {'OK' if report['validation_ok'] else 'FAILED'}")
+        rg = (report.get("toolchain") or {}).get("rg") or {}
+        print(f"  rg:           {'found ' + str(rg.get('path')) if rg.get('found') else 'missing (index is the search path; rg is optional)'}")
         print("  types:")
         for t, n in sorted(report["types"].items(), key=lambda kv: -kv[1]):
             print(f"    {t:20} {n}")
