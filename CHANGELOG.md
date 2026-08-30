@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.4.3 — 2026-08-30
+
 - `dekc_doctor.py` reports toolchain (ripgrep / SQLite FTS5). Search already
   goes through `knowledge/.index`; rg is optional, not a second index.
 
