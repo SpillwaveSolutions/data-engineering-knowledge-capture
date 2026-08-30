@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- `dekc_doctor.py` reports toolchain (ripgrep / SQLite FTS5). Search already
+  goes through `knowledge/.index`; rg is optional, not a second index.
+
 ## 0.4.2 — 2026-08-25
 
 Fabric reverse-engineering walk fixes ([#44](https://github.com/SpillwaveSolutions/data-engineering-knowledge-capture/issues/44)).
