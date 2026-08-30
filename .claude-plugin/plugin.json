@@ -1,6 +1,6 @@
 {
   "name": "data-engineering-knowledge-capture",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "Data Engineering Knowledge Capture (DEKC) \u2014 extends PKC + OKF for schemas, lineage, medallion layers, SQL/DAX, semantic models, business objects, and an indexed second brain. Agents walk data lakes. Works in Claude Code, Grok Build, Codex, and OpenCode.",
   "author": {
     "name": "Rick Hightower",

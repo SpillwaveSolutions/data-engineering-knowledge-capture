@@ -8,7 +8,7 @@ DEKC **extends [Project Knowledge Capture (PKC)](https://github.com/SpillwaveSol
 |---|---|
 | **Plugin name** | `data-engineering-knowledge-capture` |
 | **Repo** | [SpillwaveSolutions/data-engineering-knowledge-capture](https://github.com/SpillwaveSolutions/data-engineering-knowledge-capture) |
-| **Version** | 0.4.2 |
+| **Version** | 0.4.3 |
 | **License** | MIT |
 | **Hosts** | Claude Code · Grok Build · Codex · OpenCode · Agent Plugins 1.0 · Grok Bot · LangChain Deep Agents |
 
