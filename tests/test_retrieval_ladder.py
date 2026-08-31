@@ -70,17 +70,25 @@ class TestRipgrepAccelerator(unittest.TestCase):
         self.assertGreaterEqual(scan["node_count"], 5)
 
     def test_lineage_pack_survives_a_symlink_aliased_bundle(self):
-        """rg_list_files resolves its hits. mkdtemp hands back the /var alias
-        on macOS, so relative_to raised and the lineage neighbor was dropped —
-        while the pack still reported `reverse_index: rg`."""
+        """rg_list_files resolves its hits, so relative_to raised on an aliased
+        bundle and the lineage neighbor was dropped — while the pack still
+        reported `reverse_index: rg`.
+
+        The symlink is built here rather than leaned on: mkdtemp yields the
+        /var alias on macOS but a plain /tmp path on Linux, which would make an
+        alias-dependent test inert on CI — the platform this must not regress on.
+        """
         tmp = Path(tempfile.mkdtemp())
         self.addCleanup(shutil.rmtree, tmp, True)
-        if tmp == tmp.resolve():
-            self.skipTest("no path alias on this platform")
-        (tmp / "index.md").write_text(
+        real = tmp / "real"
+        real.mkdir()
+        bundle = tmp / "alias"
+        bundle.symlink_to(real, target_is_directory=True)
+        self.assertNotEqual(bundle.resolve(), bundle)
+        (bundle / "index.md").write_text(
             "---\ntype: Bundle\ntitle: T\n---\n\n# T\n", encoding="utf-8"
         )
-        tables = tmp / "tables"
+        tables = bundle / "tables"
         tables.mkdir()
         (tables / "root.md").write_text(
             "---\ntype: Table\ntitle: Root\n---\n\n# Root\n", encoding="utf-8"
@@ -90,8 +98,8 @@ class TestRipgrepAccelerator(unittest.TestCase):
             "  - target: /tables/root.md\n    rel: reads_from\n---\n\n# Caller\n",
             encoding="utf-8",
         )
-        scan = pack(tmp, "tables/root.md", hops=1, max_nodes=8, use_rg=False, use_index=False)
-        accel = pack(tmp, "tables/root.md", hops=1, max_nodes=8, use_rg=True, use_index=False)
+        scan = pack(bundle, "tables/root.md", hops=1, max_nodes=8, use_rg=False, use_index=False)
+        accel = pack(bundle, "tables/root.md", hops=1, max_nodes=8, use_rg=True, use_index=False)
         scan_paths = {n["path"] for n in scan["nodes"]}
         accel_paths = {n["path"] for n in accel["nodes"]}
         self.assertIn("/tables/caller.md", scan_paths)
