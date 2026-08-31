@@ -154,7 +154,11 @@ def _inbound_via_rg(bundle: Path, target: str) -> list[str] | None:
         if not is_concept_path(bundle, path) and path.resolve() != target_path.resolve():
             continue
         try:
-            src = "/" + path.relative_to(bundle).as_posix()
+            # rg_list_files resolves its hits, so a bundle reached through a
+            # symlink alias (macOS /var -> /private/var) makes relative_to
+            # raise and silently drop a real lineage neighbor. Canonicalize
+            # both operands, as is_concept_path already does.
+            src = "/" + path.resolve().relative_to(bundle.resolve()).as_posix()
         except ValueError:
             continue
         fm, body = _parse_rel(bundle, src)
