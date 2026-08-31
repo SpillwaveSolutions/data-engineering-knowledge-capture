@@ -2,6 +2,26 @@
 
 ## Unreleased
 
+## 0.5.1 — 2026-08-31
+
+Correctness patch for catalog rendering and the rg-backed reverse index. Both
+defects were found by porting the system-architecture-capture v0.5.4 fixes to
+the shared DEKC code.
+
+### Fixed
+
+- `refresh_catalog_index()` no longer crashes on a YAML scalar title.
+  `title: 421` parses as an int, and `_escape_link_label()` assumed a string,
+  so one legacy title aborted the refresh after capture had already written
+  concepts. A falsy-but-real title (`0`, `false`) also no longer falls back to
+  the file stem.
+  ([#51](https://github.com/SpillwaveSolutions/data-engineering-knowledge-capture/issues/51))
+- The rg-backed lineage pack no longer drops matches when the bundle is
+  addressed through a symlink. `rg_list_files()` resolves its hits, so
+  `path.relative_to(bundle)` raised and the handler silently discarded a real
+  lineage neighbor while the pack still reported `reverse_index: rg`.
+  ([#52](https://github.com/SpillwaveSolutions/data-engineering-knowledge-capture/issues/52))
+
 ## 0.5.0 — 2026-08-30
 
 Retrieval ladder: Git + Markdown stays source of truth. Accelerators are disposable.

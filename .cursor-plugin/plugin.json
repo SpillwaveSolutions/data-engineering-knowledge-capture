@@ -1,6 +1,6 @@
 {
   "name": "data-engineering-knowledge-capture",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Data Engineering Knowledge Capture: schemas, lineage, medallion, semantic models, and glossary into a durable OKF knowledge graph. Multi-host bindings and write isolation.",
   "author": {
     "name": "Rick Hightower"
