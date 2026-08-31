@@ -1035,15 +1035,19 @@ _SAC_SHARED_CATALOGS = frozenset(
 )
 
 
-def _escape_link_label(label: str) -> str:
+def _escape_link_label(label: Any) -> str:
     """Make a concept title safe to use as a Markdown link label.
 
     An unescaped `[AREA]` title renders as `[[AREA]](/cat/x.md)`, which the OKF
     graph reader's link regex cannot match. That yields a MISSING edge rather
     than a broken one, and validate reports only broken edges -- so the concept
     silently loses its catalog backlink.
+
+    YAML titles may also be typed scalars (for example integers or booleans),
+    so normalize to text at this rendering boundary. Untyped, one bad title
+    aborts the whole catalog refresh after ingestion already wrote concepts.
     """
-    return label.replace("[", "\\[").replace("]", "\\]")
+    return str(label).replace("[", "\\[").replace("]", "\\]")
 
 
 def refresh_catalog_index(bundle: Path, catalog: str) -> None:
@@ -1067,7 +1071,11 @@ def refresh_catalog_index(bundle: Path, catalog: str) -> None:
         if p.name == "index.md":
             continue
         fm_c, _ = parse_frontmatter(p.read_text(encoding="utf-8"))
-        label = _escape_link_label(fm_c.get("title") or p.stem)
+        # `or` alone sends a falsy-but-real title (`0`, `false`) to the stem.
+        title_value = fm_c.get("title")
+        label = _escape_link_label(
+            p.stem if title_value is None or title_value == "" else title_value
+        )
         layer = fm_c.get("layer")
         # Only annotate catalogs no sibling plugin renders. On a shared catalog
         # the annotation is what makes the file churn back and forth.

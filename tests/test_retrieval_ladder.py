@@ -69,6 +69,35 @@ class TestRipgrepAccelerator(unittest.TestCase):
         self.assertEqual(scan["reverse_index"], "scan")
         self.assertGreaterEqual(scan["node_count"], 5)
 
+    def test_lineage_pack_survives_a_symlink_aliased_bundle(self):
+        """rg_list_files resolves its hits. mkdtemp hands back the /var alias
+        on macOS, so relative_to raised and the lineage neighbor was dropped —
+        while the pack still reported `reverse_index: rg`."""
+        tmp = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, tmp, True)
+        if tmp == tmp.resolve():
+            self.skipTest("no path alias on this platform")
+        (tmp / "index.md").write_text(
+            "---\ntype: Bundle\ntitle: T\n---\n\n# T\n", encoding="utf-8"
+        )
+        tables = tmp / "tables"
+        tables.mkdir()
+        (tables / "root.md").write_text(
+            "---\ntype: Table\ntitle: Root\n---\n\n# Root\n", encoding="utf-8"
+        )
+        (tables / "caller.md").write_text(
+            "---\ntype: Table\ntitle: Caller\nlinks:\n"
+            "  - target: /tables/root.md\n    rel: reads_from\n---\n\n# Caller\n",
+            encoding="utf-8",
+        )
+        scan = pack(tmp, "tables/root.md", hops=1, max_nodes=8, use_rg=False, use_index=False)
+        accel = pack(tmp, "tables/root.md", hops=1, max_nodes=8, use_rg=True, use_index=False)
+        scan_paths = {n["path"] for n in scan["nodes"]}
+        accel_paths = {n["path"] for n in accel["nodes"]}
+        self.assertIn("/tables/caller.md", scan_paths)
+        self.assertEqual(scan_paths, accel_paths)
+        self.assertEqual(accel["reverse_index"], "rg")
+
 
 class TestSqliteIndex(unittest.TestCase):
     def setUp(self):

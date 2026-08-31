@@ -90,6 +90,16 @@ class TestCatalogIndex(unittest.TestCase):
             own = self._bundle(td, "layers", "Gold tier", layer="gold")
         self.assertIn("\u00b7 gold", own, f"lost the annotation on our own catalog: {own!r}")
 
+    def test_yaml_scalar_titles_render_as_text(self):
+        """`title: 421` parses as an int. str.replace on it aborted the whole
+        catalog refresh, after capture had already written concepts."""
+        cases = {"integer": ("421", "421"), "boolean": ("false", "False"),
+                 "date-like": ("2026-08-31", "2026-08-31"), "zero": ("0", "0")}
+        for slug, (yaml_title, expected) in cases.items():
+            with self.subTest(title=slug), tempfile.TemporaryDirectory() as td:
+                line = self._bundle(td, "tables", yaml_title)
+                self.assertEqual(line, f"- [{expected}](/tables/a.md)")
+
     def test_refuses_a_catalog_this_plugin_does_not_declare(self):
         self.assertNotIn("adrs", CATALOGS)
         with tempfile.TemporaryDirectory() as td:
