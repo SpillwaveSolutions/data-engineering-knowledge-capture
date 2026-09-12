@@ -22,3 +22,5 @@ uses FTS5 MATCH (prefix tokens; not score-identical). Missing index or rg
 is not an error. See `/dekc-index`.
 
 After hits on a table, offer `/dekc-context` (2-hop pack).
+
+For parent Q&A, do **not** run this skill in the parent. Spawn **data-retriever** via `/dekc-retrieve`. Search + pack stay in that sub-agent; the parent gets a retrieval card only.

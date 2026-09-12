@@ -8,7 +8,7 @@ DEKC **extends [Project Knowledge Capture (PKC)](https://github.com/SpillwaveSol
 |---|---|
 | **Plugin name** | `data-engineering-knowledge-capture` |
 | **Repo** | [SpillwaveSolutions/data-engineering-knowledge-capture](https://github.com/SpillwaveSolutions/data-engineering-knowledge-capture) |
-| **Version** | 0.5.1 |
+| **Version** | 0.5.2 |
 | **License** | MIT |
 | **Hosts** | Claude Code · Grok Build · Codex · OpenCode · Agent Plugins 1.0 · Grok Bot · LangChain Deep Agents |
 
@@ -208,11 +208,13 @@ python3 scripts/dekc_doctor.py --repo . --bundle knowledge
 python3 scripts/dekc_search.py "revenue" --repo . --bundle knowledge
 ```
 
-Slash / skill entry points: `/dekc-init` · `/dekc-walk` · `/dekc-lineage` · `/dekc-business-object` · `/dekc-glossary` · `/dekc-semantic` · `/dekc-context` · `/dekc-search` · `/dekc-index` · `/dekc-doctor`
+Slash / skill entry points: `/dekc-init` · `/dekc-walk` · `/dekc-lineage` · `/dekc-business-object` · `/dekc-glossary` · `/dekc-semantic` · `/dekc-retrieve` · `/dekc-context` · `/dekc-search` · `/dekc-index` · `/dekc-doctor`
 
 ## Agent loop (AGER-shaped): producers + adversarial judges
 
 **Orchestrators:** `data-lake-walker` (default) · `reverse-engineering-orchestrator` (Fabric/AWS/GCP).
+
+**Query-time:** `data-retriever` (`/dekc-retrieve`) — search + pack stay in the sub-agent; the parent gets a summary card only. Not an RE worker.
 
 Producer workers fan out, then **adversarial skeptics grade reverse engineering with rubrics** before index/pack. Lead judge: **re-adversary-judge** (threshold **0.75**). Fail → re-plan or **retract** unproven claims — never invent edges to pass.
 

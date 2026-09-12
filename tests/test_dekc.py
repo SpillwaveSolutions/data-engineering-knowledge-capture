@@ -3,6 +3,8 @@
 
 from __future__ import annotations
 
+import contextlib
+import io
 import json
 import re
 import subprocess
@@ -708,6 +710,120 @@ class TestPackTokenBudget(unittest.TestCase):
             self.assertEqual(packs, [])
         finally:
             shutil.rmtree(tmp)
+
+
+class TestPackSummary(unittest.TestCase):
+    def _tiny_bundle(self) -> Path:
+        tmp = Path(tempfile.mkdtemp())
+        tables = tmp / "tables"
+        tables.mkdir()
+        (tmp / "index.md").write_text(
+            '---\nokf_version: "0.2"\ntitle: t\n---\n', encoding="utf-8"
+        )
+        (tables / "root.md").write_text(
+            "---\ntype: Table\ntitle: Lumenfield Root\n"
+            "description: root-desc for the seed table\n"
+            "links:\n  - target: /tables/neighbor.md\n    rel: feeds\n"
+            "---\n# Lumenfield Root\n\nROOT_BODY_MARKER secret-of-root\n",
+            encoding="utf-8",
+        )
+        (tables / "neighbor.md").write_text(
+            "---\ntype: Table\ntitle: Neighbor\n"
+            "description: neighbor-frontmatter-only\n---\n"
+            "# Neighbor\n\nNEIGHBOR_BODY_MARKER must-not-pack\n",
+            encoding="utf-8",
+        )
+        self.addCleanup(shutil.rmtree, tmp)
+        return tmp
+
+    def test_summary_bodies_off_even_for_root(self):
+        from dekc_pack import finalize_markdown, pack
+
+        tmp = self._tiny_bundle()
+        result = pack(tmp, "tables/root.md", hops=1, max_nodes=8)
+        md, meta = finalize_markdown(result, bundle=tmp, summary=True)
+        self.assertIn("# Pack summary", md)
+        self.assertIn("`/tables/root.md`", md)
+        self.assertIn("(`Table`)", md)
+        self.assertIn("hops=1", md)
+        self.assertIn("nodes=", md)
+        self.assertIn("tokens=", md)
+        self.assertIn("Lead nodes:", md)
+        self.assertIn("root-desc for the seed table", md)
+        self.assertIn("neighbor-frontmatter-only", md)
+        self.assertNotIn("ROOT_BODY_MARKER", md)
+        self.assertNotIn("NEIGHBOR_BODY_MARKER", md)
+        self.assertNotIn("```mermaid", md)
+        self.assertGreater(meta["budget"], 0)
+        self.assertLessEqual(meta["tokens"], meta["budget"])
+
+    def test_summary_smaller_than_full_pack(self):
+        from dekc_pack import finalize_markdown, pack
+
+        tmp = self._tiny_bundle()
+        result = pack(tmp, "tables/root.md", hops=1, max_nodes=8)
+        full, _ = finalize_markdown(result, bundle=tmp, summary=False)
+        card, _ = finalize_markdown(result, bundle=tmp, summary=True)
+        self.assertLess(len(card), len(full))
+        self.assertIn("ROOT_BODY_MARKER", full)
+        self.assertNotIn("ROOT_BODY_MARKER", card)
+
+    def test_summary_over_budget_fails_closed(self):
+        from dekc_pack import PackBudgetError, finalize_markdown, pack
+        from dekc_pack import main as pack_main
+
+        tmp = self._tiny_bundle()
+        result = pack(tmp, "tables/root.md", hops=1, max_nodes=8)
+        with self.assertRaises(PackBudgetError) as ctx:
+            finalize_markdown(result, bundle=tmp, max_tokens=8, summary=True)
+        self.assertGreater(ctx.exception.tokens, ctx.exception.budget)
+        self.assertEqual(ctx.exception.budget, 8)
+        rc = pack_main(
+            [
+                "tables/root.md",
+                "--repo",
+                str(tmp),
+                "--bundle",
+                str(tmp),
+                "--tiny",
+                "--summary",
+                "--max-tokens",
+                "8",
+                "--write",
+                "--json",
+                "--author",
+                "grok-bot/northstar-console",
+            ]
+        )
+        self.assertNotEqual(rc, 0)
+        self.assertEqual(list(tmp.rglob("pack-root.md")), [])
+
+    def test_summary_cli_json_has_no_bodies(self):
+        from dekc_pack import main as pack_main
+
+        tmp = self._tiny_bundle()
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            rc = pack_main(
+                [
+                    "tables/root.md",
+                    "--repo",
+                    str(tmp),
+                    "--bundle",
+                    str(tmp),
+                    "--tiny",
+                    "--summary",
+                    "--json",
+                ]
+            )
+        self.assertEqual(rc, 0)
+        payload = json.loads(buf.getvalue())
+        self.assertIn("summary", payload)
+        self.assertIn("# Pack summary", payload["summary"])
+        self.assertNotIn("ROOT_BODY_MARKER", payload["summary"])
+        self.assertNotIn("markdown", payload)
+        for node in payload["nodes"]:
+            self.assertFalse(node.get("body"))
 
 
 if __name__ == "__main__":

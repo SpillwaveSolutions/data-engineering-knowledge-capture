@@ -58,7 +58,9 @@ Writes fail closed without `--author` or `SECOND_BRAIN_IDENTITY`. Successful kno
 
 Default ContextPack: **2 hops / ~20 nodes**.
 
-Pack before answering or writing. Do not dump the entire tree.
+For Q&A, spawn **data-retriever** (`/dekc-retrieve`). Search, score, pack, and deepen stay in that sub-agent. The parent keeps a **retrieval card** only — never a hit list, full pack, or `dekc_brain.py` dump. Pack `--summary` (bodies off) is the card-friendly path.
+
+Do not dump the entire tree. When the question also needs project or architecture context, fan out PKC **knowledge-retriever** and/or SAC **architecture-retriever** in parallel.
 
 ## Skill binding
 

@@ -37,7 +37,7 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/dekc_brain.py" "gold order_daily" \
 
 ## Workflow
 
-1. **Retrieve** with `dekc_brain.py` (intent + query) → checklist + ranked concepts + 2-hop pack  
+1. **Retrieve** with `dekc_brain.py` (intent + query) → checklist + ranked concepts + 2-hop pack. For parent Q&A, spawn **data-retriever** (`/dekc-retrieve`) and keep the card only — do not dump the brain pack inline.  
 2. **Design** using only evidence from the pack (do not invent lineage)  
 3. **Capture** new assets with `dekc_capture.py` matching `schemas/okf-concepts/`  
 4. **Index** is optional — search/pack refresh `knowledge/.dekc/index.sqlite` themselves. `dekc_index.py build` is `refresh --force`.  
