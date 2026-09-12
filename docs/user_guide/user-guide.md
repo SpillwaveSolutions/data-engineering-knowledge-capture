@@ -10,7 +10,7 @@ truth_state: current
 
 **Data Engineering Knowledge Capture** turns data platforms into a durable, Git-native [OKF](https://github.com/SpillwaveSolutions/okf-plugin) knowledge graph, with multi-agent walk loops designed using [AGER](https://github.com/SpillwaveSolutions/okf-agent-graph) (OKF Agent Graph Engineering Runtime).
 
-Plugin release **0.5.0**. Storage format is OKF **0.2**. Agent loops follow AGER **0.3** roles (orchestrator / worker / judge / synthesizer) even when you run DEKC skills without a separate AGER bundle. Search and pack use a disposable [retrieval ladder](../designs/retrieval-ladder.md) (SQLite index → ripgrep → scan); Git + Markdown stays source of truth.
+Plugin release **0.5.3**. Storage format is OKF **0.2**. Agent loops follow AGER **0.3** roles (orchestrator / worker / judge / synthesizer) even when you run DEKC skills without a separate AGER bundle. Search and pack use a disposable [retrieval ladder](../designs/retrieval-ladder.md) (SQLite index → ripgrep → scan); Git + Markdown stays source of truth.
 
 Existing second brains: [noun-ownership migration](./noun-ownership-migration.md) (`Workflow` jobs → `IngestionJob`; diagrams stay SAC).
 
@@ -134,7 +134,7 @@ Each intent returns: design checklist, ranked schema-typed concepts, progressive
 
 For Q&A, spawn **data-retriever** (`/dekc-retrieve`) instead of dumping a brain pack into the parent.
 
-Skills: `dekc-retrieve`, `dekc-second-brain`, `dekc-design-report`, `dekc-land-data`.
+Skills: `dekc-plan`, `dekc-retrieve`, `dekc-second-brain`, `dekc-design-report`, `dekc-land-data`.
 
 Patterns: `patterns/design-report-from-gold.md`, `patterns/land-stream-to-bronze.md`.
 
@@ -158,16 +158,19 @@ cp "${CLAUDE_PLUGIN_ROOT}/.dekc/config.example.yml" .dekc/config.yml
 # edit knowledge_root, walk.max_files, promote.default_layer
 ```
 
-### 2. Walk a filesystem export of your platform
+### 2. Plan, then walk a filesystem export of your platform
 
-Point the walker at SQL models, dbt, notebooks export, or a local mirror of lake paths:
+Point the planner at SQL models, dbt, notebooks export, or a local mirror of lake paths. Review the ranked areas, then walk (or `--from-plan --area`):
 
 ```bash
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/dekc_orchestrate.py" \
+  --repo . --system "Retail Lake" --scan-root ./lake-mirror --plan-only
+# review knowledge/.dekc/re-plan.md — spawn only listed specialists
 python3 "${CLAUDE_PLUGIN_ROOT}/scripts/dekc_walk.py" ./lake-mirror \
   --repo . --bundle knowledge --source-name retail-lake
 ```
 
-Or `/dekc-walk` with path arguments. The walker:
+Or `/dekc-plan` then `/dekc-walk` with path arguments. The walker:
 
 1. Registers a **SourceSystem**
 2. Discovers `*.sql`, `*.dax`, parquet directories, medallion folder names
@@ -235,6 +238,7 @@ If `okf-graph-eng` is available, prefer its pack/impact for the same paths.
 | Skill / command | Purpose |
 |-----------------|---------|
 | `dekc-init` | Scaffold knowledge catalogs + medallion layers |
+| `dekc-plan` | Breadth-first RE plan + checklists (pause before fan-out) |
 | `dekc-walk` | Filesystem / SQL root discovery |
 | `dekc-capture-table` | Manual table + columns |
 | `dekc-capture-query` | SQL or DAX query |
@@ -254,11 +258,13 @@ If `okf-graph-eng` is available, prefer its pack/impact for the same paths.
 | Agent | Use when |
 |-------|----------|
 | **data-retriever** | Query-time Q&A — spawn via `/dekc-retrieve`; parent keeps a card only |
-| **data-lake-walker** | Full reverse-engineer loop (orchestrator) |
+| **data-lake-walker** | Full reverse-engineer loop (orchestrator): plan → fan-out → judge |
 | **schema-scout** | Only structure (schemas/tables/columns) |
 | **lineage-tracer** | Only SQL/job lineage and promotions |
 | **semantic-mapper** | Business objects, glossary, metrics |
 | **report-cataloger** | Dashboards, reports, DAX |
+| **airflow-scout** / **glue-job-scout** / **fabric-pipeline-scout** | Signal-gated orchestration (plan must list them) |
+| **dbt-elt-scout** / **duckdb-scout** / **notebook-scout** / **dq-scout** | Signal-gated ELT / DQ |
 | **layer-auditor** | Judge medallion health and orphans |
 
 In Claude/Grok, ask for the agent by name or describe the walk (“walk this lake and promote gold tables”). In AGER terms, the walker is an **OrchestratorAgent**; scouts are **WorkerAgents**; the auditor is a **JudgeAgent**.

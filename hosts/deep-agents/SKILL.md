@@ -21,3 +21,5 @@ export SECOND_BRAIN_ROOT="${SECOND_BRAIN_ROOT:-knowledge}"
 ```
 
 Open an isolation session before writing a shared institutional tree.
+
+Reverse-engineering: `dekc_plan.py` / `--plan-only`, then `--from-plan --area`. For Q&A, spawn `data-retriever`.

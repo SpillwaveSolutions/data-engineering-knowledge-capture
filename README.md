@@ -8,7 +8,7 @@ DEKC **extends [Project Knowledge Capture (PKC)](https://github.com/SpillwaveSol
 |---|---|
 | **Plugin name** | `data-engineering-knowledge-capture` |
 | **Repo** | [SpillwaveSolutions/data-engineering-knowledge-capture](https://github.com/SpillwaveSolutions/data-engineering-knowledge-capture) |
-| **Version** | 0.5.2 |
+| **Version** | 0.5.3 |
 | **License** | MIT |
 | **Hosts** | Claude Code · Grok Build · Codex · OpenCode · Agent Plugins 1.0 · Grok Bot · LangChain Deep Agents |
 
@@ -195,8 +195,13 @@ See [PORTS.md](./PORTS.md).
 # Scaffold knowledge/
 python3 scripts/dekc_common.py init-bundle --repo . --bundle knowledge
 
+# Breadth-first RE plan (pause before specialist fan-out)
+python3 scripts/dekc_orchestrate.py --repo . --system "Retail Lake" \
+  --scan-root path/to/lake --plan-only
+
 # Walk a lake / SQL / job root (filesystem reverse engineer)
 python3 scripts/dekc_walk.py path/to/lake --repo . --bundle knowledge
+# or: --from-plan knowledge/.dekc/re-plan.json --area lake
 
 # Materialize lineage + promote gold → business objects
 python3 scripts/dekc_lineage.py --repo . --bundle knowledge materialize
@@ -208,7 +213,7 @@ python3 scripts/dekc_doctor.py --repo . --bundle knowledge
 python3 scripts/dekc_search.py "revenue" --repo . --bundle knowledge
 ```
 
-Slash / skill entry points: `/dekc-init` · `/dekc-walk` · `/dekc-lineage` · `/dekc-business-object` · `/dekc-glossary` · `/dekc-semantic` · `/dekc-retrieve` · `/dekc-context` · `/dekc-search` · `/dekc-index` · `/dekc-doctor`
+Slash / skill entry points: `/dekc-init` · `/dekc-plan` · `/dekc-walk` · `/dekc-lineage` · `/dekc-business-object` · `/dekc-glossary` · `/dekc-semantic` · `/dekc-retrieve` · `/dekc-context` · `/dekc-search` · `/dekc-index` · `/dekc-doctor`
 
 ## Agent loop (AGER-shaped): producers + adversarial judges
 
@@ -220,10 +225,12 @@ Producer workers fan out, then **adversarial skeptics grade reverse engineering 
 
 ```text
 Trigger → Orchestrator (LoopPolicy: goal · max_turns · no_progress)
-              │ FanOut producers
+              │ Plan (dekc_plan.py) → ranked task list
+              │ FanOut producers (only areas the plan listed)
               ├─ schema-scout · lineage-tracer · stream-job-scout
               ├─ report-cataloger · semantic-mapper
-              │ FanOut adversaries (rubrics)
+              ├─ airflow/glue/fabric/dbt/duckdb/notebook/dq scouts (signal-gated)
+              │ FanOut adversaries (rubrics) — unchanged
               ├─ lineage-skeptic · business-skeptic
               ├─ stream-job-skeptic · coverage-skeptic · layer-auditor
               ▼

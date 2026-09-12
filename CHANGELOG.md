@@ -2,6 +2,36 @@
 
 ## Unreleased
 
+## 0.5.3 — 2026-09-12
+
+Breadth-first reverse-engineering plan, matching SAC 0.5.6’s plan → task list →
+signal-gated specialist fan-out, without replacing DEKC’s adversarial judges.
+
+### Added
+
+- **`dekc_plan.py`**: cheap map of scan roots + optional export paths. Writes
+  `.dekc/re-plan.md` / `.json` / progress (ranked areas, checklists, suggested
+  sub-agents). `mark` / `show` for done/blocked. Signal-gated: no Airflow
+  markers → no `airflow-scout`.
+- **`dekc_orchestrate.py --plan-only`** and **`--from-plan --area`**. Same flags
+  on `dekc_walk.py`. Unattended orchestrate plans first, then captures only
+  domains the plan detected.
+- Skill **`dekc-plan`** / command `/dekc-plan`. Orchestrators teach plan →
+  ranked task list → producer specialists → existing skeptics →
+  `re-adversary-judge`. Query-time `data-retriever` stays separate.
+- Signal-gated specialists: `airflow-scout`, `glue-job-scout`,
+  `fabric-pipeline-scout`, thin `adf-scout` / `stepfunctions-scout` /
+  `composer-scout` / `cron-loader-scout`, `dbt-elt-scout`, `duckdb-scout`,
+  `notebook-scout`, `dq-scout`.
+- Cheap walk capture for DuckDB, `.ipynb` SQL cells, Delta `_delta_log`,
+  orchestration job stubs, and DQ markers (GE / Soda / dbt tests — no runtime).
+
+### Notes
+
+- DEKC owns data orchestration + ELT/ETL. SAC owns CI/CD. Actions that only
+  trigger Glue/dbt are a cross-link note, not a Pipeline noun.
+- No live Glue/S3/Fabric control-plane calls. Exports/mirrors only.
+
 ## 0.5.2 — 2026-09-12
 
 Query-time retrieval sub-agent, matching the PKC/SAC parity pattern: search +

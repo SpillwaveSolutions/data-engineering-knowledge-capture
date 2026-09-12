@@ -1,0 +1,8 @@
+version: 2
+models:
+  - name: orders
+    tests:
+      - unique:
+          column_name: order_id
+      - not_null:
+          column_name: order_id

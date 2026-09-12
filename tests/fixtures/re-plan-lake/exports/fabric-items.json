@@ -1,0 +1,8 @@
+{
+  "value": [
+    {"id": "pipe-1", "displayName": "LH Orders Pipeline", "type": "DataPipeline"},
+    {"id": "nb-1", "displayName": "Clean Orders NB", "type": "Notebook"},
+    {"id": "lh-1", "displayName": "RetailLake", "type": "Lakehouse"},
+    {"id": "rpt-1", "displayName": "Exec Revenue", "type": "Report"}
+  ]
+}
