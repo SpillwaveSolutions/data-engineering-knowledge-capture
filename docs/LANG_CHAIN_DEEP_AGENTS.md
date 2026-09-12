@@ -65,6 +65,7 @@ Then set `SECOND_BRAIN_ROOT` to the session bundle from the JSON. Close the sess
 
 ```bash
 export SECOND_BRAIN_IDENTITY="deep-agents/data-engineering-knowledge-capture"
+python3 scripts/dekc_plan.py --repo . --system "…" --scan-root <mirror> --write
 python3 scripts/dekc_pack.py tables/example.md --bundle "${SECOND_BRAIN_ROOT:-sample-knowledge}" --hops 2
 python3 scripts/dekc_validate.py --bundle "${SECOND_BRAIN_ROOT:-sample-knowledge}"
 ```

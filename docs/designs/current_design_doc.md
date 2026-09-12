@@ -21,7 +21,7 @@ Related systems:
 | PKC | Project reasoning capture | [project-knowledge-capture](https://github.com/SpillwaveSolutions/project-knowledge-capture) |
 | DEKC | Data-domain catalogs + walk scripts + agents | this repo |
 
-AGER spec version referenced: **0.3.0** ([AGER_SPEC](https://github.com/SpillwaveSolutions/okf-agent-graph/blob/main/docs/AGER_SPEC.md)). DEKC plugin **0.5.0**.
+AGER spec version referenced: **0.3.0** ([AGER_SPEC](https://github.com/SpillwaveSolutions/okf-agent-graph/blob/main/docs/AGER_SPEC.md)). DEKC plugin **0.5.3**.
 
 **v0.5.0 retrieval:** search/pack use a disposable ladder (SQLite FTS5 index → ripgrep → scan). Git + Markdown is still the source of truth. See [`docs/designs/retrieval-ladder.md`](retrieval-ladder.md) — the `.index/` JSON layout later in this snapshot is historical (0.4.x) and is not how 0.5.0 retrieves.
 
@@ -206,7 +206,8 @@ Parallel workers **must append** (AGER invariant) so concurrent scouts do not cl
 Reverse engineering is **producer → adversary → judge**, not producer-only.
 
 ```text
-FanOut producers (schema, lineage, stream-job, report, semantic)
+Plan (dekc_plan.py) → FanOut producers listed by the plan
+  (schema, lineage, stream-job, report, semantic, signal-gated orch/ELT/DQ)
         │
         ▼
 FanOut skeptics (adversarial workers / rubric scorers)
@@ -342,15 +343,18 @@ Principle: **mirror or export → walk → specialize workers → promote → in
 ```text
 1. Identify control plane + storage plane + compute plane + serve plane
 2. Export or mirror artifacts into a local tree (or mount readonly)
-3. Register SourceSystem(s) per plane entrypoint
-4. Fan-out:
+3. Plan (dekc_plan.py): ranked areas + signal-gated specialists
+4. Register SourceSystem(s) per plane entrypoint
+5. Fan-out only areas the plan listed:
    a. schema-scout → structural catalogs
-   b. stream-job-scout → landing producers
+   b. stream-job-scout + orch/ELT specialists → landing producers
    c. lineage-tracer → edges across jobs/SQL
    d. report-cataloger → serve plane
-5. semantic-mapper → gold/curated → business objects
-6. layer-auditor → score + gaps
-7. synthesizer → index + packs + receipt
+   e. duckdb / notebook / dq scouts when markers exist
+6. semantic-mapper → gold/curated → business objects
+7. Fan-out skeptics → re-adversary-judge (threshold 0.75)
+8. layer-auditor → score + gaps
+9. synthesizer → index + packs + receipt
 ```
 
 ### 4.2 Azure Fabric (typical setup)

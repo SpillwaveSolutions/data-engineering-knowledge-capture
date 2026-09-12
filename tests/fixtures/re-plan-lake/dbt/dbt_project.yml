@@ -1,0 +1,3 @@
+name: lumenfield_orders
+profile: lumenfield
+model-paths: ["models"]

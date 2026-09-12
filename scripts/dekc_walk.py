@@ -8,8 +8,11 @@ Discovers:
   - Medallion folder conventions: bronze/, silver/, gold/, raw/
   - dbt models (models/**/*.sql + schema.yml)
   - Spark/Delta path markers (_delta_log, *.parquet dir names)
+  - DuckDB files (*.duckdb) and notebook SQL (*.ipynb)
+  - Orchestration / ELT / DQ markers (Airflow, Glue, ADF, dbt, GE/Soda)
 
 Agents orchestrate this script; subagents specialize on schema, lineage, semantic.
+Cheap discovery writes live here. `dekc_plan.py` is presence-only.
 """
 
 from __future__ import annotations
@@ -44,7 +47,14 @@ from dekc_common import (  # noqa: E402
     utc_now,
     write_knowledge,
 )
-from dekc_platform import capture_data_lake, capture_ingestion_job, capture_stream  # noqa: E402
+from dekc_platform import (  # noqa: E402
+    capture_data_catalog,
+    capture_data_lake,
+    capture_dq_rule,
+    capture_ingestion_job,
+    capture_storage,
+    capture_stream,
+)
 
 SQL_FROM_RE = re.compile(
     r"\b(?:from|join)\s+([`\"\[]?[\w.-]+[`\"\]]?(?:\.[`\"\[]?[\w.-]+[`\"\]]?){0,2})",
@@ -247,6 +257,36 @@ def walk_lake(
             name=tname,
             layer=layer if layer in ("bronze", "silver", "gold", "raw") else "bronze",
             description=f"Parquet dataset at {key}",
+            source=src_name,
+        ):
+            result.record(rel, action)
+
+    # Delta table directories (_delta_log sibling of parquet)
+    seen_delta: set[str] = set()
+    for delta_dir in lake_root.rglob("_delta_log"):
+        if not delta_dir.is_dir():
+            continue
+        parent = delta_dir.parent
+        try:
+            key = str(parent.relative_to(lake_root))
+        except ValueError:
+            continue
+        if key in seen_delta or key in seen_dirs:
+            continue
+        seen_delta.add(key)
+        tname = parent.name
+        if tname.startswith("_"):
+            continue
+        result.discovered["delta_tables"] = result.discovered.get("delta_tables", 0) + 1
+        if dry_run:
+            result.skipped.append(key)
+            continue
+        layer = infer_layer(parent, lake_root)
+        for rel, action in capture_table(
+            bundle,
+            name=tname,
+            layer=layer if layer in ("bronze", "silver", "gold", "raw") else "bronze",
+            description=f"Delta table at {key}",
             source=src_name,
         ):
             result.record(rel, action)
@@ -532,6 +572,504 @@ def walk_inventory_json(
     return result
 
 
+def extract_notebook_sql(text_or_path: str | Path) -> list[str]:
+    """Pull SQL-ish cells from an .ipynb (%%sql, spark.sql, duckdb, SELECT)."""
+    if isinstance(text_or_path, Path):
+        try:
+            data = json.loads(text_or_path.read_text(encoding="utf-8", errors="replace"))
+        except (OSError, json.JSONDecodeError):
+            return []
+    else:
+        try:
+            data = json.loads(text_or_path)
+        except json.JSONDecodeError:
+            return []
+    if not isinstance(data, dict):
+        return []
+    found: list[str] = []
+    for cell in data.get("cells") or []:
+        if not isinstance(cell, dict) or cell.get("cell_type") != "code":
+            continue
+        src = cell.get("source") or ""
+        if isinstance(src, list):
+            src = "".join(src)
+        blob = str(src).strip()
+        if not blob:
+            continue
+        low = blob.lower()
+        if (
+            "%%sql" in low
+            or "spark.sql" in low
+            or "duckdb.sql" in low
+            or "duckdb.execute" in low
+            or re.search(r"\bselect\b", blob, re.IGNORECASE)
+        ):
+            found.append(blob)
+    return found
+
+
+def _job_name_from_file(path: Path, root: Path, text: str = "") -> str:
+    m = re.search(r"dag_id\s*=\s*['\"]([^'\"]+)", text)
+    if m:
+        return m.group(1)
+    m = re.search(r"expectation_suite_name['\"]\s*:\s*['\"]([^'\"]+)", text)
+    if m:
+        return m.group(1)
+    return path.stem
+
+
+def walk_duckdb(
+    lake_root: Path,
+    bundle: Path,
+    *,
+    dry_run: bool = False,
+) -> WalkResult:
+    result = WalkResult()
+    files = list(lake_root.rglob("*.duckdb")) + list(lake_root.rglob("*.ddb"))
+    result.discovered["duckdb_files"] = len(files)
+    for f in files[:200]:
+        name = f.stem
+        if dry_run:
+            result.skipped.append(str(f))
+            continue
+        for rel, action in capture_source(
+            bundle,
+            name=name,
+            kind="duckdb",
+            uri=str(f.resolve()),
+            description=f"DuckDB file at {f.relative_to(lake_root)} (binary not opened).",
+        ):
+            result.record(rel, action)
+    return result
+
+
+def walk_notebooks(
+    lake_root: Path,
+    bundle: Path,
+    *,
+    dry_run: bool = False,
+    max_files: int = 80,
+) -> WalkResult:
+    result = WalkResult()
+    nbs = list(lake_root.rglob("*.ipynb"))[:max_files]
+    result.discovered["notebooks"] = len(nbs)
+    for nb in nbs:
+        sqls = extract_notebook_sql(nb)
+        if dry_run:
+            result.skipped.append(str(nb))
+            continue
+        if not sqls:
+            for rel, action in capture_query(
+                bundle,
+                name=nb.stem,
+                dialect="notebook",
+                body_sql="",
+                description=f"Notebook {nb.relative_to(lake_root)} (no SQL cells extracted).",
+            ):
+                result.record(rel, action)
+            continue
+        for i, sql in enumerate(sqls):
+            qname = nb.stem if len(sqls) == 1 else f"{nb.stem}-cell-{i + 1}"
+            refs = extract_sql_tables(sql)
+            for rel, action in capture_query(
+                bundle,
+                name=qname,
+                dialect="sql",
+                body_sql=sql,
+                description=f"SQL cell from {nb.relative_to(lake_root)}",
+                reads_from=refs,
+            ):
+                result.record(rel, action)
+    return result
+
+
+def walk_dq_markers(
+    lake_root: Path,
+    bundle: Path,
+    *,
+    dry_run: bool = False,
+    max_files: int = 80,
+) -> WalkResult:
+    """Cheap DQRule capture from GE / Soda / dbt test files. No runtime."""
+    result = WalkResult()
+    candidates: list[Path] = []
+    for pat in (
+        "**/great_expectations.yml",
+        "**/great_expectations.yaml",
+        "**/expectations/*.json",
+        "**/soda*.yml",
+        "**/soda*.yaml",
+        "**/checks.yml",
+        "**/schema.yml",
+    ):
+        candidates.extend(lake_root.glob(pat))
+    seen: set[str] = set()
+    for f in candidates:
+        if not f.is_file():
+            continue
+        key = str(f)
+        if key in seen:
+            continue
+        seen.add(key)
+        if len(seen) > max_files:
+            break
+        text = f.read_text(encoding="utf-8", errors="replace")
+        low = text.lower()
+        name = f.stem
+        rule_type = "expectation"
+        if "great_expectation" in str(f).lower() or "expectation_suite" in low:
+            rule_type = "great-expectations"
+            suite = _job_name_from_file(f, lake_root, text)
+            name = suite or name
+        elif "soda" in str(f).lower() or "checks for" in low:
+            rule_type = "soda"
+        elif "tests:" in text or "data_tests:" in text:
+            if "dbt" not in str(f).lower() and "models" not in f.parts:
+                continue
+            rule_type = "dbt-test"
+        else:
+            if f.name.startswith("great_expectations"):
+                rule_type = "great-expectations"
+            elif f.name.startswith("soda") or f.name == "checks.yml":
+                rule_type = "soda"
+            else:
+                continue
+        result.discovered["dq_files"] = result.discovered.get("dq_files", 0) + 1
+        if dry_run:
+            result.skipped.append(str(f))
+            continue
+        expr = ""
+        if '"expectation_type"' in text:
+            m = re.search(r'"expectation_type"\s*:\s*"([^"]+)"', text)
+            if m:
+                expr = m.group(1)
+        for rel, action in capture_dq_rule(
+            bundle,
+            name=name,
+            description=f"DQ marker from {f.relative_to(lake_root)} (not executed).",
+            rule_type=rule_type,
+            expression=expr,
+        ):
+            result.record(rel, action)
+    return result
+
+
+def walk_elt(
+    lake_root: Path,
+    bundle: Path,
+    *,
+    dry_run: bool = False,
+) -> WalkResult:
+    result = WalkResult()
+    for proj in list(lake_root.rglob("dbt_project.yml")) + list(lake_root.rglob("dbt_project.yaml")):
+        result.discovered["dbt_projects"] = result.discovered.get("dbt_projects", 0) + 1
+        if dry_run:
+            result.skipped.append(str(proj))
+            continue
+        name = proj.parent.name
+        for rel, action in capture_ingestion_job(
+            bundle,
+            name=f"dbt-{name}",
+            description=f"dbt project at {proj.relative_to(lake_root)}",
+            orchestrator="dbt",
+            mode="batch",
+            target_layer="",
+        ):
+            result.record(rel, action)
+    spark_hits = 0
+    for py in lake_root.rglob("*.py"):
+        if spark_hits >= 40:
+            break
+        try:
+            text = py.read_text(encoding="utf-8", errors="replace")[:4000]
+        except OSError:
+            continue
+        if "SparkSession" in text or "spark-submit" in text:
+            if "awsglue" in text:
+                continue
+            spark_hits += 1
+            if dry_run:
+                result.skipped.append(str(py))
+                continue
+            for rel, action in capture_ingestion_job(
+                bundle,
+                name=py.stem,
+                description=f"Spark/EMR job script {py.relative_to(lake_root)}",
+                orchestrator="spark",
+                mode="batch",
+                target_layer="",
+            ):
+                result.record(rel, action)
+    result.discovered["spark_jobs"] = spark_hits
+    return result
+
+
+def walk_orchestration(
+    lake_root: Path,
+    bundle: Path,
+    *,
+    dry_run: bool = False,
+    kinds: set[str] | None = None,
+) -> WalkResult:
+    """Cheap IngestionJob capture for evidenced orchestrators. No live APIs."""
+    result = WalkResult()
+    want = kinds or {
+        "airflow",
+        "glue",
+        "adf",
+        "stepfunctions",
+        "composer",
+        "cron",
+        "fabric",
+    }
+
+    if "airflow" in want:
+        for py in lake_root.rglob("*.py"):
+            parts = {p.lower() for p in py.parts}
+            try:
+                text = py.read_text(encoding="utf-8", errors="replace")[:4000]
+            except OSError:
+                continue
+            if not (
+                "dags" in parts
+                or "from airflow" in text
+                or "import airflow" in text
+                or "DAG(" in text
+            ):
+                continue
+            result.discovered["airflow_dags"] = result.discovered.get("airflow_dags", 0) + 1
+            if dry_run:
+                result.skipped.append(str(py))
+                continue
+            for rel, action in capture_ingestion_job(
+                bundle,
+                name=_job_name_from_file(py, lake_root, text),
+                description=f"Airflow DAG {py.relative_to(lake_root)}",
+                orchestrator="airflow",
+                mode="batch",
+                target_layer="",
+            ):
+                result.record(rel, action)
+
+    if "glue" in want:
+        for py in lake_root.rglob("*.py"):
+            try:
+                text = py.read_text(encoding="utf-8", errors="replace")[:4000]
+            except OSError:
+                continue
+            if "awsglue" not in text and "GlueContext" not in text:
+                continue
+            result.discovered["glue_jobs"] = result.discovered.get("glue_jobs", 0) + 1
+            if dry_run:
+                result.skipped.append(str(py))
+                continue
+            for rel, action in capture_ingestion_job(
+                bundle,
+                name=py.stem,
+                description=f"Glue job script {py.relative_to(lake_root)}",
+                orchestrator="glue",
+                mode="batch",
+                target_layer="",
+            ):
+                result.record(rel, action)
+
+    if "stepfunctions" in want:
+        for jf in list(lake_root.rglob("*.json")) + list(lake_root.rglob("*.asl.json")):
+            try:
+                text = jf.read_text(encoding="utf-8", errors="replace")[:4000]
+            except OSError:
+                continue
+            if '"StartAt"' not in text or '"States"' not in text:
+                continue
+            result.discovered["stepfunctions"] = result.discovered.get("stepfunctions", 0) + 1
+            if dry_run:
+                result.skipped.append(str(jf))
+                continue
+            for rel, action in capture_ingestion_job(
+                bundle,
+                name=jf.stem.replace(".asl", ""),
+                description=f"Step Functions ASL {jf.relative_to(lake_root)}",
+                orchestrator="stepfunctions",
+                mode="batch",
+                target_layer="",
+            ):
+                result.record(rel, action)
+
+    if "adf" in want:
+        for jf in list(lake_root.rglob("*.json")) + list(lake_root.rglob("*.yml")):
+            try:
+                text = jf.read_text(encoding="utf-8", errors="replace")[:4000]
+            except OSError:
+                continue
+            if "Microsoft.DataFactory" not in text:
+                continue
+            result.discovered["adf_pipelines"] = result.discovered.get("adf_pipelines", 0) + 1
+            if dry_run:
+                result.skipped.append(str(jf))
+                continue
+            for rel, action in capture_ingestion_job(
+                bundle,
+                name=jf.stem,
+                description=f"ADF pipeline {jf.relative_to(lake_root)}",
+                orchestrator="adf",
+                mode="batch",
+                target_layer="",
+            ):
+                result.record(rel, action)
+
+    if "composer" in want:
+        for yf in list(lake_root.rglob("*.yml")) + list(lake_root.rglob("*.yaml")):
+            try:
+                text = yf.read_text(encoding="utf-8", errors="replace")[:4000]
+            except OSError:
+                continue
+            if "composer.googleapis.com" not in text and "composer" not in {p.lower() for p in yf.parts}:
+                continue
+            if "composer.googleapis.com" not in text and "airflowConfigOverrides" not in text:
+                continue
+            result.discovered["composer"] = result.discovered.get("composer", 0) + 1
+            if dry_run:
+                result.skipped.append(str(yf))
+                continue
+            for rel, action in capture_ingestion_job(
+                bundle,
+                name=yf.parent.name or yf.stem,
+                description=f"Cloud Composer marker {yf.relative_to(lake_root)}",
+                orchestrator="composer",
+                mode="batch",
+                target_layer="",
+            ):
+                result.record(rel, action)
+
+    if "cron" in want:
+        for yf in list(lake_root.rglob("*.yml")) + list(lake_root.rglob("*.yaml")):
+            try:
+                text = yf.read_text(encoding="utf-8", errors="replace")[:4000]
+            except OSError:
+                continue
+            if "kind: CronJob" not in text:
+                continue
+            low = text.lower()
+            if not any(n in low for n in ("dbt", "spark-submit", "python", "glue", "airflow")):
+                continue
+            result.discovered["cronjobs"] = result.discovered.get("cronjobs", 0) + 1
+            if dry_run:
+                result.skipped.append(str(yf))
+                continue
+            for rel, action in capture_ingestion_job(
+                bundle,
+                name=yf.stem,
+                description=f"K8s CronJob loader {yf.relative_to(lake_root)}",
+                orchestrator="k8s-cronjob",
+                mode="batch",
+                schedule="",
+                target_layer="",
+            ):
+                result.record(rel, action)
+
+    return result
+
+
+def walk_storage_markers(
+    lake_root: Path,
+    bundle: Path,
+    *,
+    dry_run: bool = False,
+) -> WalkResult:
+    result = WalkResult()
+    for hint in ("storage", "s3", "adls"):
+        for d in lake_root.rglob(hint):
+            if not d.is_dir():
+                continue
+            result.discovered["storage_dirs"] = result.discovered.get("storage_dirs", 0) + 1
+            if dry_run:
+                result.skipped.append(str(d))
+                continue
+            for rel, action in capture_storage(
+                bundle,
+                name=d.name,
+                kind="prefix",
+                uri=str(d.resolve()),
+                description=f"Storage path convention {d.relative_to(lake_root)}",
+            ):
+                result.record(rel, action)
+    catalogs = list(lake_root.rglob("catalog.json"))[:8]
+    for c in catalogs:
+        result.discovered["catalog_json"] = result.discovered.get("catalog_json", 0) + 1
+        if dry_run:
+            result.skipped.append(str(c))
+            continue
+        for rel, action in capture_data_catalog(
+            bundle,
+            name=c.parent.name or c.stem,
+            description=f"Catalog export {c.relative_to(lake_root)}",
+        ):
+            result.record(rel, action)
+    return result
+
+
+def walk_scoped(
+    lake_root: Path | None,
+    bundle: Path,
+    *,
+    domains: list[str],
+    source_name: str | None = None,
+    fabric_items: Path | None = None,
+    pbi_bindings: Path | None = None,
+    inventory: Path | None = None,
+    workspace: str = "",
+    workspace_id: str = "",
+    inventory_layer: str = "gold",
+    max_files: int = 500,
+    dry_run: bool = False,
+) -> WalkResult:
+    """Domain-scoped capture used by `--from-plan --area` / orchestrate."""
+    result = WalkResult()
+    wanted = set(domains or [])
+    if lake_root and "lake" in wanted:
+        _merge_walk(
+            result,
+            walk_lake(
+                lake_root,
+                bundle,
+                source_name=source_name,
+                max_files=max_files,
+                dry_run=dry_run,
+            ),
+        )
+    if lake_root and "elt" in wanted:
+        _merge_walk(result, walk_elt(lake_root, bundle, dry_run=dry_run))
+    if lake_root and "orchestration" in wanted:
+        _merge_walk(result, walk_orchestration(lake_root, bundle, dry_run=dry_run))
+    if lake_root and "catalogs" in wanted:
+        _merge_walk(result, walk_storage_markers(lake_root, bundle, dry_run=dry_run))
+    if inventory and "catalogs" in wanted:
+        _merge_walk(
+            result,
+            walk_inventory_json(inventory, bundle, layer=inventory_layer, dry_run=dry_run),
+        )
+    if pbi_bindings and "bi" in wanted:
+        _merge_walk(result, walk_pbi_bindings(pbi_bindings, bundle, dry_run=dry_run))
+    if fabric_items and wanted.intersection({"bi", "orchestration", "orch-fabric", "notebooks"}):
+        _merge_walk(
+            result,
+            walk_fabric_items(
+                fabric_items,
+                bundle,
+                workspace=workspace,
+                workspace_id=workspace_id,
+                dry_run=dry_run,
+            ),
+        )
+    if lake_root and "dq" in wanted:
+        _merge_walk(result, walk_dq_markers(lake_root, bundle, dry_run=dry_run))
+    if lake_root and "duckdb" in wanted:
+        _merge_walk(result, walk_duckdb(lake_root, bundle, dry_run=dry_run))
+    if lake_root and "notebooks" in wanted:
+        _merge_walk(result, walk_notebooks(lake_root, bundle, dry_run=dry_run))
+    return result
+
+
 def _merge_walk(into: WalkResult, other: WalkResult) -> WalkResult:
     into.created.extend(other.created)
     into.updated.extend(other.updated)
@@ -569,52 +1107,132 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--workspace", default="")
     parser.add_argument("--workspace-id", default="")
     parser.add_argument("--inventory-layer", default="gold")
+    parser.add_argument("--system", default="Data platform", help="With --plan-only: system name")
+    parser.add_argument(
+        "--plan-only",
+        action="store_true",
+        help="Write a breadth-first RE plan for the path, then stop (no capture)",
+    )
+    parser.add_argument(
+        "--from-plan",
+        default=None,
+        help="Existing .dekc/re-plan.json — scope capture with --area",
+    )
+    parser.add_argument(
+        "--area",
+        default=None,
+        help="With --from-plan: one focus area (domain-scoped capture)",
+    )
+    parser.add_argument(
+        "--export",
+        action="append",
+        default=[],
+        help="Optional export JSON for --plan-only (Fabric / inventory / PBI)",
+    )
     args = parser.parse_args(argv)
     from dekc_common import resolve_author
-    if not args.dry_run:
-        resolve_author(args.author)
-
-    if not args.path and not args.fabric_items and not args.pbi_bindings and not args.inventory:
-        parser.error("provide a filesystem path and/or --fabric-items / --pbi-bindings / --inventory")
 
     repo = Path(args.repo).resolve()
     bundle = resolve_knowledge_root(repo, args.bundle)
-    ensure_bundle(bundle)
-    result = WalkResult()
-    if args.path:
-        result = walk_lake(
-            Path(args.path).resolve(),
+    lake = Path(args.path).resolve() if args.path else None
+
+    if args.plan_only:
+        from dekc_plan import write_plan
+
+        roots = [lake] if lake else [repo]
+        exports = [Path(e).resolve() for e in (args.export or [])]
+        if args.fabric_items:
+            exports.append(Path(args.fabric_items).resolve())
+        if args.inventory:
+            exports.append(Path(args.inventory).resolve())
+        if args.pbi_bindings:
+            exports.append(Path(args.pbi_bindings).resolve())
+        bundle.mkdir(parents=True, exist_ok=True)
+        plan = write_plan(bundle, roots, system_name=args.system, exports=exports)
+        if args.json:
+            print(json.dumps(plan, indent=2, default=str))
+        else:
+            from dekc_plan import render_plan_markdown
+
+            print(render_plan_markdown(plan))
+            written = plan.get("written") or {}
+            print(f"\nWrote {written.get('md')} and {written.get('json')}")
+        return 0
+
+    if not args.dry_run:
+        resolve_author(args.author)
+
+    if args.from_plan:
+        from dekc_plan import load_plan, scan_domains_from_plan
+
+        plan = load_plan(Path(args.from_plan).resolve() if args.from_plan else bundle)
+        domains = scan_domains_from_plan(plan, area=args.area)
+        if args.area and not domains:
+            payload = {
+                "enrichment_only": True,
+                "area": args.area,
+                "domains": [],
+                "counts": {"created": 0, "updated": 0, "skipped": 0, "errors": 0},
+            }
+            print(json.dumps(payload, indent=2) if args.json else f"enrichment only: area={args.area}")
+            return 0
+        if not args.path and not args.fabric_items and not args.pbi_bindings and not args.inventory:
+            parser.error("provide a filesystem path and/or --fabric-items / --pbi-bindings / --inventory")
+        ensure_bundle(bundle)
+        result = walk_scoped(
+            lake,
             bundle,
+            domains=domains or ["lake"],
             source_name=args.source_name,
+            fabric_items=Path(args.fabric_items).resolve() if args.fabric_items else None,
+            pbi_bindings=Path(args.pbi_bindings).resolve() if args.pbi_bindings else None,
+            inventory=Path(args.inventory).resolve() if args.inventory else None,
+            workspace=args.workspace,
+            workspace_id=args.workspace_id,
+            inventory_layer=args.inventory_layer,
             max_files=args.max_files,
             dry_run=args.dry_run,
         )
-    if args.fabric_items:
-        _merge_walk(
-            result,
-            walk_fabric_items(
-                Path(args.fabric_items).resolve(),
+    else:
+        if not args.path and not args.fabric_items and not args.pbi_bindings and not args.inventory:
+            parser.error("provide a filesystem path and/or --fabric-items / --pbi-bindings / --inventory")
+
+        ensure_bundle(bundle)
+        result = WalkResult()
+        if args.path:
+            result = walk_lake(
+                Path(args.path).resolve(),
                 bundle,
-                workspace=args.workspace,
-                workspace_id=args.workspace_id,
+                source_name=args.source_name,
+                max_files=args.max_files,
                 dry_run=args.dry_run,
-            ),
-        )
-    if args.pbi_bindings:
-        _merge_walk(
-            result,
-            walk_pbi_bindings(Path(args.pbi_bindings).resolve(), bundle, dry_run=args.dry_run),
-        )
-    if args.inventory:
-        _merge_walk(
-            result,
-            walk_inventory_json(
-                Path(args.inventory).resolve(),
-                bundle,
-                layer=args.inventory_layer,
-                dry_run=args.dry_run,
-            ),
-        )
+            )
+        if args.fabric_items:
+            _merge_walk(
+                result,
+                walk_fabric_items(
+                    Path(args.fabric_items).resolve(),
+                    bundle,
+                    workspace=args.workspace,
+                    workspace_id=args.workspace_id,
+                    dry_run=args.dry_run,
+                ),
+            )
+        if args.pbi_bindings:
+            _merge_walk(
+                result,
+                walk_pbi_bindings(Path(args.pbi_bindings).resolve(), bundle, dry_run=args.dry_run),
+            )
+        if args.inventory:
+            _merge_walk(
+                result,
+                walk_inventory_json(
+                    Path(args.inventory).resolve(),
+                    bundle,
+                    layer=args.inventory_layer,
+                    dry_run=args.dry_run,
+                ),
+            )
     if (args.fabric_items or args.pbi_bindings or args.inventory) and not args.dry_run:
         n = len(result.created) + len(result.updated)
         append_log(

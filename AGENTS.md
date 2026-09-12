@@ -76,8 +76,8 @@ Plugin root: `${CLAUDE_PLUGIN_ROOT}`.
 
 | Agent | Role |
 |-------|------|
-| **data-lake-walker** | Default orchestrator: walk → produce → adversarial grade → index |
-| **reverse-engineering-orchestrator** | Multi-cloud RE (Fabric/AWS/GCP), strict LoopPolicy + fan-out |
+| **data-lake-walker** | Default orchestrator: plan → produce → adversarial grade → index |
+| **reverse-engineering-orchestrator** | Multi-cloud RE (Fabric/AWS/GCP), plan + LoopPolicy + fan-out |
 
 ## Query-time retrieval
 
@@ -95,9 +95,11 @@ When the question also needs project decisions or system topology, fan out PKC *
 |-------|------|
 | **schema-scout** | Schemas, tables, columns, contracts |
 | **lineage-tracer** | SQL/job lineage edges |
-| **stream-job-scout** | Streams + jobs landing data |
+| **stream-job-scout** | Streams + jobs landing data (`orchestration`, `elt` plan areas) |
 | **semantic-mapper** | Business objects, glossary, metrics |
 | **report-cataloger** | Dashboards, reports, DAX |
+| **airflow-scout** / **glue-job-scout** / **fabric-pipeline-scout** | Signal-gated orch (plan must list them) |
+| **dbt-elt-scout** / **duckdb-scout** / **notebook-scout** / **dq-scout** | Signal-gated ELT / DQ |
 
 ## Adversarial subagents (rubric graders)
 
@@ -116,6 +118,8 @@ Hard fails: invented lineage, secrets in bodies, gold without BO when promotion 
 
 ```bash
 python3 scripts/dekc_common.py init-bundle --repo . --bundle knowledge
+python3 scripts/dekc_plan.py --repo . --system "…" --scan-root <lake> --write
+python3 scripts/dekc_orchestrate.py --repo . --scan-root <lake> --from-plan knowledge/.dekc/re-plan.json --area lake
 python3 scripts/dekc_walk.py <lake> --repo . --bundle knowledge
 python3 scripts/dekc_lineage.py --repo . --bundle knowledge materialize
 python3 scripts/dekc_business.py --repo . --bundle knowledge promote-layer --layer gold
@@ -131,10 +135,12 @@ python3 tests/test_dekc.py
 | User language | Agent / skill |
 |---------------|---------------|
 | walk the lake / inventory warehouse | data-lake-walker / dekc-walk |
+| plan the reverse-engineer / what scouts to spawn | dekc-plan / `dekc_plan.py` |
 | reverse engineer Fabric/AWS/GCP | reverse-engineering-orchestrator |
 | schema / columns / tables | schema-scout / dekc-capture-table |
 | lineage / blast radius | lineage-tracer / dekc-lineage |
 | streams / jobs / landing | stream-job-scout |
+| Airflow / Glue / Fabric pipelines | airflow-scout / glue-job-scout / fabric-pipeline-scout |
 | business meaning / glossary | semantic-mapper / dekc-business-object |
 | dashboards / DAX | report-cataloger / dekc-semantic |
 | grade / audit RE quality | re-adversary-judge / dekc-grade + skeptics |

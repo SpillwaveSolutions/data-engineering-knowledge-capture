@@ -1,0 +1,4 @@
+[
+  {"TABLE_SCHEMA": "gold", "TABLE_NAME": "order_daily", "TABLE_TYPE": "BASE TABLE"},
+  {"TABLE_SCHEMA": "gold", "TABLE_NAME": "customer_ltv", "TABLE_TYPE": "VIEW"}
+]

@@ -1,0 +1,14 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: lumenfield-nightly-dbt
+spec:
+  schedule: "15 6 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: dbt
+              image: ghcr.io/lumenfield/dbt:latest
+              command: ["dbt", "run"]

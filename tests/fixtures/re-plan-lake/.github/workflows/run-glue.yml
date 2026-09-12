@@ -1,0 +1,9 @@
+name: trigger-glue
+on:
+  schedule:
+    - cron: "0 6 * * *"
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "aws glue start-job-run --job-name orders_to_silver"
