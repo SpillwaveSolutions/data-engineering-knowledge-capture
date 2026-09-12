@@ -314,6 +314,8 @@ Compensation is rare (knowledge is additive); “undo” = revert Git commit of 
 
 Orchestrator and workers load **2-hop packs** (~20 nodes) via RetrievalBinding, not the full lake graph. Judge sees doctor JSON + gap list only. This matches OKF progressive disclosure and AGER ContextIsolationPolicy for subagents.
 
+Query-time Q&A is a different path: spawn **data-retriever** (`/dekc-retrieve`). Search, score, pack (`--summary`), and deepen stay in that sub-agent; the parent keeps a retrieval card only. Do not confuse this with RE producers.
+
 ### 3.10 Optional formal AGER bundle
 
 Teams can author an explicit AGER bundle (via `/ager-init`) that **KnowledgeBinds** the DEKC `knowledge/` root and **uses** DEKC scripts as Tools. DEKC agents remain usable without that bundle; the AGER bundle is the portable runtime config for LangGraph/CrewAI adapters.

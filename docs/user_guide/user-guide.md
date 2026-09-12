@@ -132,7 +132,9 @@ python3 scripts/dekc_brain.py "silver.orders" --intent impact --repo . --bundle 
 
 Each intent returns: design checklist, ranked schema-typed concepts, progressive disclosure pack, lineage snippet.
 
-Skills: `dekc-second-brain`, `dekc-design-report`, `dekc-land-data`.
+For Q&A, spawn **data-retriever** (`/dekc-retrieve`) instead of dumping a brain pack into the parent.
+
+Skills: `dekc-retrieve`, `dekc-second-brain`, `dekc-design-report`, `dekc-land-data`.
 
 Patterns: `patterns/design-report-from-gold.md`, `patterns/land-stream-to-bronze.md`.
 
@@ -221,6 +223,9 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/dekc_pack.py" tables/gold-order-daily.md 
 # tiny pack for chat focus
 python3 "${CLAUDE_PLUGIN_ROOT}/scripts/dekc_pack.py" tables/gold-order-daily.md \
   --repo . --bundle knowledge --tiny
+# card-friendly summary (bodies off) — prefer this from data-retriever
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/dekc_pack.py" tables/gold-order-daily.md \
+  --repo . --bundle knowledge --tiny --summary
 ```
 
 If `okf-graph-eng` is available, prefer its pack/impact for the same paths.
@@ -237,8 +242,9 @@ If `okf-graph-eng` is available, prefer its pack/impact for the same paths.
 | `dekc-business-object` | Promote technical → business + glossary |
 | `dekc-glossary` | Author glossary terms |
 | `dekc-semantic` | Semantic models, metrics, dashboards |
-| `dekc-context` | Context packs |
-| `dekc-search` | Second-brain search |
+| `dekc-retrieve` | Query-time retrieval — spawn `data-retriever`; card only |
+| `dekc-context` | Context packs (retriever internals / known seed) |
+| `dekc-search` | Second-brain search (raw hits; not parent Q&A) |
 | `dekc-index` | Rebuild index |
 | `dekc-grade` | Rubric grade + adversarial RE protocol |
 | `dekc-doctor` | Health: coverage, orphans, validation |
@@ -247,6 +253,7 @@ If `okf-graph-eng` is available, prefer its pack/impact for the same paths.
 
 | Agent | Use when |
 |-------|----------|
+| **data-retriever** | Query-time Q&A — spawn via `/dekc-retrieve`; parent keeps a card only |
 | **data-lake-walker** | Full reverse-engineer loop (orchestrator) |
 | **schema-scout** | Only structure (schemas/tables/columns) |
 | **lineage-tracer** | Only SQL/job lineage and promotions |

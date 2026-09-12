@@ -8,7 +8,10 @@ description: Build progressive-disclosure context packs for a data concept.
 ```bash
 python3 "${CLAUDE_PLUGIN_ROOT}/scripts/dekc_pack.py" tables/<slug>.md --repo . --bundle knowledge --hops 2
 python3 "${CLAUDE_PLUGIN_ROOT}/scripts/dekc_pack.py" tables/<slug>.md --repo . --bundle knowledge --tiny
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/dekc_pack.py" tables/<slug>.md --repo . --bundle knowledge --tiny --summary
 python3 "${CLAUDE_PLUGIN_ROOT}/scripts/dekc_pack.py" tables/<slug>.md --repo . --bundle knowledge --write
 ```
+
+`--summary` is card-friendly (bodies off, fail-closed budget). Query-time Q&A must spawn **data-retriever** via `/dekc-retrieve` instead of running this skill in the parent.
 
 When okf-plugin is installed, `okf pack` / impact also work on DEKC concepts.

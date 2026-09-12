@@ -88,3 +88,16 @@ Full topologies: `docs/designs/current_design_doc.md`.
 - Pass/fail vs RE threshold **0.75**
 - Explicit revise list if fail
 - Never claim reverse engineering complete without judge pass
+
+## Query-time (not reverse engineering)
+
+**data-retriever** is query-time only. It is **not** an RE sub-agent. Do not put it in producer or skeptic fan-out.
+
+When someone asks about an existing Table, Metric, LineagePath, IngestionJob, Transformation, Dashboard, DataProduct, GlossaryTerm, or BusinessObject:
+
+1. Spawn **data-retriever** (via `/dekc-retrieve`).
+2. Do **not** run `dekc_search.py`, `dekc_pack.py`, or `dekc_brain.py` in this orchestrator for that Q&A.
+3. Keep the **retrieval card** only — never a hit list or full pack.
+4. If the question also needs project decisions or system topology, fan out PKC **knowledge-retriever** and/or SAC **architecture-retriever** in parallel.
+
+See `agents/data-retriever.md` and `skills/dekc-retrieve/SKILL.md`.

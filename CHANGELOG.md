@@ -2,6 +2,27 @@
 
 ## Unreleased
 
+## 0.5.2 — 2026-09-12
+
+Query-time retrieval sub-agent, matching the PKC/SAC parity pattern: search +
+score + pack + deepen stay off the parent; the parent gets a summary card only.
+
+### Added
+
+- **`data-retriever`** agent — retrieval-only. No capture, walk, reverse
+  engineer, or knowledge writes. Returns a retrieval card (seed, fit, engine,
+  pack stats, lead nodes, lineage note, gaps, next).
+- **`/dekc-retrieve`** skill + slash command. Parent must spawn `data-retriever`
+  and must not run `dekc_search.py` / `dekc_pack.py` in-process for Q&A.
+  Orthogonal fan-out: PKC `knowledge-retriever`, SAC `architecture-retriever`.
+- `dekc_pack.py --summary` — compact card-friendly output, bodies off (root
+  included), fail-closed token budget. Retriever prefers `--tiny --summary`.
+
+### Notes
+
+- Reverse-engineering agents (`data-lake-walker`, `lineage-tracer`, …) are
+  unchanged. Query-time is a separate section on the RE orchestrator.
+
 ## 0.5.1 — 2026-08-31
 
 Correctness patch for catalog rendering and the rg-backed reverse index. Both

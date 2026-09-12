@@ -79,6 +79,16 @@ Plugin root: `${CLAUDE_PLUGIN_ROOT}`.
 | **data-lake-walker** | Default orchestrator: walk → produce → adversarial grade → index |
 | **reverse-engineering-orchestrator** | Multi-cloud RE (Fabric/AWS/GCP), strict LoopPolicy + fan-out |
 
+## Query-time retrieval
+
+Orthogonal to reverse engineering. Search, score, pack, and deepen stay in the sub-agent. The parent sees a **summary card only**.
+
+| Agent | Role |
+|-------|------|
+| **data-retriever** | Query-time data-plane context. Spawn via `/dekc-retrieve`. Never dump hit lists or pack markdown into the parent. |
+
+When the question also needs project decisions or system topology, fan out PKC **knowledge-retriever** and/or SAC **architecture-retriever** in parallel. Do not run `dekc_search.py` / `dekc_pack.py` / `dekc_brain.py` in the parent for Q&A.
+
 ## Producer workers
 
 | Agent | Role |
@@ -131,7 +141,8 @@ python3 tests/test_dekc.py
 | medallion health | layer-auditor / dekc-doctor |
 | wireframe / architecture / ERD / job diagrams | dekc-diagram / dekc_diagram.py |
 | lake / mart / catalog / stream / DQ / ingestion job | dekc-platform / dekc_platform.py |
-| search the second brain | dekc-search / dekc-index |
+| retrieve / what's this table / metric / impact Q&A | data-retriever / dekc-retrieve |
+| search the second brain (raw hits, not parent Q&A) | dekc-search / dekc-index |
 | multi-agent loop authoring | okf-agent-graph `/ager-*` + DEKC KnowledgeBind |
 
 <!-- worklog:policy:start -->

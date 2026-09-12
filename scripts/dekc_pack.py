@@ -377,17 +377,72 @@ def render_markdown(
     return "\n".join(md)
 
 
+LEAD_NODE_LIMIT = 8
+
+
+def bodies_off(result: dict) -> dict:
+    """Card path: never include concept bodies (root included)."""
+    out = dict(result)
+    out["nodes"] = [{**n, "body": ""} for n in result.get("nodes", [])]
+    return out
+
+
+def _lead_why(node: dict) -> str:
+    desc = str(node.get("description") or "").strip()
+    title = str(node.get("title") or Path(str(node.get("path") or "")).stem)
+    why = desc.splitlines()[0] if desc else title
+    if len(why) > 140:
+        return why[:137] + "..."
+    return why
+
+
+def render_summary(
+    result: dict,
+    *,
+    tokens: int | None = None,
+    budget: int | None = None,
+) -> str:
+    """Compact card-friendly pack. Bodies off. No mermaid, no excerpts."""
+    focus = result["focus"]
+    seed = next((n for n in result.get("nodes", []) if n.get("path") == focus), None)
+    seed_type = (seed or {}).get("type") or "?"
+    token_bit = ""
+    if tokens is not None and budget is not None:
+        token_bit = f" tokens={tokens}/{budget}"
+    lines = [
+        "# Pack summary",
+        "",
+        f"- Seed: `{focus}` (`{seed_type}`)",
+        f"- Engine: {result.get('reverse_index') or 'scan'}",
+        f"- Pack: hops={result['hops']} nodes={result['node_count']}{token_bit}",
+        "- Lead nodes:",
+    ]
+    for n in result.get("nodes", [])[:LEAD_NODE_LIMIT]:
+        lines.append(
+            f"  - `{n['path']}` (`{n.get('type') or '?'}`) — {_lead_why(n)}"
+        )
+    lines.append("")
+    return "\n".join(lines)
+
+
 def finalize_markdown(
     result: dict,
     *,
     bundle: Path | None = None,
     max_tokens: str | int | None = None,
     window_tokens: str | int | None = None,
+    summary: bool = False,
 ) -> tuple[str, dict[str, int]]:
     window, budget = resolve_pack_budget(max_tokens, window_tokens)
-    draft = render_markdown(result, bundle=bundle, tokens=0, budget=budget)
-    tokens = estimate_tokens(draft)
-    md = render_markdown(result, bundle=bundle, tokens=tokens, budget=budget)
+    if summary:
+        card = bodies_off(result)
+        draft = render_summary(card, tokens=0, budget=budget)
+        tokens = estimate_tokens(draft)
+        md = render_summary(card, tokens=tokens, budget=budget)
+    else:
+        draft = render_markdown(result, bundle=bundle, tokens=0, budget=budget)
+        tokens = estimate_tokens(draft)
+        md = render_markdown(result, bundle=bundle, tokens=tokens, budget=budget)
     tokens = estimate_tokens(md)
     meta = {"tokens": tokens, "budget": budget, "window": window}
     if tokens > budget:
@@ -405,6 +460,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--max-tokens", default="")
     parser.add_argument("--window-tokens", default="")
     parser.add_argument("--tiny", action="store_true")
+    parser.add_argument(
+        "--summary",
+        action="store_true",
+        help="Compact card-friendly summary; bodies off (query-time retriever)",
+    )
     parser.add_argument("--json", action="store_true")
     parser.add_argument("--mermaid", action="store_true")
     parser.add_argument("--write", action="store_true", help="Write pack under packs/")
@@ -443,11 +503,14 @@ def main(argv: list[str] | None = None) -> int:
                 raise PackBudgetError(tokens, budget, window, [n["path"] for n in result["nodes"]])
             print(diagram)
             return 0
+        if args.summary:
+            result = bodies_off(result)
         md, meta = finalize_markdown(
             result,
             bundle=bundle,
             max_tokens=args.max_tokens,
             window_tokens=args.window_tokens,
+            summary=args.summary,
         )
     except PackBudgetError as exc:
         payload = {
@@ -495,7 +558,12 @@ def main(argv: list[str] | None = None) -> int:
         append_log(bundle, f"Wrote context pack for {result['focus']}")
 
     if args.json:
-        print(json.dumps({k: v for k, v in result.items() if k != "markdown"}, indent=2))
+        payload = {k: v for k, v in result.items() if k != "markdown"}
+        if args.summary:
+            payload["summary"] = md
+            for node in payload.get("nodes") or []:
+                node.pop("body", None)
+        print(json.dumps(payload, indent=2))
     elif not args.write:
         print(md)
     return 0

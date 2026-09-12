@@ -55,6 +55,7 @@ the tree. The curate hook does not install rg and does not build the index.
 |---|---|---|
 | `dekc_search.py` | yes | candidate prefilter |
 | `dekc_pack.py` inbound | yes | reverse index via literal path + self SQL |
+| `dekc_pack.py --summary` | n/a | card-friendly render; bodies off; fail-closed budget |
 | `dekc_validate.py` / `dekc-curate.sh` | **no** | must parse frontmatter + resolve links |
 | orphans / doctor listings | **no** | need the parsed graph |
 | mermaid (`build_graph`) | **no** | leftover full scan; accepted |

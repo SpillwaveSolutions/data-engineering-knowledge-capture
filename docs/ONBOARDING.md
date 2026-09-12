@@ -37,7 +37,7 @@ See [GROK_BOT.md](GROK_BOT.md) for the binding contract.
 
 1. State your identity: `Grok Bot: Data Engineering Knowledge Capture`.
 2. Confirm the knowledge root (`SECOND_BRAIN_ROOT` or the target bundle).
-3. Pack the relevant subgraph (2 hops) before answering or writing.
+3. For Q&A, spawn **data-retriever** (`/dekc-retrieve`) and keep the retrieval card only. Do not dump a 2-hop pack or `dekc_brain.py` output into the parent. Pack before writing.
 4. Persist only through skills + deterministic scripts inside an isolation session when writing a shared brain.
 5. Report path + validation result, not a dumped graph.
 
